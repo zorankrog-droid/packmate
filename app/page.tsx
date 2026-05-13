@@ -7,7 +7,6 @@ import { supabase } from "../lib/supabase";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [user, setUser] = useState<any>(null);
 
   const [listName, setListName] = useState("");
@@ -15,8 +14,11 @@ export default function Home() {
 
   const [itemName, setItemName] = useState("");
   const [priority, setPriority] = useState("medium");
+  const [category, setCategory] = useState("Putovanje");
+
   const [selectedList, setSelectedList] = useState("");
   const [items, setItems] = useState<any[]>([]);
+  const [aiPrompt, setAiPrompt] = useState("");
 
   const signUp = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
@@ -40,7 +42,10 @@ export default function Home() {
     } = await supabase.auth.getUser();
 
     setUser(user);
-    if (user) loadLists(user.id);
+
+    if (user) {
+      loadLists(user.id);
+    }
   };
 
   const createList = async () => {
@@ -74,7 +79,7 @@ export default function Home() {
   };
 
   const deleteList = async (listId: string) => {
-    if (!confirm("Želiš li obrisati ovu listu?")) return;
+    if (!confirm("Želiš li obrisati listu?")) return;
 
     const { error } = await supabase.from("lists").delete().eq("id", listId);
 
@@ -91,7 +96,7 @@ export default function Home() {
 
   const createItem = async () => {
     if (!selectedList) {
-      alert("Prvo odaberi listu.");
+      alert("Odaberi listu.");
       return;
     }
 
@@ -105,12 +110,14 @@ export default function Home() {
       list_id: selectedList,
       checked: false,
       priority,
+      category,
     });
 
     if (error) alert(error.message);
     else {
       setItemName("");
       setPriority("medium");
+      setCategory("Putovanje");
       loadItems(selectedList);
     }
   };
@@ -142,9 +149,52 @@ export default function Home() {
     else loadItems(selectedList);
   };
 
+  const generateAIList = async () => {
+    if (!selectedList) {
+      alert("Odaberi listu.");
+      return;
+    }
+
+    if (!aiPrompt) {
+      alert("Upiši opis putovanja.");
+      return;
+    }
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: aiPrompt,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.items || !Array.isArray(data.items)) {
+      alert("AI greška.");
+      return;
+    }
+
+    for (const item of data.items) {
+      await supabase.from("items").insert({
+        name: item.name,
+        priority: item.priority || "medium",
+        category: item.category || "Putovanje",
+        list_id: selectedList,
+        checked: false,
+      });
+    }
+
+    setAiPrompt("");
+    loadItems(selectedList);
+    alert("AI lista generirana!");
+  };
+
   const exportPDF = () => {
     if (!selectedList) {
-      alert("Prvo odaberi listu.");
+      alert("Odaberi listu.");
       return;
     }
 
@@ -153,7 +203,6 @@ export default function Home() {
 
     const doc = new jsPDF();
 
-    doc.setTextColor(0, 0, 0);
     doc.setFontSize(20);
     doc.text("PackMate", 20, 20);
 
@@ -163,13 +212,9 @@ export default function Home() {
     let y = 50;
 
     items.forEach((item) => {
-      if (item.priority === "high") {
-        doc.setTextColor(220, 38, 38);
-      } else if (item.priority === "low") {
-        doc.setTextColor(22, 163, 74);
-      } else {
-        doc.setTextColor(202, 138, 4);
-      }
+      if (item.priority === "high") doc.setTextColor(220, 38, 38);
+      else if (item.priority === "low") doc.setTextColor(22, 163, 74);
+      else doc.setTextColor(202, 138, 4);
 
       const status = item.checked ? "[x]" : "[ ]";
 
@@ -180,7 +225,14 @@ export default function Home() {
           ? "Niski"
           : "Srednji";
 
-      doc.text(`${status} ${item.name} (${itemPriority})`, 20, y);
+      doc.text(
+        `${status} ${item.name} (${itemPriority} • ${
+          item.category || "Putovanje"
+        })`,
+        20,
+        y
+      );
+
       y += 10;
     });
 
@@ -190,6 +242,7 @@ export default function Home() {
 
   const logout = async () => {
     await supabase.auth.signOut();
+
     setUser(null);
     setLists([]);
     setItems([]);
@@ -206,6 +259,18 @@ export default function Home() {
     if (priority === "high") return "#ffe5e5";
     if (priority === "low") return "#e7f9ed";
     return "#fff9db";
+  };
+
+  const getCategoryIcon = (category: string) => {
+    if (category === "Dokumenti") return "📄";
+    if (category === "Odjeća") return "👕";
+    if (category === "Elektronika") return "🔌";
+    if (category === "Higijena") return "🧴";
+    if (category === "Lijekovi") return "💊";
+    if (category === "More") return "🏖️";
+    if (category === "Djeca") return "🧸";
+    if (category === "Posao") return "💼";
+    return "✈️";
   };
 
   useEffect(() => {
@@ -310,8 +375,52 @@ export default function Home() {
         <option value="low">🟢 Niski prioritet</option>
       </select>
 
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        style={{ width: "100%", padding: 12, marginBottom: 10 }}
+      >
+        <option value="Dokumenti">📄 Dokumenti</option>
+        <option value="Odjeća">👕 Odjeća</option>
+        <option value="Elektronika">🔌 Elektronika</option>
+        <option value="Higijena">🧴 Higijena</option>
+        <option value="Lijekovi">💊 Lijekovi</option>
+        <option value="More">🏖️ More</option>
+        <option value="Djeca">🧸 Djeca</option>
+        <option value="Putovanje">✈️ Putovanje</option>
+        <option value="Posao">💼 Posao</option>
+      </select>
+
       <button onClick={createItem} style={{ padding: 12 }}>
         Dodaj stavku
+      </button>
+
+      <hr />
+
+      <h2>AI Generator liste</h2>
+
+      <input
+        type="text"
+        placeholder="npr. MSC krstarenje 7 dana"
+        value={aiPrompt}
+        onChange={(e) => setAiPrompt(e.target.value)}
+        style={{ width: "100%", padding: 12, marginBottom: 10 }}
+      />
+
+      <button
+        type="button"
+        onClick={generateAIList}
+        style={{
+          padding: 12,
+          marginBottom: 20,
+          cursor: "pointer",
+          background: "#2563eb",
+          color: "white",
+          border: "none",
+          borderRadius: 8,
+        }}
+      >
+        🤖 Generiraj AI listu
       </button>
 
       <hr />
@@ -352,7 +461,10 @@ export default function Home() {
               {item.name}
             </span>
 
-            <small>{getPriorityLabel(item.priority)}</small>
+            <small>
+              {getPriorityLabel(item.priority)} •{" "}
+              {getCategoryIcon(item.category)} {item.category || "Putovanje"}
+            </small>
           </div>
 
           <button onClick={() => deleteItem(item.id)}>🗑</button>
