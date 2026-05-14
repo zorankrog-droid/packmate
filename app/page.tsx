@@ -8,17 +8,33 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<any>(null);
 
-  const [listName, setListName] = useState("");
   const [lists, setLists] = useState<any[]>([]);
-
-  const [itemName, setItemName] = useState("");
-  const [priority, setPriority] = useState("medium");
-  const [category, setCategory] = useState("Putovanje");
-
   const [selectedList, setSelectedList] = useState("");
   const [items, setItems] = useState<any[]>([]);
 
+  const [listName, setListName] = useState("");
+  const [itemName, setItemName] = useState("");
+
+  const [priority, setPriority] = useState("medium");
+  const [category, setCategory] = useState("Putovanje");
+
   const [aiPrompt, setAiPrompt] = useState("");
+
+  const loadUser = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    setUser(user);
+
+    if (user) {
+      loadLists(user.id);
+    }
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   const signUp = async () => {
     const { error } = await supabase.auth.signUp({
@@ -41,255 +57,6 @@ export default function Home() {
     else loadUser();
   };
 
-  const loadUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    setUser(user);
-
-    if (user) {
-      loadLists(user.id);
-    }
-  };
-
-  const createList = async () => {
-    if (!user) return;
-
-    if (!listName) {
-      alert("Upiši naziv liste.");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("lists")
-      .insert({
-        name: listName,
-        user_id: user.id,
-      });
-
-    if (error) {
-      alert(error.message);
-    } else {
-      setListName("");
-      loadLists(user.id);
-    }
-  };
-
-  const loadLists = async (
-    userId: string
-  ) => {
-    const { data, error } =
-      await supabase
-        .from("lists")
-        .select("*")
-        .eq("user_id", userId);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      setLists(data || []);
-    }
-  };
-
-  const deleteList = async (
-    listId: string
-  ) => {
-    if (
-      !confirm(
-        "Želiš li obrisati listu?"
-      )
-    )
-      return;
-
-    const { error } =
-      await supabase
-        .from("lists")
-        .delete()
-        .eq("id", listId);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      if (user) {
-        loadLists(user.id);
-      }
-
-      if (selectedList === listId) {
-        setSelectedList("");
-        setItems([]);
-      }
-    }
-  };
-
-  const createItem = async () => {
-    if (!selectedList) {
-      alert("Odaberi listu.");
-      return;
-    }
-
-    if (!itemName) {
-      alert("Upiši naziv stavke.");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("items")
-      .insert({
-        name: itemName,
-        list_id: selectedList,
-        checked: false,
-        priority,
-        category,
-      });
-
-    if (error) {
-      alert(error.message);
-    } else {
-      setItemName("");
-      setPriority("medium");
-      setCategory("Putovanje");
-      loadItems(selectedList);
-    }
-  };
-
-  const loadItems = async (
-    listId: string
-  ) => {
-    const { data, error } =
-      await supabase
-        .from("items")
-        .select("*")
-        .eq("list_id", listId);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      setItems(data || []);
-    }
-  };
-
-  const toggleItem = async (
-    item: any
-  ) => {
-    const { error } =
-      await supabase
-        .from("items")
-        .update({
-          checked: !item.checked,
-        })
-        .eq("id", item.id);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      loadItems(selectedList);
-    }
-  };
-
-  const deleteItem = async (
-    itemId: string
-  ) => {
-    const { error } =
-      await supabase
-        .from("items")
-        .delete()
-        .eq("id", itemId);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      loadItems(selectedList);
-    }
-  };
-
-  const generateAIList = async () => {
-    if (!selectedList) {
-      alert("Odaberi listu.");
-      return;
-    }
-
-    if (!aiPrompt) {
-      alert("Upiši opis putovanja.");
-      return;
-    }
-
-    const response = await fetch(
-      "/api/generate",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          prompt: aiPrompt,
-        }),
-      }
-    );
-
-    const data =
-      await response.json();
-
-    if (
-      !data.items ||
-      !Array.isArray(data.items)
-    ) {
-      alert("AI greška.");
-      return;
-    }
-
-    for (const item of data.items) {
-      await supabase
-        .from("items")
-        .insert({
-          name: item.name,
-          priority:
-            item.priority ||
-            "medium",
-          category:
-            item.category ||
-            "Putovanje",
-          list_id:
-            selectedList,
-          checked: false,
-        });
-    }
-
-    setAiPrompt("");
-
-    loadItems(selectedList);
-
-    alert("AI lista generirana!");
-  };
-
-  const exportPDF = () => {
-    if (!selectedList) {
-      alert("Odaberi listu.");
-      return;
-    }
-
-    const selectedListName =
-      lists.find(
-        (list) =>
-          list.id === selectedList
-      )?.name || "Packing lista";
-
-    localStorage.setItem(
-      "packmate_print",
-      JSON.stringify({
-        listName:
-          selectedListName,
-        items,
-      })
-    );
-
-    window.open(
-      "/print",
-      "_blank"
-    );
-  };
-
   const logout = async () => {
     await supabase.auth.signOut();
 
@@ -299,128 +66,194 @@ export default function Home() {
     setSelectedList("");
   };
 
-  const getPriorityLabel = (
-    priority: string
-  ) => {
-    if (priority === "high")
-      return "🔴 Visoki";
+  const loadLists = async (userId: string) => {
+    const { data } = await supabase
+      .from("lists")
+      .select("*")
+      .eq("user_id", userId);
 
-    if (priority === "low")
-      return "🟢 Niski";
-
-    return "🟡 Srednji";
+    setLists(data || []);
   };
 
-  const getPriorityColor = (
-    priority: string
-  ) => {
-    if (priority === "high")
-      return "#ffe5e5";
+  const createList = async () => {
+    if (!user || !listName) return;
 
-    if (priority === "low")
-      return "#e7f9ed";
+    await supabase.from("lists").insert({
+      name: listName,
+      user_id: user.id,
+    });
 
-    return "#fff9db";
+    setListName("");
+    loadLists(user.id);
   };
 
-  const getCategoryIcon = (
-    category: string
-  ) => {
-    if (category === "Dokumenti")
-      return "📄";
+  const deleteList = async (id: string) => {
+    await supabase.from("lists").delete().eq("id", id);
 
-    if (category === "Odjeća")
-      return "👕";
-
-    if (
-      category === "Elektronika"
-    )
-      return "🔌";
-
-    if (category === "Higijena")
-      return "🧴";
-
-    if (category === "Lijekovi")
-      return "💊";
-
-    if (category === "More")
-      return "🏖️";
-
-    if (category === "Djeca")
-      return "🧸";
-
-    if (category === "Posao")
-      return "💼";
-
-    return "✈️";
+    if (user) loadLists(user.id);
   };
 
-  useEffect(() => {
-    loadUser();
-  }, []);
+  const loadItems = async (listId: string) => {
+    const { data } = await supabase
+      .from("items")
+      .select("*")
+      .eq("list_id", listId);
+
+    setItems(data || []);
+  };
+
+  const createItem = async () => {
+    if (!selectedList || !itemName) return;
+
+    await supabase.from("items").insert({
+      name: itemName,
+      list_id: selectedList,
+      checked: false,
+      priority,
+      category,
+    });
+
+    setItemName("");
+    loadItems(selectedList);
+  };
+
+  const toggleItem = async (item: any) => {
+    await supabase
+      .from("items")
+      .update({
+        checked: !item.checked,
+      })
+      .eq("id", item.id);
+
+    loadItems(selectedList);
+  };
+
+  const deleteItem = async (id: string) => {
+    await supabase.from("items").delete().eq("id", id);
+
+    loadItems(selectedList);
+  };
+
+  const generateAIList = async () => {
+    if (!selectedList || !aiPrompt) return;
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: aiPrompt,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.items) {
+      alert("AI greška.");
+      return;
+    }
+
+    for (const item of data.items) {
+      await supabase.from("items").insert({
+        name: item.name,
+        priority: item.priority || "medium",
+        category: item.category || "Putovanje",
+        checked: false,
+        list_id: selectedList,
+      });
+    }
+
+    loadItems(selectedList);
+
+    alert("AI lista generirana!");
+  };
+
+  const exportPDF = () => {
+    if (!selectedList) return;
+
+    const selectedListName =
+      lists.find((l) => l.id === selectedList)?.name || "PackMate";
+
+    localStorage.setItem(
+      "packmate_print",
+      JSON.stringify({
+        listName: selectedListName,
+        items,
+      })
+    );
+
+    window.open("/print", "_blank");
+  };
+
+  const bg = "#071120";
+  const card = "#0f1d33";
+  const gold = "#d4af37";
 
   if (!user) {
     return (
       <main
         style={{
-          maxWidth: 400,
-          margin:
-            "50px auto",
+          minHeight: "100vh",
+          background: bg,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           padding: 20,
         }}
       >
-        <h1>PackMate</h1>
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(
-              e.target.value
-            )
-          }
+        <div
           style={{
             width: "100%",
-            padding: 12,
-            marginBottom: 10,
-          }}
-        />
-
-        <input
-          type="password"
-          placeholder="Lozinka"
-          value={password}
-          onChange={(e) =>
-            setPassword(
-              e.target.value
-            )
-          }
-          style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 10,
-          }}
-        />
-
-        <button
-          onClick={signUp}
-          style={{
-            padding: 12,
-            marginRight: 10,
+            maxWidth: 400,
+            background: card,
+            borderRadius: 24,
+            padding: 30,
+            color: "white",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
           }}
         >
-          Registracija
-        </button>
+          <h1
+            style={{
+              textAlign: "center",
+              marginBottom: 30,
+              color: gold,
+              fontSize: 34,
+            }}
+          >
+            ✈️ PackMate
+          </h1>
 
-        <button
-          onClick={signIn}
-          style={{
-            padding: 12,
-          }}
-        >
-          Prijava
-        </button>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={inputStyle}
+          />
+
+          <input
+            type="password"
+            placeholder="Lozinka"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={inputStyle}
+          />
+
+          <button onClick={signIn} style={goldButton}>
+            Prijava
+          </button>
+
+          <button
+            onClick={signUp}
+            style={{
+              ...secondaryButton,
+              marginTop: 12,
+            }}
+          >
+            Registracija
+          </button>
+        </div>
       </main>
     );
   }
@@ -428,335 +261,326 @@ export default function Home() {
   return (
     <main
       style={{
-        maxWidth: 750,
-        margin:
-          "50px auto",
+        minHeight: "100vh",
+        background: bg,
+        color: "white",
         padding: 20,
       }}
     >
-      <h1>PackMate</h1>
-
-      <p>
-        Prijavljen:
-        {" "}
-        {user.email}
-      </p>
-
-      <button
-        onClick={logout}
+      <div
         style={{
-          marginBottom: 20,
+          maxWidth: 800,
+          margin: "0 auto",
         }}
       >
-        Logout
-      </button>
-
-      <hr />
-
-      <h2>
-        Napravi novu listu
-      </h2>
-
-      <input
-        type="text"
-        placeholder="Naziv liste"
-        value={listName}
-        onChange={(e) =>
-          setListName(
-            e.target.value
-          )
-        }
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      />
-
-      <button
-        onClick={createList}
-        style={{
-          padding: 12,
-        }}
-      >
-        Dodaj listu
-      </button>
-
-      <hr />
-
-      <h2>Odaberi listu</h2>
-
-      <select
-        value={selectedList}
-        onChange={(e) => {
-          setSelectedList(
-            e.target.value
-          );
-
-          if (
-            e.target.value
-          ) {
-            loadItems(
-              e.target.value
-            );
-          } else {
-            setItems([]);
-          }
-        }}
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      >
-        <option value="">
-          Odaberi listu
-        </option>
-
-        {lists.map((list) => (
-          <option
-            key={list.id}
-            value={list.id}
-          >
-            {list.name}
-          </option>
-        ))}
-      </select>
-
-      <input
-        type="text"
-        placeholder="Nova stavka"
-        value={itemName}
-        onChange={(e) =>
-          setItemName(
-            e.target.value
-          )
-        }
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      />
-
-      <select
-        value={priority}
-        onChange={(e) =>
-          setPriority(
-            e.target.value
-          )
-        }
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      >
-        <option value="high">
-          🔴 Visoki prioritet
-        </option>
-
-        <option value="medium">
-          🟡 Srednji prioritet
-        </option>
-
-        <option value="low">
-          🟢 Niski prioritet
-        </option>
-      </select>
-
-      <select
-        value={category}
-        onChange={(e) =>
-          setCategory(
-            e.target.value
-          )
-        }
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      >
-        <option value="Dokumenti">
-          📄 Dokumenti
-        </option>
-
-        <option value="Odjeća">
-          👕 Odjeća
-        </option>
-
-        <option value="Elektronika">
-          🔌 Elektronika
-        </option>
-
-        <option value="Higijena">
-          🧴 Higijena
-        </option>
-
-        <option value="Lijekovi">
-          💊 Lijekovi
-        </option>
-
-        <option value="More">
-          🏖️ More
-        </option>
-
-        <option value="Djeca">
-          🧸 Djeca
-        </option>
-
-        <option value="Putovanje">
-          ✈️ Putovanje
-        </option>
-
-        <option value="Posao">
-          💼 Posao
-        </option>
-      </select>
-
-      <button
-        onClick={createItem}
-        style={{
-          padding: 12,
-        }}
-      >
-        Dodaj stavku
-      </button>
-
-      <hr />
-
-      <h2>
-        AI Generator liste
-      </h2>
-
-      <input
-        type="text"
-        placeholder="npr. MSC krstarenje 7 dana"
-        value={aiPrompt}
-        onChange={(e) =>
-          setAiPrompt(
-            e.target.value
-          )
-        }
-        style={{
-          width: "100%",
-          padding: 12,
-          marginBottom: 10,
-        }}
-      />
-
-      <button
-        type="button"
-        onClick={
-          generateAIList
-        }
-        style={{
-          padding: 12,
-          marginBottom: 20,
-          cursor: "pointer",
-          background:
-            "#2563eb",
-          color: "white",
-          border: "none",
-          borderRadius: 8,
-        }}
-      >
-        🤖 Generiraj AI listu
-      </button>
-
-      <hr />
-
-      <h2>Stavke</h2>
-
-      <button
-        onClick={exportPDF}
-        style={{
-          padding: 12,
-          marginBottom: 20,
-        }}
-      >
-        📄 Izvezi PDF
-      </button>
-
-      {items.map((item) => (
         <div
-          key={item.id}
           style={{
-            padding: 12,
-            border:
-              "1px solid #ccc",
-            marginBottom: 10,
-            display: "flex",
-            alignItems:
-              "center",
-            justifyContent:
-              "space-between",
-            background:
-              getPriorityColor(
-                item.priority
-              ),
+            background: card,
+            borderRadius: 24,
+            padding: 24,
+            marginBottom: 20,
           }}
         >
-          <div>
-            <button
-              onClick={() =>
-                toggleItem(
-                  item
-                )
-              }
-              style={{
-                marginRight: 10,
-                cursor:
-                  "pointer",
-              }}
-            >
-              {item.checked
-                ? "☑"
-                : "☐"}
-            </button>
+          <h1
+            style={{
+              color: gold,
+              marginBottom: 10,
+            }}
+          >
+            ✈️ PackMate
+          </h1>
 
-            <span
-              style={{
-                textDecoration:
-                  item.checked
-                    ? "line-through"
-                    : "none",
-                marginRight: 10,
-              }}
-            >
-              {item.name}
-            </span>
-
-            <small>
-              {getPriorityLabel(
-                item.priority
-              )}
-
-              {" • "}
-
-              {getCategoryIcon(
-                item.category
-              )}
-
-              {" "}
-
-              {item.category ||
-                "Putovanje"}
-            </small>
-          </div>
+          <p>{user.email}</p>
 
           <button
-            onClick={() =>
-              deleteItem(
-                item.id
-              )
-            }
+            onClick={logout}
+            style={{
+              ...secondaryButton,
+              marginTop: 10,
+            }}
           >
-            🗑
+            Logout
           </button>
         </div>
-      ))}
+
+        <div style={sectionCard}>
+          <h2 style={titleStyle}>Nova lista</h2>
+
+          <input
+            placeholder="Naziv liste"
+            value={listName}
+            onChange={(e) =>
+              setListName(e.target.value)
+            }
+            style={inputStyle}
+          />
+
+          <button
+            onClick={createList}
+            style={goldButton}
+          >
+            Dodaj listu
+          </button>
+        </div>
+
+        <div style={sectionCard}>
+          <h2 style={titleStyle}>Odaberi listu</h2>
+
+          <select
+            value={selectedList}
+            onChange={(e) => {
+              setSelectedList(e.target.value);
+
+              if (e.target.value) {
+                loadItems(e.target.value);
+              }
+            }}
+            style={inputStyle}
+          >
+            <option value="">
+              Odaberi listu
+            </option>
+
+            {lists.map((list) => (
+              <option
+                key={list.id}
+                value={list.id}
+              >
+                {list.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={sectionCard}>
+          <h2 style={titleStyle}>Nova stavka</h2>
+
+          <input
+            placeholder="Nova stavka"
+            value={itemName}
+            onChange={(e) =>
+              setItemName(e.target.value)
+            }
+            style={inputStyle}
+          />
+
+          <select
+            value={priority}
+            onChange={(e) =>
+              setPriority(e.target.value)
+            }
+            style={inputStyle}
+          >
+            <option value="high">
+              🔴 Visoki prioritet
+            </option>
+
+            <option value="medium">
+              🟡 Srednji prioritet
+            </option>
+
+            <option value="low">
+              🟢 Niski prioritet
+            </option>
+          </select>
+
+          <button
+            onClick={createItem}
+            style={goldButton}
+          >
+            Dodaj stavku
+          </button>
+        </div>
+
+        <div style={sectionCard}>
+          <h2 style={titleStyle}>
+            🤖 AI Generator
+          </h2>
+
+          <input
+            placeholder="npr. MSC krstarenje 7 dana"
+            value={aiPrompt}
+            onChange={(e) =>
+              setAiPrompt(e.target.value)
+            }
+            style={inputStyle}
+          />
+
+          <button
+            onClick={generateAIList}
+            style={goldButton}
+          >
+            Generiraj AI listu
+          </button>
+        </div>
+
+        <div style={sectionCard}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent:
+                "space-between",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
+          >
+            <h2 style={titleStyle}>
+              Stavke
+            </h2>
+
+            <button
+              onClick={exportPDF}
+              style={goldButton}
+            >
+              📄 PDF
+            </button>
+          </div>
+
+          {items.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                background:
+                  "rgba(255,255,255,0.06)",
+                padding: 18,
+                borderRadius: 18,
+                marginBottom: 14,
+                display: "flex",
+                justifyContent:
+                  "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 18,
+                    textDecoration:
+                      item.checked
+                        ? "line-through"
+                        : "none",
+                  }}
+                >
+                  {item.name}
+                </div>
+
+                <small
+                  style={{
+                    opacity: 0.7,
+                  }}
+                >
+                  {item.priority}
+                </small>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                }}
+              >
+                <button
+                  onClick={() =>
+                    toggleItem(item)
+                  }
+                  style={goldButton}
+                >
+                  {item.checked
+                    ? "☑"
+                    : "☐"}
+                </button>
+
+                <button
+                  onClick={() =>
+                    deleteItem(item.id)
+                  }
+                  style={secondaryButton}
+                >
+                  🗑
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={sectionCard}>
+          <h2 style={titleStyle}>
+            Moje liste
+          </h2>
+
+          {lists.map((list) => (
+            <div
+              key={list.id}
+              style={{
+                background:
+                  "rgba(255,255,255,0.05)",
+                padding: 16,
+                borderRadius: 16,
+                marginBottom: 12,
+                display: "flex",
+                justifyContent:
+                  "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{list.name}</span>
+
+              <button
+                onClick={() =>
+                  deleteList(list.id)
+                }
+                style={secondaryButton}
+              >
+                🗑
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: 16,
+  borderRadius: 16,
+  border: "1px solid rgba(255,255,255,0.1)",
+  background: "rgba(255,255,255,0.08)",
+  color: "white",
+  marginBottom: 16,
+  fontSize: 16,
+};
+
+const goldButton: React.CSSProperties = {
+  width: "100%",
+  padding: 16,
+  borderRadius: 16,
+  border: "none",
+  background: "#d4af37",
+  color: "#071120",
+  fontWeight: 700,
+  fontSize: 16,
+  cursor: "pointer",
+};
+
+const secondaryButton: React.CSSProperties = {
+  padding: "12px 16px",
+  borderRadius: 14,
+  border: "1px solid rgba(255,255,255,0.15)",
+  background: "rgba(255,255,255,0.08)",
+  color: "white",
+  cursor: "pointer",
+};
+
+const sectionCard: React.CSSProperties = {
+  background: "#0f1d33",
+  borderRadius: 24,
+  padding: 24,
+  marginBottom: 20,
+};
+
+const titleStyle: React.CSSProperties = {
+  marginBottom: 20,
+  color: "#d4af37",
+};
