@@ -34,6 +34,14 @@ const [destination, setDestination] =
   useState("");
   const [repackingMode, setRepackingMode] =
   useState(false);
+  const [adults, setAdults] =
+  useState(1);
+
+const [kids, setKids] =
+  useState(0);
+
+const [babies, setBabies] =
+  useState(0);
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -304,6 +312,10 @@ Vrijeme:
 ${realWeather}
 Flight mode:
 ${flightMode}
+Travelers:
+Adults: ${adults}
+Kids: ${kids}
+Babies: ${babies}
 Dodatni opis:
 ${aiPrompt}
 Travel notes:
@@ -668,7 +680,60 @@ const progress =
     💸 Low-cost airline
   </option>
 </select>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "1fr 1fr 1fr",
+    gap: 10,
+    marginBottom: 10,
+  }}
+>
+  <input
+    type="number"
+    min="1"
+    placeholder="Adults"
+    value={adults}
+    onChange={(e) =>
+      setAdults(
+        Number(
+          e.target.value
+        )
+      )
+    }
+    style={inputStyle}
+  />
 
+  <input
+    type="number"
+    min="0"
+    placeholder="Kids"
+    value={kids}
+    onChange={(e) =>
+      setKids(
+        Number(
+          e.target.value
+        )
+      )
+    }
+    style={inputStyle}
+  />
+
+  <input
+    type="number"
+    min="0"
+    placeholder="Babies"
+    value={babies}
+    onChange={(e) =>
+      setBabies(
+        Number(
+          e.target.value
+        )
+      )
+    }
+    style={inputStyle}
+  />
+</div>
 <div style={{ height: 10 }} />
 <div style={{ height: 10 }} />
           <input
