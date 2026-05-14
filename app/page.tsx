@@ -409,14 +409,14 @@ marginBottom: 20,
 gap: 16,
             }}
           >
-            <<h2
+           <h2
   style={{
     ...titleStyle,
     marginBottom: 0,
   }}
 >
   Stavke
-</h2>>
+</h2>
 
             <button
               onClick={exportPDF}
