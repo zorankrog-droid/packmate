@@ -233,6 +233,7 @@ const updateItem = async (
   };
 
   const generateAIList = async () => {
+    let realWeather = "";
     if (!selectedList) {
       alert("Prvo odaberi listu.");
       return;
@@ -242,13 +243,60 @@ const updateItem = async (
       alert("Upiši opis putovanja.");
       return;
     }
+if (destination) {
+  try {
+    const weatherResponse =
+      await fetch(
+        "/api/weather",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            city: destination,
+          }),
+        }
+      );
 
+    const weatherData =
+      await weatherResponse.json();
+if (weatherData.temp) {
+  setTripTemp(
+    `${weatherData.temp}°C`
+  );
+}
+    realWeather = `
+Temperatura: ${weatherData.temp}°C
+Vrijeme: ${weatherData.description}
+`;
+  } catch (e) {
+    console.log(
+      "Weather fetch failed"
+    );
+  }
+}
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: aiPrompt }),
+      body: JSON.stringify({
+  prompt: `
+Destinacija:
+${destination}
+
+Broj dana:
+${tripDays}
+
+Vrijeme:
+${realWeather}
+
+Dodatni opis:
+${aiPrompt}
+`,
+}),
     });
 
     const data = await response.json();
