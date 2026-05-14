@@ -432,6 +432,40 @@ const carryOnWarning =
   flightMode ===
     "carryon" &&
   estimatedWeight > 8;
+  const smartAlerts: string[] = [];
+
+if (carryOnWarning) {
+  smartAlerts.push(
+    "⚠️ Carry-on možda pretežak"
+  );
+}
+
+if (
+  destination
+    .toLowerCase()
+    .includes("london")
+) {
+  smartAlerts.push(
+    "🌧️ Moguća kiša u Londonu"
+  );
+}
+
+if (
+  stayMode === "cruise"
+) {
+  smartAlerts.push(
+    "🚢 Provjeri embarkation dokumente"
+  );
+}
+
+if (
+  flightMode ===
+  "lowcost"
+) {
+  smartAlerts.push(
+    "🧳 Provjeri dimenzije low-cost prtljage"
+  );
+}
     const mustNotForget =
   items.filter(
     (item) =>
@@ -953,7 +987,41 @@ const carryOnWarning =
   {estimatedWeight.toFixed(1)}
   kg
 </div>
+{smartAlerts.length > 0 && (
+  <div
+    style={{
+      marginTop: 14,
+      padding: 12,
+      borderRadius: 12,
+      background:
+        "rgba(255,255,255,0.05)",
+    }}
+  >
+    <div
+      style={{
+        fontWeight: 700,
+        marginBottom: 8,
+      }}
+    >
+      🔔 Smart Alerts
+    </div>
 
+    {smartAlerts.map(
+      (alert, index) => (
+        <div
+          key={index}
+          style={{
+            marginBottom: 6,
+            fontSize: 14,
+            opacity: 0.9,
+          }}
+        >
+          {alert}
+        </div>
+      )
+    )}
+  </div>
+)}
 {carryOnWarning && (
   <div
     style={{
