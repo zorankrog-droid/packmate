@@ -216,27 +216,55 @@ const [deferredPrompt, setDeferredPrompt] =
     alert("AI lista generirana!");
   };
 const installApp = async () => {
-  if (!deferredPrompt) {
-    alert(
-      "Instalacija trenutno nije dostupna."
-    );
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+
+    const result =
+      await deferredPrompt.userChoice;
+
+    if (
+      result.outcome ===
+      "accepted"
+    ) {
+      console.log(
+        "App installed"
+      );
+    }
+
+    setDeferredPrompt(null);
+
     return;
   }
 
-  deferredPrompt.prompt();
-
-  const result =
-    await deferredPrompt.userChoice;
-
-  if (
-    result.outcome === "accepted"
-  ) {
-    console.log(
-      "App installed"
+  const isAndroid =
+    /Android/i.test(
+      navigator.userAgent
     );
+
+  const isIOS =
+    /iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    );
+
+  if (isAndroid) {
+    alert(
+      "Za instalaciju:\n\nKlikni ⋮ gore desno u browseru i odaberi:\n\n'Dodaj na početni zaslon' ili 'Install app'"
+    );
+
+    return;
   }
 
-  setDeferredPrompt(null);
+  if (isIOS) {
+    alert(
+      "Za instalaciju:\n\nKlikni Share → Add to Home Screen"
+    );
+
+    return;
+  }
+
+  alert(
+    "Instalacija trenutno nije dostupna."
+  );
 };
   const exportPDF = () => {
     if (!selectedList) return;
