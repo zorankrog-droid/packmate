@@ -50,6 +50,22 @@ Pravila za kvalitetu:
 - Dodaj 25 do 40 relevantnih stavki.
 - Koristi hrvatski jezik.
 - Dodaj količine gdje ima smisla, npr. "5 majica", "3 para čarapa", "2 kupaća kostima".
+Količine moraju ovisiti o:
+- broju dana putovanja
+- vremenskim uvjetima
+- tipu putovanja
+- business ili leisure putovanju
+- krstarenju ili hotelu
+- toploj ili hladnoj destinaciji
+
+Primjeri:
+- 3 dana = manje odjeće
+- 14 dana = više odjeće
+- hladno vrijeme = više slojeva
+- plaža = više kupaćih kostima
+- business = više poslovne odjeće
+
+Uvijek razmišljaj realistično kao iskusan putnik.
 - Ne dupliciraj stavke.
 - Najvažnije stvari označi kao high.
 - Obične stvari označi kao medium.
