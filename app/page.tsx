@@ -155,7 +155,17 @@ export default function Home() {
 
     loadItems(selectedList);
   };
+const updateItem = async (
+  id: string,
+  updates: any
+) => {
+  await supabase
+    .from("items")
+    .update(updates)
+    .eq("id", id);
 
+  loadItems(selectedList);
+};
   const deleteItem = async (id: string) => {
     await supabase.from("items").delete().eq("id", id);
     loadItems(selectedList);
