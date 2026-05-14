@@ -32,6 +32,8 @@ const [destination, setDestination] =
   useState("");
   const [timeline, setTimeline] =
   useState("");
+  const [repackingMode, setRepackingMode] =
+  useState(false);
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -308,6 +310,8 @@ Travel notes:
 ${travelNotes}
 Timeline:
 ${timeline}
+Repacking mode:
+${repackingMode}
 `,
 }),
     });
@@ -705,6 +709,27 @@ const progress =
     resize: "vertical",
   }}
 />
+<label
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 16,
+    cursor: "pointer",
+  }}
+>
+  <input
+    type="checkbox"
+    checked={repackingMode}
+    onChange={(e) =>
+      setRepackingMode(
+        e.target.checked
+      )
+    }
+  />
+
+  🧠 AI Repacking Mode
+</label>
           <button onClick={generateAIList} style={goldButton}>
             Generiraj AI listu
           </button>
