@@ -42,6 +42,8 @@ const [kids, setKids] =
 
 const [babies, setBabies] =
   useState(0);
+  const [stayMode, setStayMode] =
+  useState("hotel");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -767,6 +769,20 @@ const progress =
     />
   </div>
 </div>
+<select
+  value={stayMode}
+  onChange={(e) => setStayMode(e.target.value)}
+  style={inputStyle}
+>
+  <option value="hotel">🏨 Hotel</option>
+  <option value="apartment">🏡 Apartment</option>
+  <option value="cruise">🚢 Cruise ship</option>
+  <option value="resort">🌴 Resort</option>
+  <option value="camping">⛺ Camping</option>
+  <option value="business_hotel">💼 Business hotel</option>
+</select>
+
+<div style={{ height: 10 }} />
 <div style={{ height: 10 }} />
 <div style={{ height: 10 }} />
           <input
