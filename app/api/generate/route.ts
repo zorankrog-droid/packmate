@@ -47,6 +47,19 @@ Dozvoljene category:
 - Posao
 
 Pravila za kvalitetu:
+Pametno prepoznaj tip putovanja prema destinaciji.
+
+Primjeri:
+- Dubai → luxury + hot weather
+- Iceland → cold + hiking
+- MSC/Costa → cruise
+- Ryanair → low-cost carry-on
+- Maldives → beach vacation
+- London/Paris → city break
+- Alps → snow/winter
+- Safari → outdoor/adventure
+
+Automatski prilagodi packing listu.
 - Dodaj 25 do 40 relevantnih stavki.
 - Koristi hrvatski jezik.
 - Dodaj količine gdje ima smisla, npr. "5 majica", "3 para čarapa", "2 kupaća kostima".
