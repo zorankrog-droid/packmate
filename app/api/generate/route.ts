@@ -47,6 +47,22 @@ Dozvoljene category:
 - Posao
 
 Pravila za kvalitetu:
+Organiziraj stvari po vrstama torbi kada ima smisla.
+
+Koristi sekcije poput:
+🎒 Backpack
+🧳 Checked baggage
+💼 Carry-on
+🧒 Kids bag
+
+Najvažnije stvari stavi u backpack ili carry-on:
+- dokumenti
+- lijekovi
+- elektronika
+- punjači
+- novčanik
+
+Veće stvari stavi u checked baggage.
 Spriječi overpacking.
 
 Ako je putovanje kratko:
