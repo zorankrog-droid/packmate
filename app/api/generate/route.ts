@@ -47,6 +47,17 @@ Dozvoljene category:
 - Posao
 
 Pravila za kvalitetu:
+Spriječi overpacking.
+
+Ako je putovanje kratko:
+- smanji količine
+- izbjegavaj duplikate
+- optimiziraj carry-on
+
+Upozori korisnika ako:
+- ima previše odjeće
+- previše obuće
+- lista nije realna za carry-on
 Pametno prepoznaj tip putovanja prema destinaciji.
 
 Primjeri:
