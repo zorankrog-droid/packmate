@@ -577,7 +577,20 @@ const progress =
                 <div
                   key={item.id}
                   style={{
-                    background: "rgba(255,255,255,0.06)",
+                   background:
+  item.priority === "high"
+    ? "rgba(255,0,0,0.10)"
+    : item.priority ===
+      "medium"
+    ? "rgba(212,175,55,0.12)"
+    : "rgba(0,255,120,0.08)",
+    border:
+  item.priority === "high"
+    ? "1px solid rgba(255,0,0,0.25)"
+    : item.priority ===
+      "medium"
+    ? "1px solid rgba(212,175,55,0.25)"
+    : "1px solid rgba(0,255,120,0.2)",
                     padding: 18,
                     borderRadius: 18,
                     marginBottom: 14,
