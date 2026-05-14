@@ -18,6 +18,14 @@ export default function Home() {
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("Putovanje");
   const [aiPrompt, setAiPrompt] = useState("");
+  const [tripDays, setTripDays] =
+  useState("");
+
+const [tripTemp, setTripTemp] =
+  useState("");
+
+const [destination, setDestination] =
+  useState("");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -533,7 +541,44 @@ const progress =
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>🤖 AI Generator</h2>
+<input
+  placeholder="Destinacija"
+  value={destination}
+  onChange={(e) =>
+    setDestination(
+      e.target.value
+    )
+  }
+  style={inputStyle}
+/>
 
+<div style={{ height: 10 }} />
+
+<input
+  placeholder="Broj dana"
+  value={tripDays}
+  onChange={(e) =>
+    setTripDays(
+      e.target.value
+    )
+  }
+  style={inputStyle}
+/>
+
+<div style={{ height: 10 }} />
+
+<input
+  placeholder="Temperatura (npr. 28°C)"
+  value={tripTemp}
+  onChange={(e) =>
+    setTripTemp(
+      e.target.value
+    )
+  }
+  style={inputStyle}
+/>
+
+<div style={{ height: 10 }} />
           <input
             placeholder="npr. MSC krstarenje 7 dana"
             value={aiPrompt}
