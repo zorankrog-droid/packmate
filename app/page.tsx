@@ -477,11 +477,12 @@ const progress =
           <h2 style={titleStyle}>Nova stavka</h2>
 
           <input
-            placeholder="Nova stavka"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-            style={inputStyle}
-          />
+  id="quick-add"
+  placeholder="Nova stavka"
+  value={itemName}
+  onChange={(e) => setItemName(e.target.value)}
+  style={inputStyle}
+/>
 
           <select value={priority} onChange={(e) => setPriority(e.target.value)} style={inputStyle}>
             <option value="high">🔴 Visoki prioritet</option>
@@ -702,6 +703,38 @@ const progress =
           ))}
         </div>
       </div>
+      <button
+  onClick={() => {
+    const input =
+      document.getElementById(
+        "quick-add"
+      ) as HTMLInputElement;
+
+    input?.focus();
+  }}
+  style={{
+    position: "fixed",
+    right: 24,
+    bottom: 24,
+    width: 64,
+    height: 64,
+    borderRadius: "50%",
+    border: "none",
+    background:
+      "#d4af37",
+    color: "#000",
+    fontSize: 34,
+    fontWeight: 700,
+    cursor: "pointer",
+    boxShadow:
+      "0 10px 30px rgba(212,175,55,0.45)",
+    zIndex: 999,
+    transition:
+      "all 0.25s ease",
+  }}
+>
+  +
+</button>
     </main>
   );
 }
