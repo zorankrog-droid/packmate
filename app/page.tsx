@@ -30,6 +30,8 @@ const [destination, setDestination] =
   useState("checked");
   const [travelNotes, setTravelNotes] =
   useState("");
+  const [timeline, setTimeline] =
+  useState("");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -304,6 +306,8 @@ Dodatni opis:
 ${aiPrompt}
 Travel notes:
 ${travelNotes}
+Timeline:
+${timeline}
 `,
 }),
     });
@@ -677,6 +681,22 @@ const progress =
   style={{
     ...inputStyle,
     minHeight: 100,
+    resize: "vertical",
+  }}
+/>
+<div style={{ height: 10 }} />
+
+<textarea
+  placeholder="Trip timeline: Day 1 flight + hotel, Day 2 cruise embarkation..."
+  value={timeline}
+  onChange={(e) =>
+    setTimeline(
+      e.target.value
+    )
+  }
+  style={{
+    ...inputStyle,
+    minHeight: 120,
     resize: "vertical",
   }}
 />
