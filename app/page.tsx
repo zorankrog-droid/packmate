@@ -689,50 +689,83 @@ const progress =
     marginBottom: 10,
   }}
 >
-  <input
-    type="number"
-    min="1"
-    placeholder="Adults"
-    value={adults}
-    onChange={(e) =>
-      setAdults(
-        Number(
-          e.target.value
-        )
-      )
-    }
-    style={inputStyle}
-  />
+  <div>
+    <div
+      style={{
+        fontSize: 12,
+        marginBottom: 6,
+        opacity: 0.7,
+      }}
+    >
+      👨 Adults
+    </div>
 
-  <input
-    type="number"
-    min="0"
-    placeholder="Kids"
-    value={kids}
-    onChange={(e) =>
-      setKids(
-        Number(
-          e.target.value
+    <input
+      type="number"
+      min="1"
+      value={adults}
+      onChange={(e) =>
+        setAdults(
+          Number(
+            e.target.value
+          )
         )
-      )
-    }
-    style={inputStyle}
-  />
+      }
+      style={inputStyle}
+    />
+  </div>
 
-  <input
-    type="number"
-    min="0"
-    placeholder="Babies"
-    value={babies}
-    onChange={(e) =>
-      setBabies(
-        Number(
-          e.target.value
+  <div>
+    <div
+      style={{
+        fontSize: 12,
+        marginBottom: 6,
+        opacity: 0.7,
+      }}
+    >
+      🧒 Kids
+    </div>
+
+    <input
+      type="number"
+      min="0"
+      value={kids}
+      onChange={(e) =>
+        setKids(
+          Number(
+            e.target.value
+          )
         )
-      )
-    }
-    style={inputStyle}
-  />
+      }
+      style={inputStyle}
+    />
+  </div>
+
+  <div>
+    <div
+      style={{
+        fontSize: 12,
+        marginBottom: 6,
+        opacity: 0.7,
+      }}
+    >
+      👶 Babies
+    </div>
+
+    <input
+      type="number"
+      min="0"
+      value={babies}
+      onChange={(e) =>
+        setBabies(
+          Number(
+            e.target.value
+          )
+        )
+      }
+      style={inputStyle}
+    />
+  </div>
 </div>
 <div style={{ height: 10 }} />
 <div style={{ height: 10 }} />
