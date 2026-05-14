@@ -26,6 +26,8 @@ const [tripTemp, setTripTemp] =
 
 const [destination, setDestination] =
   useState("");
+  const [flightMode, setFlightMode] =
+  useState("checked");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -292,7 +294,8 @@ ${tripDays}
 
 Vrijeme:
 ${realWeather}
-
+Flight mode:
+${flightMode}
 Dodatni opis:
 ${aiPrompt}
 `,
@@ -625,7 +628,29 @@ const progress =
   }
   style={inputStyle}
 />
+<select
+  value={flightMode}
+  onChange={(e) =>
+    setFlightMode(
+      e.target.value
+    )
+  }
+  style={inputStyle}
+>
+  <option value="checked">
+    ✈️ Checked baggage
+  </option>
 
+  <option value="carryon">
+    🧳 Carry-on only
+  </option>
+
+  <option value="lowcost">
+    💸 Low-cost airline
+  </option>
+</select>
+
+<div style={{ height: 10 }} />
 <div style={{ height: 10 }} />
           <input
             placeholder="npr. MSC krstarenje 7 dana"
