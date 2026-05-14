@@ -47,11 +47,10 @@ export default function Home() {
   };
 
   const signIn = async () => {
-    const { error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) alert(error.message);
     else loadUser();
@@ -91,6 +90,11 @@ export default function Home() {
     await supabase.from("lists").delete().eq("id", id);
 
     if (user) loadLists(user.id);
+
+    if (selectedList === id) {
+      setSelectedList("");
+      setItems([]);
+    }
   };
 
   const loadItems = async (listId: string) => {
@@ -164,6 +168,7 @@ export default function Home() {
       });
     }
 
+    setAiPrompt("");
     loadItems(selectedList);
 
     alert("AI lista generirana!");
@@ -248,6 +253,7 @@ export default function Home() {
             onClick={signUp}
             style={{
               ...secondaryButton,
+              width: "100%",
               marginTop: 12,
             }}
           >
@@ -273,14 +279,7 @@ export default function Home() {
           margin: "0 auto",
         }}
       >
-        <div
-          style={{
-            background: card,
-            borderRadius: 24,
-            padding: 24,
-            marginBottom: 20,
-          }}
-        >
+        <div style={sectionCard}>
           <h1
             style={{
               color: gold,
@@ -309,16 +308,11 @@ export default function Home() {
           <input
             placeholder="Naziv liste"
             value={listName}
-            onChange={(e) =>
-              setListName(e.target.value)
-            }
+            onChange={(e) => setListName(e.target.value)}
             style={inputStyle}
           />
 
-          <button
-            onClick={createList}
-            style={goldButton}
-          >
+          <button onClick={createList} style={goldButton}>
             Dodaj listu
           </button>
         </div>
@@ -327,43 +321,26 @@ export default function Home() {
           <h2 style={titleStyle}>Odaberi listu</h2>
 
           <select
-  value={selectedList}
-  onChange={(e) => {
-    setSelectedList(e.target.value);
+            value={selectedList}
+            onChange={(e) => {
+              setSelectedList(e.target.value);
 
-    if (e.target.value) {
-      loadItems(e.target.value);
-    }
-  }}
-  style={{
-    ...inputStyle,
-    background: "#14233d",
-    color: "white",
-  }}
->
-  <option
-    value=""
-    style={{
-      background: "#14233d",
-      color: "white",
-    }}
-  >
-    Odaberi listu
-  </option>
+              if (e.target.value) {
+                loadItems(e.target.value);
+              } else {
+                setItems([]);
+              }
+            }}
+            style={inputStyle}
+          >
+            <option value="">Odaberi listu</option>
 
-  {lists.map((list) => (
-    <option
-      key={list.id}
-      value={list.id}
-      style={{
-        background: "#14233d",
-        color: "white",
-      }}
-    >
-      {list.name}
-    </option>
-  ))}
-</select>
+            {lists.map((list) => (
+              <option key={list.id} value={list.id}>
+                {list.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div style={sectionCard}>
@@ -372,80 +349,52 @@ export default function Home() {
           <input
             placeholder="Nova stavka"
             value={itemName}
-            onChange={(e) =>
-              setItemName(e.target.value)
-            }
+            onChange={(e) => setItemName(e.target.value)}
             style={inputStyle}
           />
 
- <select
-  value={priority}
-  onChange={(e) =>
-    setPriority(e.target.value)
-  }
-  style={{
-    ...inputStyle,
-    background: "#14233d",
-    color: "white",
-  }}
->
-  <option
-    value="high"
-    style={{
-      background: "#14233d",
-      color: "white",
-    }}
-  >
-    🔴 Visoki prioritet
-  </option>
-
-  <option
-    value="medium"
-    style={{
-      background: "#14233d",
-      color: "white",
-    }}
-  >
-    🟡 Srednji prioritet
-  </option>
-
-  <option
-    value="low"
-    style={{
-      background: "#14233d",
-      color: "white",
-    }}
-  >
-    🟢 Niski prioritet
-  </option>
-</select>
-
-          <button
-            onClick={createItem}
-            style={goldButton}
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            style={inputStyle}
           >
+            <option value="high">🔴 Visoki prioritet</option>
+            <option value="medium">🟡 Srednji prioritet</option>
+            <option value="low">🟢 Niski prioritet</option>
+          </select>
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={inputStyle}
+          >
+            <option value="Dokumenti">📄 Dokumenti</option>
+            <option value="Odjeća">👕 Odjeća</option>
+            <option value="Elektronika">🔌 Elektronika</option>
+            <option value="Higijena">🧴 Higijena</option>
+            <option value="Lijekovi">💊 Lijekovi</option>
+            <option value="More">🏖️ More</option>
+            <option value="Djeca">🧸 Djeca</option>
+            <option value="Putovanje">✈️ Putovanje</option>
+            <option value="Posao">💼 Posao</option>
+          </select>
+
+          <button onClick={createItem} style={goldButton}>
             Dodaj stavku
           </button>
         </div>
 
         <div style={sectionCard}>
-          <h2 style={titleStyle}>
-            🤖 AI Generator
-          </h2>
+          <h2 style={titleStyle}>🤖 AI Generator</h2>
 
           <input
             placeholder="npr. MSC krstarenje 7 dana"
             value={aiPrompt}
-            onChange={(e) =>
-              setAiPrompt(e.target.value)
-            }
+            onChange={(e) => setAiPrompt(e.target.value)}
             style={inputStyle}
           />
 
-          <button
-            onClick={generateAIList}
-            style={goldButton}
-          >
+          <button onClick={generateAIList} style={goldButton}>
             Generiraj AI listu
           </button>
         </div>
@@ -454,58 +403,61 @@ export default function Home() {
           <div
             style={{
               display: "flex",
-              justifyContent:
-                "space-between",
-              alignItems: "center",
-              marginBottom: 20,
+flexDirection: "column",
+alignItems: "stretch",
+marginBottom: 20,
+gap: 16,
             }}
           >
-            <h2 style={titleStyle}>
-              Stavke
-            </h2>
+            <<h2
+  style={{
+    ...titleStyle,
+    marginBottom: 0,
+  }}
+>
+  Stavke
+</h2>>
 
             <button
               onClick={exportPDF}
-              style={goldButton}
-            >
+style={{
+  ...goldButton,
+  width: "100%",
+}}            >
               📄 PDF
             </button>
           </div>
+
+          {items.length === 0 && (
+            <p style={{ opacity: 0.7 }}>Nema stavki u odabranoj listi.</p>
+          )}
 
           {items.map((item) => (
             <div
               key={item.id}
               style={{
-                background:
-                  "rgba(255,255,255,0.06)",
+                background: "rgba(255,255,255,0.06)",
                 padding: 18,
                 borderRadius: 18,
                 marginBottom: 14,
                 display: "flex",
-                justifyContent:
-                  "space-between",
+                justifyContent: "space-between",
                 alignItems: "center",
+                gap: 12,
               }}
             >
               <div>
                 <div
                   style={{
                     fontSize: 18,
-                    textDecoration:
-                      item.checked
-                        ? "line-through"
-                        : "none",
+                    textDecoration: item.checked ? "line-through" : "none",
                   }}
                 >
                   {item.name}
                 </div>
 
-                <small
-                  style={{
-                    opacity: 0.7,
-                  }}
-                >
-                  {item.priority}
+                <small style={{ opacity: 0.75 }}>
+                  {item.priority || "medium"} • {item.category || "Putovanje"}
                 </small>
               </div>
 
@@ -516,21 +468,21 @@ export default function Home() {
                 }}
               >
                 <button
-                  onClick={() =>
-                    toggleItem(item)
-                  }
-                  style={goldButton}
+                  onClick={() => toggleItem(item)}
+                  style={{
+                    ...secondaryButton,
+                    padding: "10px 12px",
+                  }}
                 >
-                  {item.checked
-                    ? "☑"
-                    : "☐"}
+                  {item.checked ? "☑" : "☐"}
                 </button>
 
                 <button
-                  onClick={() =>
-                    deleteItem(item.id)
-                  }
-                  style={secondaryButton}
+                  onClick={() => deleteItem(item.id)}
+                  style={{
+                    ...secondaryButton,
+                    padding: "10px 12px",
+                  }}
                 >
                   🗑
                 </button>
@@ -540,31 +492,28 @@ export default function Home() {
         </div>
 
         <div style={sectionCard}>
-          <h2 style={titleStyle}>
-            Moje liste
-          </h2>
+          <h2 style={titleStyle}>Moje liste</h2>
+
+          {lists.length === 0 && <p style={{ opacity: 0.7 }}>Još nema lista.</p>}
 
           {lists.map((list) => (
             <div
               key={list.id}
               style={{
-                background:
-                  "rgba(255,255,255,0.05)",
+                background: "rgba(255,255,255,0.05)",
                 padding: 16,
                 borderRadius: 16,
                 marginBottom: 12,
                 display: "flex",
-                justifyContent:
-                  "space-between",
+                justifyContent: "space-between",
                 alignItems: "center",
+                gap: 12,
               }}
             >
               <span>{list.name}</span>
 
               <button
-                onClick={() =>
-                  deleteList(list.id)
-                }
+                onClick={() => deleteList(list.id)}
                 style={secondaryButton}
               >
                 🗑
@@ -582,11 +531,12 @@ const inputStyle: React.CSSProperties = {
   padding: 16,
   borderRadius: 16,
   border: "1px solid rgba(255,255,255,0.1)",
-  background: "#14233d",
+  backgroundColor: "#14233d",
   color: "white",
   marginBottom: 16,
   fontSize: 16,
   outline: "none",
+  appearance: "none",
 };
 
 const goldButton: React.CSSProperties = {
@@ -594,7 +544,7 @@ const goldButton: React.CSSProperties = {
   padding: 16,
   borderRadius: 16,
   border: "none",
-  background: "#d4af37",
+  backgroundColor: "#d4af37",
   color: "#071120",
   fontWeight: 700,
   fontSize: 16,
@@ -605,13 +555,13 @@ const secondaryButton: React.CSSProperties = {
   padding: "12px 16px",
   borderRadius: 14,
   border: "1px solid rgba(255,255,255,0.15)",
-  background: "rgba(255,255,255,0.08)",
+  backgroundColor: "rgba(255,255,255,0.08)",
   color: "white",
   cursor: "pointer",
 };
 
 const sectionCard: React.CSSProperties = {
-  background: "#0f1d33",
+  backgroundColor: "#0f1d33",
   borderRadius: 24,
   padding: 24,
   marginBottom: 20,
