@@ -603,28 +603,34 @@ const progress =
                 <div
                   key={item.id}
                   style={{
-                   background:
-  item.priority === "high"
-    ? "rgba(255,0,0,0.10)"
-    : item.priority ===
-      "medium"
-    ? "rgba(212,175,55,0.12)"
-    : "rgba(0,255,120,0.08)",
-    border:
-  item.priority === "high"
-    ? "1px solid rgba(255,0,0,0.25)"
-    : item.priority ===
-      "medium"
-    ? "1px solid rgba(212,175,55,0.25)"
-    : "1px solid rgba(0,255,120,0.2)",
-                    padding: 18,
-                    borderRadius: 18,
-                    marginBottom: 14,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
+  background:
+    item.priority === "high"
+      ? "rgba(255,0,0,0.10)"
+      : item.priority === "medium"
+      ? "rgba(212,175,55,0.12)"
+      : "rgba(0,255,120,0.08)",
+
+  border:
+    item.priority === "high"
+      ? "1px solid rgba(255,0,0,0.25)"
+      : item.priority === "medium"
+      ? "1px solid rgba(212,175,55,0.25)"
+      : "1px solid rgba(0,255,120,0.2)",
+
+  transition: "all 0.25s ease",
+
+  transform: item.checked
+    ? "scale(0.98)"
+    : "scale(1)",
+
+  padding: 18,
+  borderRadius: 18,
+  marginBottom: 14,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 12,
+}}
                 >
                   <div>
                     <div
@@ -735,10 +741,19 @@ const secondaryButton: React.CSSProperties = {
 };
 
 const sectionCard: React.CSSProperties = {
-  backgroundColor: "#0f1d33",
-  borderRadius: 24,
+  background:
+    "rgba(15,29,51,0.72)",
+  backdropFilter:
+    "blur(14px)",
+  WebkitBackdropFilter:
+    "blur(14px)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 28,
   padding: 24,
   marginBottom: 20,
+  boxShadow:
+    "0 10px 40px rgba(0,0,0,0.35)",
 };
 
 const titleStyle: React.CSSProperties = {
