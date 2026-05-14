@@ -392,7 +392,12 @@ const progress =
         100
       ).toFixed(0)
     : 0;
-    
+    const mustNotForget =
+  items.filter(
+    (item) =>
+      item.priority ===
+      "high"
+  );
   const groupedItems =
   items
     .sort((a, b) => {
@@ -707,6 +712,42 @@ const progress =
 
         <div style={sectionCard}>
           <h2 style={{ ...titleStyle, marginBottom: 16 }}>Stavke</h2>
+          {mustNotForget.length >
+  0 && (
+  <div
+    style={{
+      background:
+        "rgba(255,0,0,0.08)",
+      border:
+        "1px solid rgba(255,0,0,0.18)",
+      borderRadius: 22,
+      padding: 18,
+      marginBottom: 22,
+    }}
+  >
+    <h3
+      style={{
+        color: "#ff8080",
+        marginBottom: 12,
+      }}
+    >
+      🚨 Must Not Forget
+    </h3>
+
+    {mustNotForget.map(
+      (item) => (
+        <div
+          key={item.id}
+          style={{
+            marginBottom: 8,
+          }}
+        >
+          • {item.name}
+        </div>
+      )
+    )}
+  </div>
+)}
 <div
   style={{
     marginBottom: 20,
