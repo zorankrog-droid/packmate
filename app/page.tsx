@@ -314,12 +314,38 @@ const progress =
       ).toFixed(0)
     : 0;
     
-  const groupedItems = items.reduce((acc: any, item: any) => {
-    const cat = item.category || "Putovanje";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(item);
-    return acc;
-  }, {});
+  const groupedItems =
+  items
+    .sort((a, b) => {
+      if (
+        a.checked ===
+        b.checked
+      )
+        return 0;
+
+      return a.checked
+        ? 1
+        : -1;
+    })
+    .reduce(
+      (
+        acc: any,
+        item: any
+      ) => {
+        const cat =
+          item.category ||
+          "Putovanje";
+
+        if (!acc[cat]) {
+          acc[cat] = [];
+        }
+
+        acc[cat].push(item);
+
+        return acc;
+      },
+      {}
+    );
 
   const getCategoryIcon = (cat: string) => {
     if (cat === "Dokumenti") return "📄";
