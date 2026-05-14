@@ -18,10 +18,9 @@ export default function Home() {
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("Putovanje");
   const [aiPrompt, setAiPrompt] = useState("");
-  const [template, setTemplate] =
-  useState("msc");
-const [deferredPrompt, setDeferredPrompt] =
-  useState<any>(null);
+  const [template, setTemplate] = useState("msc");
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
   const loadUser = async () => {
     const {
       data: { user },
@@ -29,38 +28,26 @@ const [deferredPrompt, setDeferredPrompt] =
 
     setUser(user);
 
-    if (user) {
-      loadLists(user.id);
-    }
+    if (user) loadLists(user.id);
   };
 
   useEffect(() => {
-  loadUser();
+    loadUser();
 
-  const handler = (e: any) => {
-    e.preventDefault();
-    setDeferredPrompt(e);
-  };
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
 
-  window.addEventListener(
-    "beforeinstallprompt",
-    handler
-  );
+    window.addEventListener("beforeinstallprompt", handler);
 
-  return () => {
-    window.removeEventListener(
-      "beforeinstallprompt",
-      handler
-    );
-  };
-}, []);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+    };
+  }, []);
 
   const signUp = async () => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
+    const { error } = await supabase.auth.signUp({ email, password });
     if (error) alert(error.message);
     else alert("Registracija uspješna!");
   };
@@ -77,7 +64,6 @@ const [deferredPrompt, setDeferredPrompt] =
 
   const logout = async () => {
     await supabase.auth.signOut();
-
     setUser(null);
     setLists([]);
     setItems([]);
@@ -126,18 +112,14 @@ const [deferredPrompt, setDeferredPrompt] =
 
       await supabase
         .from("lists")
-        .update({
-          share_id: shareId,
-        })
+        .update({ share_id: shareId })
         .eq("id", list.id);
 
       if (user) loadLists(user.id);
     }
 
     const shareUrl = `${window.location.origin}/share/${shareId}`;
-
     await navigator.clipboard.writeText(shareUrl);
-
     alert("Link kopiran!\n\n" + shareUrl);
   };
 
@@ -168,9 +150,7 @@ const [deferredPrompt, setDeferredPrompt] =
   const toggleItem = async (item: any) => {
     await supabase
       .from("items")
-      .update({
-        checked: !item.checked,
-      })
+      .update({ checked: !item.checked })
       .eq("id", item.id);
 
     loadItems(selectedList);
@@ -178,88 +158,79 @@ const [deferredPrompt, setDeferredPrompt] =
 
   const deleteItem = async (id: string) => {
     await supabase.from("items").delete().eq("id", id);
-
     loadItems(selectedList);
   };
-const loadTemplate =
-  async () => {
+
+  const loadTemplate = async () => {
     if (!selectedList) {
-      alert(
-        "Odaberi listu."
-      );
+      alert("Odaberi listu.");
       return;
     }
 
     const templates: any = {
       msc: [
-        "Putovnica",
-        "Kupaći kostim",
-        "Elegantna odjeća",
-        "Punjač",
-        "Naočale",
-        "Lijekovi",
-        "Krema za sunce",
-        "Večernje cipele",
+        ["Putovnica", "high", "Dokumenti"],
+        ["Boarding pass", "high", "Dokumenti"],
+        ["Putno osiguranje", "high", "Dokumenti"],
+        ["Kupaći kostim", "medium", "More"],
+        ["Elegantna odjeća", "medium", "Odjeća"],
+        ["Večernje cipele", "medium", "Odjeća"],
+        ["Punjač", "high", "Elektronika"],
+        ["Power bank", "medium", "Elektronika"],
+        ["Lijekovi protiv mučnine", "high", "Lijekovi"],
+        ["Krema za sunce", "medium", "More"],
       ],
-
       zanzibar: [
-        "Putovnica",
-        "Adapter",
-        "Krema SPF 50",
-        "Lagane majice",
-        "Šešir",
-        "Sandale",
-        "Lijekovi",
-        "Naočale za sunce",
+        ["Putovnica", "high", "Dokumenti"],
+        ["Adapter", "high", "Elektronika"],
+        ["Krema SPF 50", "high", "More"],
+        ["Lagane majice", "medium", "Odjeća"],
+        ["Šešir", "medium", "More"],
+        ["Sandale", "medium", "Odjeća"],
+        ["Lijekovi", "high", "Lijekovi"],
+        ["Naočale za sunce", "medium", "More"],
       ],
-
       business: [
-        "Laptop",
-        "Punjač",
-        "Poslovna odijela",
-        "Dokumenti",
-        "Vizitke",
-        "Tablet",
+        ["Laptop", "high", "Posao"],
+        ["Punjač za laptop", "high", "Elektronika"],
+        ["Poslovno odijelo", "high", "Odjeća"],
+        ["Dokumenti", "high", "Dokumenti"],
+        ["Vizitke", "medium", "Posao"],
+        ["Tablet", "medium", "Elektronika"],
       ],
     };
 
-    const selectedTemplate =
-      templates[
-        template
-      ] || [];
-
-    for (const item of selectedTemplate) {
-      await supabase
-        .from("items")
-        .insert({
-          name: item,
-          list_id:
-            selectedList,
-          checked: false,
-          priority:
-            "medium",
-          category:
-            "Putovanje",
-        });
+    for (const item of templates[template] || []) {
+      await supabase.from("items").insert({
+        name: item[0],
+        priority: item[1],
+        category: item[2],
+        list_id: selectedList,
+        checked: false,
+      });
     }
 
     loadItems(selectedList);
-
-    alert(
-      "Template učitan!"
-    );
+    alert("Template učitan!");
   };
+
   const generateAIList = async () => {
-    if (!selectedList || !aiPrompt) return;
+    if (!selectedList) {
+      alert("Prvo odaberi listu.");
+      return;
+    }
+
+    if (!aiPrompt) {
+      alert("Upiši opis putovanja.");
+      return;
+    }
 
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt: aiPrompt,
-      }),
+      body: JSON.stringify({ prompt: aiPrompt }),
     });
 
     const data = await response.json();
@@ -281,60 +252,35 @@ const loadTemplate =
 
     setAiPrompt("");
     loadItems(selectedList);
-
     alert("AI lista generirana!");
   };
-const installApp = async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
 
-    const result =
+  const installApp = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
       await deferredPrompt.userChoice;
-
-    if (
-      result.outcome ===
-      "accepted"
-    ) {
-      console.log(
-        "App installed"
-      );
+      setDeferredPrompt(null);
+      return;
     }
 
-    setDeferredPrompt(null);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    return;
-  }
+    if (isAndroid) {
+      alert(
+        "Za instalaciju:\n\nKlikni ⋮ u browseru i odaberi:\n\n'Dodaj na početni zaslon' ili 'Install app'"
+      );
+      return;
+    }
 
-  const isAndroid =
-    /Android/i.test(
-      navigator.userAgent
-    );
+    if (isIOS) {
+      alert("Za instalaciju:\n\nKlikni Share → Add to Home Screen");
+      return;
+    }
 
-  const isIOS =
-    /iPhone|iPad|iPod/i.test(
-      navigator.userAgent
-    );
+    alert("Instalacija trenutno nije dostupna.");
+  };
 
-  if (isAndroid) {
-    alert(
-      "Za instalaciju:\n\nKlikni ⋮ gore desno u browseru i odaberi:\n\n'Dodaj na početni zaslon' ili 'Install app'"
-    );
-
-    return;
-  }
-
-  if (isIOS) {
-    alert(
-      "Za instalaciju:\n\nKlikni Share → Add to Home Screen"
-    );
-
-    return;
-  }
-
-  alert(
-    "Instalacija trenutno nije dostupna."
-  );
-};
   const exportPDF = () => {
     if (!selectedList) return;
 
@@ -350,6 +296,25 @@ const installApp = async () => {
     );
 
     window.open("/print", "_blank");
+  };
+
+  const groupedItems = items.reduce((acc: any, item: any) => {
+    const cat = item.category || "Putovanje";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(item);
+    return acc;
+  }, {});
+
+  const getCategoryIcon = (cat: string) => {
+    if (cat === "Dokumenti") return "📄";
+    if (cat === "Odjeća") return "👕";
+    if (cat === "Elektronika") return "🔌";
+    if (cat === "Higijena") return "🧴";
+    if (cat === "Lijekovi") return "💊";
+    if (cat === "More") return "🏖️";
+    if (cat === "Djeca") return "🧸";
+    if (cat === "Posao") return "💼";
+    return "✈️";
   };
 
   const bg = "#071120";
@@ -376,17 +341,9 @@ const installApp = async () => {
             borderRadius: 24,
             padding: 30,
             color: "white",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
           }}
         >
-          <h1
-            style={{
-              textAlign: "center",
-              marginBottom: 30,
-              color: gold,
-              fontSize: 34,
-            }}
-          >
+          <h1 style={{ textAlign: "center", color: gold, fontSize: 34 }}>
             ✈️ PackMate
           </h1>
 
@@ -412,11 +369,7 @@ const installApp = async () => {
 
           <button
             onClick={signUp}
-            style={{
-              ...secondaryButton,
-              width: "100%",
-              marginTop: 12,
-            }}
+            style={{ ...secondaryButton, width: "100%", marginTop: 12 }}
           >
             Registracija
           </button>
@@ -426,48 +379,18 @@ const installApp = async () => {
   }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: bg,
-        color: "white",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 800,
-          margin: "0 auto",
-        }}
-      >
+    <main style={{ minHeight: "100vh", background: bg, color: "white", padding: 20 }}>
+      <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={sectionCard}>
-          <h1
-            style={{
-              color: gold,
-              marginBottom: 10,
-            }}
-          >
-            ✈️ PackMate
-          </h1>
-<button
-  onClick={installApp}
-  style={{
-    ...goldButton,
-    marginTop: 12,
-    marginBottom: 12,
-  }}
->
-  📲 Instaliraj aplikaciju
-</button>
+          <h1 style={{ color: gold }}>✈️ PackMate</h1>
+
+          <button onClick={installApp} style={{ ...goldButton, marginBottom: 16 }}>
+            📲 Instaliraj aplikaciju
+          </button>
+
           <p>{user.email}</p>
 
-          <button
-            onClick={logout}
-            style={{
-              ...secondaryButton,
-              marginTop: 10,
-            }}
-          >
+          <button onClick={logout} style={secondaryButton}>
             Logout
           </button>
         </div>
@@ -494,17 +417,12 @@ const installApp = async () => {
             value={selectedList}
             onChange={(e) => {
               setSelectedList(e.target.value);
-
-              if (e.target.value) {
-                loadItems(e.target.value);
-              } else {
-                setItems([]);
-              }
+              if (e.target.value) loadItems(e.target.value);
+              else setItems([]);
             }}
             style={inputStyle}
           >
             <option value="">Odaberi listu</option>
-
             {lists.map((list) => (
               <option key={list.id} value={list.id}>
                 {list.name}
@@ -523,21 +441,13 @@ const installApp = async () => {
             style={inputStyle}
           />
 
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            style={inputStyle}
-          >
+          <select value={priority} onChange={(e) => setPriority(e.target.value)} style={inputStyle}>
             <option value="high">🔴 Visoki prioritet</option>
             <option value="medium">🟡 Srednji prioritet</option>
             <option value="low">🟢 Niski prioritet</option>
           </select>
 
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={inputStyle}
-          >
+          <select value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle}>
             <option value="Dokumenti">📄 Dokumenti</option>
             <option value="Odjeća">👕 Odjeća</option>
             <option value="Elektronika">🔌 Elektronika</option>
@@ -555,38 +465,22 @@ const installApp = async () => {
         </div>
 
         <div style={sectionCard}>
+          <h2 style={titleStyle}>🚢 Cruise Templates</h2>
+
+          <select value={template} onChange={(e) => setTemplate(e.target.value)} style={inputStyle}>
+            <option value="msc">🚢 MSC Krstarenje</option>
+            <option value="zanzibar">🌴 Zanzibar</option>
+            <option value="business">💼 Business Trip</option>
+          </select>
+
+          <button onClick={loadTemplate} style={goldButton}>
+            🚢 Učitaj template
+          </button>
+        </div>
+
+        <div style={sectionCard}>
           <h2 style={titleStyle}>🤖 AI Generator</h2>
-<select
-  value={template}
-  onChange={(e) =>
-    setTemplate(
-      e.target.value
-    )
-  }
-  style={inputStyle}
->
-  <option value="msc">
-    🚢 MSC Krstarenje
-  </option>
 
-  <option value="zanzibar">
-    🌴 Zanzibar
-  </option>
-
-  <option value="business">
-    💼 Business Trip
-  </option>
-</select>
-
-<button
-  onClick={loadTemplate}
-  style={{
-    ...goldButton,
-    marginBottom: 20,
-  }}
->
-  🚢 Učitaj template
-</button>
           <input
             placeholder="npr. MSC krstarenje 7 dana"
             value={aiPrompt}
@@ -600,14 +494,7 @@ const installApp = async () => {
         </div>
 
         <div style={sectionCard}>
-          <h2
-            style={{
-              ...titleStyle,
-              marginBottom: 16,
-            }}
-          >
-            Stavke
-          </h2>
+          <h2 style={{ ...titleStyle, marginBottom: 16 }}>Stavke</h2>
 
           <button onClick={exportPDF} style={goldButton}>
             📄 PDF
@@ -619,71 +506,62 @@ const installApp = async () => {
             <p style={{ opacity: 0.7 }}>Nema stavki u odabranoj listi.</p>
           )}
 
-          {items.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                padding: 18,
-                borderRadius: 18,
-                marginBottom: 14,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <div>
+          {Object.entries(groupedItems).map(([cat, catItems]) => (
+            <div key={cat} style={{ marginBottom: 30 }}>
+              <h3 style={{ color: gold, fontSize: 23, marginBottom: 16 }}>
+                {getCategoryIcon(cat)} {cat}
+              </h3>
+
+              {(catItems as any[]).map((item) => (
                 <div
+                  key={item.id}
                   style={{
-                    fontSize: 18,
-                    textDecoration: item.checked ? "line-through" : "none",
+                    background: "rgba(255,255,255,0.06)",
+                    padding: 18,
+                    borderRadius: 18,
+                    marginBottom: 14,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
                   }}
                 >
-                  {item.name}
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 18,
+                        textDecoration: item.checked ? "line-through" : "none",
+                      }}
+                    >
+                      {item.name}
+                    </div>
+
+                    <small style={{ opacity: 0.75 }}>{item.priority || "medium"}</small>
+                  </div>
+
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <button
+                      onClick={() => toggleItem(item)}
+                      style={{ ...secondaryButton, padding: "10px 12px" }}
+                    >
+                      {item.checked ? "☑" : "☐"}
+                    </button>
+
+                    <button
+                      onClick={() => deleteItem(item.id)}
+                      style={{ ...secondaryButton, padding: "10px 12px" }}
+                    >
+                      🗑
+                    </button>
+                  </div>
                 </div>
-
-                <small style={{ opacity: 0.75 }}>
-                  {item.priority || "medium"} • {item.category || "Putovanje"}
-                </small>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 10,
-                }}
-              >
-                <button
-                  onClick={() => toggleItem(item)}
-                  style={{
-                    ...secondaryButton,
-                    padding: "10px 12px",
-                  }}
-                >
-                  {item.checked ? "☑" : "☐"}
-                </button>
-
-                <button
-                  onClick={() => deleteItem(item.id)}
-                  style={{
-                    ...secondaryButton,
-                    padding: "10px 12px",
-                  }}
-                >
-                  🗑
-                </button>
-              </div>
+              ))}
             </div>
           ))}
         </div>
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>Moje liste</h2>
-
-          {lists.length === 0 && (
-            <p style={{ opacity: 0.7 }}>Još nema lista.</p>
-          )}
 
           {lists.map((list) => (
             <div
@@ -706,21 +584,12 @@ const installApp = async () => {
               >
                 <span>{list.name}</span>
 
-                <button
-                  onClick={() => deleteList(list.id)}
-                  style={secondaryButton}
-                >
+                <button onClick={() => deleteList(list.id)} style={secondaryButton}>
                   🗑
                 </button>
               </div>
 
-              <button
-                onClick={() => shareList(list)}
-                style={{
-                  ...goldButton,
-                  padding: 12,
-                }}
-              >
+              <button onClick={() => shareList(list)} style={{ ...goldButton, padding: 12 }}>
                 🔗 Podijeli listu
               </button>
             </div>
