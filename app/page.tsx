@@ -653,7 +653,38 @@ const progress =
                     >
                       {item.checked ? "☑" : "☐"}
                     </button>
+<button
+  onClick={() => {
+    const newName =
+      prompt(
+        "Uredi stavku",
+        item.name
+      );
 
+    if (!newName) return;
+
+    updateItem(
+      item.id,
+      {
+        name: newName,
+      }
+    );
+  }}
+  style={{
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.06)",
+    color: "white",
+    cursor: "pointer",
+    fontSize: 18,
+  }}
+>
+  ✏️
+</button>
                     <button
                       onClick={() => deleteItem(item.id)}
                       style={{ ...secondaryButton, padding: "10px 12px" }}
