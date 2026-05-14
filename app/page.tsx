@@ -17,7 +17,6 @@ export default function Home() {
 
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("Putovanje");
-
   const [aiPrompt, setAiPrompt] = useState("");
 
   const loadUser = async () => {
@@ -87,6 +86,8 @@ export default function Home() {
   };
 
   const deleteList = async (id: string) => {
+    if (!confirm("Želiš li obrisati listu?")) return;
+
     await supabase.from("lists").delete().eq("id", id);
 
     if (user) loadLists(user.id);
@@ -95,6 +96,29 @@ export default function Home() {
       setSelectedList("");
       setItems([]);
     }
+  };
+
+  const shareList = async (list: any) => {
+    let shareId = list.share_id;
+
+    if (!shareId) {
+      shareId = crypto.randomUUID();
+
+      await supabase
+        .from("lists")
+        .update({
+          share_id: shareId,
+        })
+        .eq("id", list.id);
+
+      if (user) loadLists(user.id);
+    }
+
+    const shareUrl = `${window.location.origin}/share/${shareId}`;
+
+    await navigator.clipboard.writeText(shareUrl);
+
+    alert("Link kopiran!\n\n" + shareUrl);
   };
 
   const loadItems = async (listId: string) => {
@@ -400,33 +424,20 @@ export default function Home() {
         </div>
 
         <div style={sectionCard}>
-          <div
+          <h2
             style={{
-              display: "flex",
-flexDirection: "column",
-alignItems: "stretch",
-marginBottom: 20,
-gap: 16,
+              ...titleStyle,
+              marginBottom: 16,
             }}
           >
-           <h2
-  style={{
-    ...titleStyle,
-    marginBottom: 0,
-  }}
->
-  Stavke
-</h2>
+            Stavke
+          </h2>
 
-            <button
-              onClick={exportPDF}
-style={{
-  ...goldButton,
-  width: "100%",
-}}            >
-              📄 PDF
-            </button>
-          </div>
+          <button onClick={exportPDF} style={goldButton}>
+            📄 PDF
+          </button>
+
+          <div style={{ height: 20 }} />
 
           {items.length === 0 && (
             <p style={{ opacity: 0.7 }}>Nema stavki u odabranoj listi.</p>
@@ -494,7 +505,9 @@ style={{
         <div style={sectionCard}>
           <h2 style={titleStyle}>Moje liste</h2>
 
-          {lists.length === 0 && <p style={{ opacity: 0.7 }}>Još nema lista.</p>}
+          {lists.length === 0 && (
+            <p style={{ opacity: 0.7 }}>Još nema lista.</p>
+          )}
 
           {lists.map((list) => (
             <div
@@ -504,19 +517,35 @@ style={{
                 padding: 16,
                 borderRadius: 16,
                 marginBottom: 12,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 12,
               }}
             >
-              <span>{list.name}</span>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  marginBottom: 12,
+                }}
+              >
+                <span>{list.name}</span>
+
+                <button
+                  onClick={() => deleteList(list.id)}
+                  style={secondaryButton}
+                >
+                  🗑
+                </button>
+              </div>
 
               <button
-                onClick={() => deleteList(list.id)}
-                style={secondaryButton}
+                onClick={() => shareList(list)}
+                style={{
+                  ...goldButton,
+                  padding: 12,
+                }}
               >
-                🗑
+                🔗 Podijeli listu
               </button>
             </div>
           ))}
