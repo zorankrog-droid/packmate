@@ -47,6 +47,18 @@ Dozvoljene category:
 - Posao
 
 Pravila za kvalitetu:
+Ako korisnik unese timeline ili itinerary:
+- analiziraj aktivnosti po danima
+- prilagodi packing listu svakom danu
+- prepoznaj:
+  - beach day
+  - hiking
+  - formal dinner
+  - business meeting
+  - city walk
+  - cruise excursions
+
+Dodaj stvari koje odgovaraju planu putovanja.
 Organiziraj stvari po vrstama torbi kada ima smisla.
 
 Koristi sekcije poput:
