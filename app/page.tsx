@@ -314,6 +314,8 @@ Vrijeme:
 ${realWeather}
 Flight mode:
 ${flightMode}
+Stay mode:
+${stayMode}
 Travelers:
 Adults: ${adults}
 Kids: ${kids}
@@ -410,6 +412,19 @@ const progress =
         100
       ).toFixed(0)
     : 0;
+    const highPriorityMissing =
+  items.filter(
+    (item) =>
+      item.priority ===
+        "high" &&
+      !item.checked
+  ).length;
+
+const packingScore = Math.max(
+  0,
+  100 -
+    highPriorityMissing * 10
+);
     const mustNotForget =
   items.filter(
     (item) =>
@@ -911,7 +926,16 @@ const progress =
       {totalItems}
     </span>
   </div>
-
+<div
+  style={{
+    marginBottom: 10,
+    fontSize: 14,
+    opacity: 0.85,
+  }}
+>
+  🎯 Packing Score:
+  {packingScore}%
+</div>
   <div
     style={{
       height: 12,
