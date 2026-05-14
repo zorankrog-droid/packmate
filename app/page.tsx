@@ -425,6 +425,13 @@ const packingScore = Math.max(
   100 -
     highPriorityMissing * 10
 );
+const estimatedWeight =
+  items.length * 0.4;
+
+const carryOnWarning =
+  flightMode ===
+    "carryon" &&
+  estimatedWeight > 8;
     const mustNotForget =
   items.filter(
     (item) =>
@@ -935,6 +942,30 @@ const packingScore = Math.max(
 >
   🎯 Packing Score:
   {packingScore}%
+  <div
+  style={{
+    marginTop: 8,
+    fontSize: 14,
+    opacity: 0.85,
+  }}
+>
+  📦 Estimated weight:
+  {estimatedWeight.toFixed(1)}
+  kg
+</div>
+
+{carryOnWarning && (
+  <div
+    style={{
+      marginTop: 8,
+      color: "#ffb84d",
+      fontSize: 13,
+    }}
+  >
+    ⚠️ Carry-on limit
+    možda prekoračen
+  </div>
+)}
 </div>
   <div
     style={{
