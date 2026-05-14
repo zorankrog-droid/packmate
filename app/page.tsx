@@ -18,6 +18,8 @@ export default function Home() {
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("Putovanje");
   const [aiPrompt, setAiPrompt] = useState("");
+  const [template, setTemplate] =
+  useState("msc");
 const [deferredPrompt, setDeferredPrompt] =
   useState<any>(null);
   const loadUser = async () => {
@@ -179,7 +181,74 @@ const [deferredPrompt, setDeferredPrompt] =
 
     loadItems(selectedList);
   };
+const loadTemplate =
+  async () => {
+    if (!selectedList) {
+      alert(
+        "Odaberi listu."
+      );
+      return;
+    }
 
+    const templates: any = {
+      msc: [
+        "Putovnica",
+        "Kupaći kostim",
+        "Elegantna odjeća",
+        "Punjač",
+        "Naočale",
+        "Lijekovi",
+        "Krema za sunce",
+        "Večernje cipele",
+      ],
+
+      zanzibar: [
+        "Putovnica",
+        "Adapter",
+        "Krema SPF 50",
+        "Lagane majice",
+        "Šešir",
+        "Sandale",
+        "Lijekovi",
+        "Naočale za sunce",
+      ],
+
+      business: [
+        "Laptop",
+        "Punjač",
+        "Poslovna odijela",
+        "Dokumenti",
+        "Vizitke",
+        "Tablet",
+      ],
+    };
+
+    const selectedTemplate =
+      templates[
+        template
+      ] || [];
+
+    for (const item of selectedTemplate) {
+      await supabase
+        .from("items")
+        .insert({
+          name: item,
+          list_id:
+            selectedList,
+          checked: false,
+          priority:
+            "medium",
+          category:
+            "Putovanje",
+        });
+    }
+
+    loadItems(selectedList);
+
+    alert(
+      "Template učitan!"
+    );
+  };
   const generateAIList = async () => {
     if (!selectedList || !aiPrompt) return;
 
@@ -487,7 +556,37 @@ const installApp = async () => {
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>🤖 AI Generator</h2>
+<select
+  value={template}
+  onChange={(e) =>
+    setTemplate(
+      e.target.value
+    )
+  }
+  style={inputStyle}
+>
+  <option value="msc">
+    🚢 MSC Krstarenje
+  </option>
 
+  <option value="zanzibar">
+    🌴 Zanzibar
+  </option>
+
+  <option value="business">
+    💼 Business Trip
+  </option>
+</select>
+
+<button
+  onClick={loadTemplate}
+  style={{
+    ...goldButton,
+    marginBottom: 20,
+  }}
+>
+  🚢 Učitaj template
+</button>
           <input
             placeholder="npr. MSC krstarenje 7 dana"
             value={aiPrompt}
