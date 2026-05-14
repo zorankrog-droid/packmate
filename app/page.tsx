@@ -18,7 +18,8 @@ export default function Home() {
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("Putovanje");
   const [aiPrompt, setAiPrompt] = useState("");
-
+const [deferredPrompt, setDeferredPrompt] =
+  useState<any>(null);
   const loadUser = async () => {
     const {
       data: { user },
@@ -32,8 +33,25 @@ export default function Home() {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
+  loadUser();
+
+  const handler = (e: any) => {
+    e.preventDefault();
+    setDeferredPrompt(e);
+  };
+
+  window.addEventListener(
+    "beforeinstallprompt",
+    handler
+  );
+
+  return () => {
+    window.removeEventListener(
+      "beforeinstallprompt",
+      handler
+    );
+  };
+}, []);
 
   const signUp = async () => {
     const { error } = await supabase.auth.signUp({
@@ -197,7 +215,29 @@ export default function Home() {
 
     alert("AI lista generirana!");
   };
+const installApp = async () => {
+  if (!deferredPrompt) {
+    alert(
+      "Instalacija trenutno nije dostupna."
+    );
+    return;
+  }
 
+  deferredPrompt.prompt();
+
+  const result =
+    await deferredPrompt.userChoice;
+
+  if (
+    result.outcome === "accepted"
+  ) {
+    console.log(
+      "App installed"
+    );
+  }
+
+  setDeferredPrompt(null);
+};
   const exportPDF = () => {
     if (!selectedList) return;
 
@@ -312,7 +352,16 @@ export default function Home() {
           >
             ✈️ PackMate
           </h1>
-
+<button
+  onClick={installApp}
+  style={{
+    ...goldButton,
+    marginTop: 12,
+    marginBottom: 12,
+  }}
+>
+  📲 Instaliraj aplikaciju
+</button>
           <p>{user.email}</p>
 
           <button
