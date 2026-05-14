@@ -297,7 +297,23 @@ export default function Home() {
 
     window.open("/print", "_blank");
   };
+const completedItems =
+  items.filter(
+    (item) => item.checked
+  ).length;
 
+const totalItems =
+  items.length;
+
+const progress =
+  totalItems > 0
+    ? (
+        (completedItems /
+          totalItems) *
+        100
+      ).toFixed(0)
+    : 0;
+    
   const groupedItems = items.reduce((acc: any, item: any) => {
     const cat = item.category || "Putovanje";
     if (!acc[cat]) acc[cat] = [];
@@ -495,7 +511,52 @@ export default function Home() {
 
         <div style={sectionCard}>
           <h2 style={{ ...titleStyle, marginBottom: 16 }}>Stavke</h2>
+<div
+  style={{
+    marginBottom: 20,
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent:
+        "space-between",
+      marginBottom: 8,
+      fontSize: 14,
+      opacity: 0.8,
+    }}
+  >
+    <span>
+      Progress
+    </span>
 
+    <span>
+      {completedItems} /{" "}
+      {totalItems}
+    </span>
+  </div>
+
+  <div
+    style={{
+      height: 12,
+      background:
+        "rgba(255,255,255,0.08)",
+      borderRadius: 999,
+      overflow: "hidden",
+    }}
+  >
+    <div
+      style={{
+        width: `${progress}%`,
+        height: "100%",
+        background:
+          "#d4af37",
+        transition:
+          "0.3s",
+      }}
+    />
+  </div>
+</div>
           <button onClick={exportPDF} style={goldButton}>
             📄 PDF
           </button>
