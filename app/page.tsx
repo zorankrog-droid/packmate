@@ -327,29 +327,43 @@ export default function Home() {
           <h2 style={titleStyle}>Odaberi listu</h2>
 
           <select
-            value={selectedList}
-            onChange={(e) => {
-              setSelectedList(e.target.value);
+  value={selectedList}
+  onChange={(e) => {
+    setSelectedList(e.target.value);
 
-              if (e.target.value) {
-                loadItems(e.target.value);
-              }
-            }}
-            style={inputStyle}
-          >
-            <option value="">
-              Odaberi listu
-            </option>
+    if (e.target.value) {
+      loadItems(e.target.value);
+    }
+  }}
+  style={{
+    ...inputStyle,
+    background: "#14233d",
+    color: "white",
+  }}
+>
+  <option
+    value=""
+    style={{
+      background: "#14233d",
+      color: "white",
+    }}
+  >
+    Odaberi listu
+  </option>
 
-            {lists.map((list) => (
-              <option
-                key={list.id}
-                value={list.id}
-              >
-                {list.name}
-              </option>
-            ))}
-          </select>
+  {lists.map((list) => (
+    <option
+      key={list.id}
+      value={list.id}
+      style={{
+        background: "#14233d",
+        color: "white",
+      }}
+    >
+      {list.name}
+    </option>
+  ))}
+</select>
         </div>
 
         <div style={sectionCard}>
@@ -364,25 +378,47 @@ export default function Home() {
             style={inputStyle}
           />
 
-          <select
-            value={priority}
-            onChange={(e) =>
-              setPriority(e.target.value)
-            }
-            style={inputStyle}
-          >
-            <option value="high">
-              🔴 Visoki prioritet
-            </option>
+ <select
+  value={priority}
+  onChange={(e) =>
+    setPriority(e.target.value)
+  }
+  style={{
+    ...inputStyle,
+    background: "#14233d",
+    color: "white",
+  }}
+>
+  <option
+    value="high"
+    style={{
+      background: "#14233d",
+      color: "white",
+    }}
+  >
+    🔴 Visoki prioritet
+  </option>
 
-            <option value="medium">
-              🟡 Srednji prioritet
-            </option>
+  <option
+    value="medium"
+    style={{
+      background: "#14233d",
+      color: "white",
+    }}
+  >
+    🟡 Srednji prioritet
+  </option>
 
-            <option value="low">
-              🟢 Niski prioritet
-            </option>
-          </select>
+  <option
+    value="low"
+    style={{
+      background: "#14233d",
+      color: "white",
+    }}
+  >
+    🟢 Niski prioritet
+  </option>
+</select>
 
           <button
             onClick={createItem}
@@ -546,10 +582,11 @@ const inputStyle: React.CSSProperties = {
   padding: 16,
   borderRadius: 16,
   border: "1px solid rgba(255,255,255,0.1)",
-  background: "rgba(255,255,255,0.08)",
+  background: "#14233d",
   color: "white",
   marginBottom: 16,
   fontSize: 16,
+  outline: "none",
 };
 
 const goldButton: React.CSSProperties = {
