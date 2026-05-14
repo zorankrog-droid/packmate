@@ -28,6 +28,8 @@ const [destination, setDestination] =
   useState("");
   const [flightMode, setFlightMode] =
   useState("checked");
+  const [travelNotes, setTravelNotes] =
+  useState("");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -240,7 +242,9 @@ const updateItem = async (
       alert("Prvo odaberi listu.");
       return;
     }
-
+const exportPDF = () => {
+  window.print();
+};
     if (!aiPrompt) {
       alert("Upiši opis putovanja.");
       return;
@@ -298,6 +302,8 @@ Flight mode:
 ${flightMode}
 Dodatni opis:
 ${aiPrompt}
+Travel notes:
+${travelNotes}
 `,
 }),
     });
@@ -658,7 +664,22 @@ const progress =
             onChange={(e) => setAiPrompt(e.target.value)}
             style={inputStyle}
           />
+<div style={{ height: 10 }} />
 
+<textarea
+  placeholder="Travel notes: hotel, flight, gate, transfer, booking broj..."
+  value={travelNotes}
+  onChange={(e) =>
+    setTravelNotes(
+      e.target.value
+    )
+  }
+  style={{
+    ...inputStyle,
+    minHeight: 100,
+    resize: "vertical",
+  }}
+/>
           <button onClick={generateAIList} style={goldButton}>
             Generiraj AI listu
           </button>
@@ -828,7 +849,14 @@ const progress =
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>Moje liste</h2>
+<button
+  onClick={exportPDF}
+  style={goldButton}
+>
+  📄 Export PDF
+</button>
 
+<div style={{ height: 10 }} />
           {lists.map((list) => (
             <div
               key={list.id}
