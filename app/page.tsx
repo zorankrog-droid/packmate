@@ -117,12 +117,26 @@ useEffect(() => {
   };
 }, []);
   const signUp = async () => {
-    const signUp = async () => {
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) alert(error.message);
-    else alert("Registracija uspješna!");
-  };
+  if (isOffline) {
+    alert(
+      "Offline si. Registracija nije dostupna bez interneta."
+    );
+    return;
+  }
 
+  const { error } =
+    await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Registracija uspješna!");
+  }
+};
+    
   const signIn = async () => {
     if (isOffline) {
   alert("Offline si. Login nije dostupan bez interneta.");
@@ -1352,5 +1366,3 @@ const titleStyle: React.CSSProperties = {
   marginBottom: 20,
   color: "#d4af37",
 };
-
-}
