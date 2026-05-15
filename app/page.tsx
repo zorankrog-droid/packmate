@@ -117,6 +117,26 @@ useEffect(() => {
     );
   };
 }, []);
+useEffect(() => {
+  localStorage.setItem(
+    "packmate-lists",
+    JSON.stringify(lists)
+  );
+}, [lists]);
+
+useEffect(() => {
+  localStorage.setItem(
+    "packmate-items",
+    JSON.stringify(items)
+  );
+}, [items]);
+
+useEffect(() => {
+  localStorage.setItem(
+    "packmate-selected-list",
+    selectedList
+  );
+}, [selectedList]);
   const signUp = async () => {
   if (isOffline) {
     alert(
