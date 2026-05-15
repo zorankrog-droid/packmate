@@ -67,7 +67,8 @@ const [babies, setBabies] =
   useState("hotel");
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-
+const [isOffline, setIsOffline] =
+  useState(false);
   const loadUser = async () => {
     const {
       data: { user },
@@ -92,7 +93,35 @@ const [babies, setBabies] =
       window.removeEventListener("beforeinstallprompt", handler);
     };
   }, []);
+useEffect(() => {
+  const updateOnlineStatus = () => {
+    setIsOffline(!navigator.onLine);
+  };
 
+  updateOnlineStatus();
+
+  window.addEventListener(
+    "online",
+    updateOnlineStatus
+  );
+
+  window.addEventListener(
+    "offline",
+    updateOnlineStatus
+  );
+
+  return () => {
+    window.removeEventListener(
+      "online",
+      updateOnlineStatus
+    );
+
+    window.removeEventListener(
+      "offline",
+      updateOnlineStatus
+    );
+  };
+}, []);
   const signUp = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) alert(error.message);
