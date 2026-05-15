@@ -50,16 +50,17 @@ const [isOffline, setIsOffline] =
   useState(false);
   
   const loadUser = async () => {
-    if (isOffline) return;
+  if (isOffline) return;
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   setUser(user);
 
- if (user) {
-  // loadLists(user.id);
-}
+  if (user) {
+    loadLists(user.id);
+  }
 };
 
 useEffect(() => {
