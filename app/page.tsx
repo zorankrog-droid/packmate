@@ -162,6 +162,9 @@ useEffect(() => {
   if (savedSelectedList) {
     setSelectedList(savedSelectedList);
   }
+  setUser({
+  email: "Offline mode",
+});
 }, [isOffline]);
   const signUp = async () => {
   if (isOffline) {
