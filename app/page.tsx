@@ -1350,3 +1350,5 @@ const titleStyle: React.CSSProperties = {
   marginBottom: 20,
   color: "#d4af37",
 };
+
+}
