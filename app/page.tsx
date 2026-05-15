@@ -20,7 +20,28 @@ export default function Home() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [tripDays, setTripDays] =
   useState("");
+useEffect(() => {
+  const saved =
+    localStorage.getItem(
+      "packmate-items"
+    );
 
+  if (saved) {
+    setItems(JSON.parse(saved));
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem(
+    "packmate-items",
+    JSON.stringify(items)
+  );
+}, [items]);
+useEffect(() => {
+  if (!selectedList) return;
+
+  loadItems(selectedList);
+}, [selectedList]);
 const [tripTemp, setTripTemp] =
   useState("");
 
