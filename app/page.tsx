@@ -57,7 +57,9 @@ const [isOffline, setIsOffline] =
 
   setUser(user);
 
-  if (user) loadLists(user.id);
+ if (user) {
+  // loadLists(user.id);
+}
 };
 
 useEffect(() => {
