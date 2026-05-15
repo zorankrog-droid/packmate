@@ -115,12 +115,17 @@ useEffect(() => {
   };
 }, []);
   const signUp = async () => {
+    const signUp = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) alert(error.message);
     else alert("Registracija uspješna!");
   };
 
   const signIn = async () => {
+    if (isOffline) {
+  alert("Offline si. Login nije dostupan bez interneta.");
+  return;
+}
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
