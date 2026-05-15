@@ -9,5 +9,5 @@ const nextConfig = {
 
 export default withPWA({
   dest: "public",
-  disable: isDev,
+  disable: false,
 })(nextConfig);
