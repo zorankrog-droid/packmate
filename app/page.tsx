@@ -50,6 +50,7 @@ const [isOffline, setIsOffline] =
   useState(false);
   
   const loadUser = async () => {
+    if (isOffline) return;
   const {
     data: { user },
   } = await supabase.auth.getUser();
