@@ -137,6 +137,32 @@ useEffect(() => {
     selectedList
   );
 }, [selectedList]);
+useEffect(() => {
+  if (!isOffline) return;
+
+  const savedLists =
+    localStorage.getItem("packmate-lists");
+
+  const savedItems =
+    localStorage.getItem("packmate-items");
+
+  const savedSelectedList =
+    localStorage.getItem(
+      "packmate-selected-list"
+    );
+
+  if (savedLists) {
+    setLists(JSON.parse(savedLists));
+  }
+
+  if (savedItems) {
+    setItems(JSON.parse(savedItems));
+  }
+
+  if (savedSelectedList) {
+    setSelectedList(savedSelectedList);
+  }
+}, [isOffline]);
   const signUp = async () => {
   if (isOffline) {
     alert(
