@@ -117,55 +117,6 @@ useEffect(() => {
     );
   };
 }, []);
-useEffect(() => {
-  localStorage.setItem(
-    "packmate-lists",
-    JSON.stringify(lists)
-  );
-}, [lists]);
-
-useEffect(() => {
-  localStorage.setItem(
-    "packmate-items",
-    JSON.stringify(items)
-  );
-}, [items]);
-
-useEffect(() => {
-  localStorage.setItem(
-    "packmate-selected-list",
-    selectedList
-  );
-}, [selectedList]);
-useEffect(() => {
-  if (!isOffline) return;
-
-  const savedLists =
-    localStorage.getItem("packmate-lists");
-
-  const savedItems =
-    localStorage.getItem("packmate-items");
-
-  const savedSelectedList =
-    localStorage.getItem(
-      "packmate-selected-list"
-    );
-
-  if (savedLists) {
-    setLists(JSON.parse(savedLists));
-  }
-
-  if (savedItems) {
-    setItems(JSON.parse(savedItems));
-  }
-
-  if (savedSelectedList) {
-    setSelectedList(savedSelectedList);
-  }
-  setUser({
-  email: "Offline mode",
-});
-}, [isOffline]);
   const signUp = async () => {
   if (isOffline) {
     alert(
