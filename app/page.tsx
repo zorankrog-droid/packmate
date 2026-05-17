@@ -399,9 +399,9 @@ const syncOfflineLists = async () => {
     setItems(updatedItems);
 
     localStorage.setItem(
-      "packmate-items",
-      JSON.stringify(updatedItems)
-    );
+  `packmate-items-${selectedList}`,
+  JSON.stringify(updatedItems)
+);
 
     setItemName("");
 
