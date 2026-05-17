@@ -118,7 +118,6 @@ useEffect(() => {
 
 useEffect(() => {
   const handler = (e: any) => {
-    e.preventDefault();
     setDeferredPrompt(e);
   };
 
