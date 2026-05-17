@@ -382,7 +382,6 @@ const updateItem = async (
 
   loadItems(selectedList);
 };
-
 const deleteItem = async (id: string) => {
   if (isOffline) {
     const updatedItems = items.filter(
