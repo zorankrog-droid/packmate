@@ -110,6 +110,8 @@ useEffect(() => {
 }, [isOffline]);
 
 useEffect(() => {
+  if (!selectedList) return;
+
   localStorage.setItem(
     "packmate-selected-list",
     selectedList
