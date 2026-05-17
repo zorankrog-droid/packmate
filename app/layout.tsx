@@ -14,10 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PackMate AI",
-  description:
-    "AI Travel Packing Assistant",
-
+  description: "AI Travel Packing Assistant",
   manifest: "/manifest.json",
+};
+
+export const viewport = {
   themeColor: "#d4af37",
 };
 
