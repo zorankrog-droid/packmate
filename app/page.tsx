@@ -319,17 +319,52 @@ useEffect(() => {
 };
 
   const toggleItem = async (item: any) => {
-    await supabase
-      .from("items")
-      .update({ checked: !item.checked })
-      .eq("id", item.id);
+  if (isOffline) {
+    const updatedItems = items.map((i) =>
+      i.id === item.id
+        ? { ...i, checked: !i.checked }
+        : i
+    );
 
-    loadItems(selectedList);
-  };
+    setItems(updatedItems);
+
+    localStorage.setItem(
+      "packmate-items",
+      JSON.stringify(updatedItems)
+    );
+
+    return;
+  }
+
+  await supabase
+    .from("items")
+    .update({ checked: !item.checked })
+    .eq("id", item.id);
+
+  loadItems(selectedList);
+};
+
 const updateItem = async (
   id: string,
   updates: any
 ) => {
+  if (isOffline) {
+    const updatedItems = items.map((item) =>
+      item.id === id
+        ? { ...item, ...updates }
+        : item
+    );
+
+    setItems(updatedItems);
+
+    localStorage.setItem(
+      "packmate-items",
+      JSON.stringify(updatedItems)
+    );
+
+    return;
+  }
+
   await supabase
     .from("items")
     .update(updates)
@@ -337,10 +372,30 @@ const updateItem = async (
 
   loadItems(selectedList);
 };
-  const deleteItem = async (id: string) => {
-    await supabase.from("items").delete().eq("id", id);
-    loadItems(selectedList);
-  };
+
+const deleteItem = async (id: string) => {
+  if (isOffline) {
+    const updatedItems = items.filter(
+      (item) => item.id !== id
+    );
+
+    setItems(updatedItems);
+
+    localStorage.setItem(
+      "packmate-items",
+      JSON.stringify(updatedItems)
+    );
+
+    return;
+  }
+
+  await supabase
+    .from("items")
+    .delete()
+    .eq("id", id);
+
+  loadItems(selectedList);
+};
 
   const loadTemplate = async () => {
     if (!selectedList) {
