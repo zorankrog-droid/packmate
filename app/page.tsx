@@ -108,6 +108,14 @@ useEffect(() => {
     email: "Offline mode",
   });
 }, [isOffline]);
+
+useEffect(() => {
+  localStorage.setItem(
+    "packmate-selected-list",
+    selectedList
+  );
+}, [selectedList]);
+
 useEffect(() => {
   const handler = (e: any) => {
     e.preventDefault();
@@ -215,39 +223,17 @@ useEffect(() => {
   );
 };
 
-  const createList = async () => {
-  if (!listName) return;
-
-  if (isOffline) {
-    const newList = {
-      id: Date.now().toString(),
+  
+    if (!user || !listName) return;
+const createList = async () => {
+    await supabase.from("lists").insert({
       name: listName,
-      offline: true,
-    };
-
-    const updatedLists = [...lists, newList];
-
-    setLists(updatedLists);
-
-    localStorage.setItem(
-      "packmate-lists",
-      JSON.stringify(updatedLists)
-    );
+      user_id: user.id,
+    });
 
     setListName("");
-    return;
-  }
-
-  if (!user) return;
-
-  await supabase.from("lists").insert({
-    name: listName,
-    user_id: user.id,
-  });
-
-  setListName("");
-  loadLists(user.id);
-};
+    loadLists(user.id);
+  };
 
   const deleteList = async (id: string) => {
     if (!confirm("Želiš li obrisati listu?")) return;
