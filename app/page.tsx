@@ -297,10 +297,12 @@ const syncOfflineLists = async () => {
 
   for (const item of offlineItems) {
     await supabase.from("items").insert({
-      list_id: insertedList.id,
-      text: item.text,
-      checked: item.checked || false,
-    });
+  list_id: insertedList.id,
+  name: item.name,
+  checked: item.checked || false,
+  priority: item.priority || "medium",
+  category: item.category || "Putovanje",
+});
   }
 
   localStorage.removeItem(
