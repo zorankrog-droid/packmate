@@ -136,6 +136,12 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js");
+  }
+}, []);
+
+useEffect(() => {
   const updateOnlineStatus = () => {
     setIsOffline(!navigator.onLine);
   };
