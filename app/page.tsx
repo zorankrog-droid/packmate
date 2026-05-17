@@ -68,7 +68,36 @@ useEffect(() => {
     loadUser();
   }
 }, [isOffline]);
+useEffect(() => {
+  if (!isOffline) return;
 
+  const savedLists =
+    localStorage.getItem("packmate-lists");
+
+  const savedItems =
+    localStorage.getItem("packmate-items");
+
+  const savedSelectedList =
+    localStorage.getItem(
+      "packmate-selected-list"
+    );
+
+  if (savedLists) {
+    setLists(JSON.parse(savedLists));
+  }
+
+  if (savedItems) {
+    setItems(JSON.parse(savedItems));
+  }
+
+  if (savedSelectedList) {
+    setSelectedList(savedSelectedList);
+  }
+
+  setUser({
+    email: "Offline mode",
+  });
+}, [isOffline]);
 useEffect(() => {
   const handler = (e: any) => {
     e.preventDefault();
