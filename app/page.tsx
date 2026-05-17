@@ -299,17 +299,13 @@ const createList = async () => {
   const loadItems = async (listId: string) => {
   // OFFLINE MODE
   if (isOffline) {
-    const savedItems = JSON.parse(
-      localStorage.getItem("packmate-items") || "[]"
-    );
+  const savedItems = JSON.parse(
+    localStorage.getItem(`packmate-items-${listId}`) || "[]"
+  );
 
-    const filtered = savedItems.filter(
-      (item: any) => item.list_id === listId
-    );
-
-    setItems(filtered);
-    return;
-  }
+  setItems(savedItems);
+  return;
+}
 
   const { data } = await supabase
     .from("items")
@@ -319,9 +315,9 @@ const createList = async () => {
   setItems(data || []);
 
   localStorage.setItem(
-    "packmate-items",
-    JSON.stringify(data || [])
-  );
+  `packmate-items-${listId}`,
+  JSON.stringify(data || [])
+);
 };
 
   const createItem = async () => {
