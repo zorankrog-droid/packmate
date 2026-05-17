@@ -190,13 +190,20 @@ useEffect(() => {
   };
 
   const loadLists = async (userId: string) => {
-    const { data } = await supabase
-      .from("lists")
-      .select("*")
-      .eq("user_id", userId);
+  const { data } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("user_id", userId);
 
-    setLists(data || []);
-  };
+  const loadedLists = data || [];
+
+  setLists(loadedLists);
+
+  localStorage.setItem(
+    "packmate-lists",
+    JSON.stringify(loadedLists)
+  );
+};
 
   const createList = async () => {
     if (!user || !listName) return;
