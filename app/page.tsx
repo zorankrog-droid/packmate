@@ -190,56 +190,25 @@ useEffect(() => {
   };
 
   const loadLists = async (userId: string) => {
-  const { data } = await supabase
-    .from("lists")
-    .select("*")
-    .eq("user_id", userId);
+    const { data } = await supabase
+      .from("lists")
+      .select("*")
+      .eq("user_id", userId);
 
-  setLists(data || []);
-
-  localStorage.setItem(
-    "packmate-lists",
-    JSON.stringify(data || [])
-  );
-};
+    setLists(data || []);
+  };
 
   const createList = async () => {
-  if (!listName) return;
+    if (!user || !listName) return;
 
-  // OFFLINE MODE
-  if (isOffline) {
-    const newList = {
-      id: Date.now().toString(),
+    await supabase.from("lists").insert({
       name: listName,
-      offline: true,
-    };
-
-    const updatedLists = [...lists, newList];
-
-    setLists(updatedLists);
-
-    localStorage.setItem(
-      "packmate-lists",
-      JSON.stringify(updatedLists)
-    );
+      user_id: user.id,
+    });
 
     setListName("");
-
-    return;
-  }
-
-  // ONLINE MODE
-  if (!user) return;
-
-  await supabase.from("lists").insert({
-    name: listName,
-    user_id: user.id,
-  });
-
-  setListName("");
-
-  loadLists(user.id);
-};
+    loadLists(user.id);
+  };
 
   const deleteList = async (id: string) => {
     if (!confirm("Želiš li obrisati listu?")) return;
@@ -283,45 +252,15 @@ useEffect(() => {
   };
 
   const createItem = async () => {
-  if (!selectedList || !itemName) return;
+    if (!selectedList || !itemName) return;
 
-  if (isOffline) {
-    const newItem = {
-      id: Date.now().toString(),
+    await supabase.from("items").insert({
       name: itemName,
+      list_id: selectedList,
       checked: false,
       priority,
       category,
-      list_id: selectedList,
-      offline: true,
-    };
-
-    const updatedItems = [...items, newItem];
-
-    setItems(updatedItems);
-
-    localStorage.setItem(
-      "packmate-items",
-      JSON.stringify(updatedItems)
-    );
-
-    setItemName("");
-
-    return;
-  }
-
-  await supabase.from("items").insert({
-    name: itemName,
-    checked: false,
-    priority,
-    category,
-    list_id: selectedList,
-  });
-
-  setItemName("");
-
-  loadItems(selectedList);
-};
+    });
 
     setItemName("");
     loadItems(selectedList);
