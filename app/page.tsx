@@ -250,28 +250,73 @@ useEffect(() => {
   };
 
   const loadItems = async (listId: string) => {
-    const { data } = await supabase
-      .from("items")
-      .select("*")
-      .eq("list_id", listId);
+  // OFFLINE MODE
+  if (isOffline) {
+    const savedItems = JSON.parse(
+      localStorage.getItem("packmate-items") || "[]"
+    );
 
-    setItems(data || []);
-  };
+    const filtered = savedItems.filter(
+      (item: any) => item.list_id === listId
+    );
+
+    setItems(filtered);
+    return;
+  }
+
+  const { data } = await supabase
+    .from("items")
+    .select("*")
+    .eq("list_id", listId);
+
+  setItems(data || []);
+
+  localStorage.setItem(
+    "packmate-items",
+    JSON.stringify(data || [])
+  );
+};
 
   const createItem = async () => {
-    if (!selectedList || !itemName) return;
+  if (!selectedList || !itemName) return;
 
-    await supabase.from("items").insert({
+  // OFFLINE MODE
+  if (isOffline) {
+    const newItem = {
+      id: Date.now().toString(),
       name: itemName,
       list_id: selectedList,
       checked: false,
       priority,
       category,
-    });
+      offline: true,
+    };
+
+    const updatedItems = [...items, newItem];
+
+    setItems(updatedItems);
+
+    localStorage.setItem(
+      "packmate-items",
+      JSON.stringify(updatedItems)
+    );
 
     setItemName("");
-    loadItems(selectedList);
-  };
+
+    return;
+  }
+
+  await supabase.from("items").insert({
+    name: itemName,
+    list_id: selectedList,
+    checked: false,
+    priority,
+    category,
+  });
+
+  setItemName("");
+  loadItems(selectedList);
+};
 
   const toggleItem = async (item: any) => {
     await supabase
