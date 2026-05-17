@@ -204,16 +204,42 @@ useEffect(() => {
 };
 
   const createList = async () => {
-    if (!user || !listName) return;
+  if (!listName) return;
 
-    await supabase.from("lists").insert({
+  // OFFLINE MODE
+  if (isOffline) {
+    const newList = {
+      id: Date.now().toString(),
       name: listName,
-      user_id: user.id,
-    });
+      offline: true,
+    };
+
+    const updatedLists = [...lists, newList];
+
+    setLists(updatedLists);
+
+    localStorage.setItem(
+      "packmate-lists",
+      JSON.stringify(updatedLists)
+    );
 
     setListName("");
-    loadLists(user.id);
-  };
+
+    return;
+  }
+
+  // ONLINE MODE
+  if (!user) return;
+
+  await supabase.from("lists").insert({
+    name: listName,
+    user_id: user.id,
+  });
+
+  setListName("");
+
+  loadLists(user.id);
+};
 
   const deleteList = async (id: string) => {
     if (!confirm("Želiš li obrisati listu?")) return;
