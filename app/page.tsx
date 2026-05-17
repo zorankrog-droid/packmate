@@ -224,8 +224,8 @@ useEffect(() => {
 };
 
   
-    if (!user || !listName) return;
-const createList = async () => {
+    const createList = async () => {
+  if (!user || !listName) return;
     await supabase.from("lists").insert({
       name: listName,
       user_id: user.id,
