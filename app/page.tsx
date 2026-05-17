@@ -47,19 +47,29 @@ const [babies, setBabies] =
   const [template, setTemplate] = useState("msc");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 const [isOffline, setIsOffline] =
-  useState(false);
+  useState(() => {
+    if (typeof navigator === "undefined") {
+      return false;
+    }
+
+    return !navigator.onLine;
+  });
   
-  const loadUser = async () => {
+ const loadUser = async () => {
   if (isOffline) return;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  setUser(user);
+    setUser(user);
 
-  if (user) {
-    loadLists(user.id);
+    if (user) {
+      loadLists(user.id);
+    }
+  } catch {
+    setIsOffline(true);
   }
 };
 
