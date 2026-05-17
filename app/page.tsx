@@ -174,7 +174,7 @@ useEffect(() => {
   if (!isOffline && user) {
     syncOfflineLists();
   }
-  
+
 }, [isOffline, user]);
   const signUp = async () => {
   if (isOffline) {
@@ -279,11 +279,34 @@ const syncOfflineLists = async () => {
   if (offlineLists.length === 0) return;
 
   for (const list of offlineLists) {
-    await supabase.from("lists").insert({
+
+  const { data: insertedList } = await supabase
+    .from("lists")
+    .insert({
       name: list.name,
       user_id: user.id,
+    })
+    .select()
+    .single();
+
+  const offlineItems = JSON.parse(
+    localStorage.getItem(
+      `packmate-items-${list.id}`
+    ) || "[]"
+  );
+
+  for (const item of offlineItems) {
+    await supabase.from("items").insert({
+      list_id: insertedList.id,
+      text: item.text,
+      checked: item.checked || false,
     });
   }
+
+  localStorage.removeItem(
+    `packmate-items-${list.id}`
+  );
+}
 
   const syncedLists = lists.filter(
     (list) => !list.offline
