@@ -283,15 +283,45 @@ useEffect(() => {
   };
 
   const createItem = async () => {
-    if (!selectedList || !itemName) return;
+  if (!selectedList || !itemName) return;
 
-    await supabase.from("items").insert({
+  if (isOffline) {
+    const newItem = {
+      id: Date.now().toString(),
       name: itemName,
-      list_id: selectedList,
       checked: false,
       priority,
       category,
-    });
+      list_id: selectedList,
+      offline: true,
+    };
+
+    const updatedItems = [...items, newItem];
+
+    setItems(updatedItems);
+
+    localStorage.setItem(
+      "packmate-items",
+      JSON.stringify(updatedItems)
+    );
+
+    setItemName("");
+
+    return;
+  }
+
+  await supabase.from("items").insert({
+    name: itemName,
+    checked: false,
+    priority,
+    category,
+    list_id: selectedList,
+  });
+
+  setItemName("");
+
+  loadItems(selectedList);
+};
 
     setItemName("");
     loadItems(selectedList);
