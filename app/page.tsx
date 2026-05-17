@@ -565,30 +565,20 @@ ${repackingMode}
   };
 
   const installApp = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      setDeferredPrompt(null);
-      return;
-    }
+  if (!deferredPrompt) {
+    alert(
+      "Ako se instalacija ne otvori automatski, klikni tri točkice u Chromeu i odaberi 'Dodaj na početni zaslon'."
+    );
+    return;
+  }
 
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  deferredPrompt.prompt();
 
-    if (isAndroid) {
-      alert(
-        "Za instalaciju:\n\nKlikni ⋮ u browseru i odaberi:\n\n'Dodaj na početni zaslon' ili 'Install app'"
-      );
-      return;
-    }
+  await deferredPrompt.userChoice;
 
-    if (isIOS) {
-      alert("Za instalaciju:\n\nKlikni Share → Add to Home Screen");
-      return;
-    }
+  setDeferredPrompt(null);
+};
 
-    alert("Instalacija trenutno nije dostupna.");
-  };
 
   const exportPDF = () => {
     if (!selectedList) return;
