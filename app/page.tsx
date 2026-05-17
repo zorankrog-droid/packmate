@@ -728,6 +728,7 @@ if (
   const gold = "#d4af37";
 
   if (!user) {
+    console.log("LOGIN SCREEN RENDER");
     return (
       <main
         style={{
