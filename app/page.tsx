@@ -169,6 +169,13 @@ useEffect(() => {
     );
   };
 }, []);
+
+useEffect(() => {
+  if (!isOffline && user) {
+    syncOfflineLists();
+  }
+  
+}, [isOffline, user]);
   const signUp = async () => {
   if (isOffline) {
     alert(
@@ -262,7 +269,35 @@ const createList = async () => {
   setListName("");
   loadLists(user.id);
 };
+const syncOfflineLists = async () => {
+  if (!user || isOffline) return;
 
+  const offlineLists = lists.filter(
+    (list) => list.offline
+  );
+
+  if (offlineLists.length === 0) return;
+
+  for (const list of offlineLists) {
+    await supabase.from("lists").insert({
+      name: list.name,
+      user_id: user.id,
+    });
+  }
+
+  const syncedLists = lists.filter(
+    (list) => !list.offline
+  );
+
+  setLists(syncedLists);
+
+  localStorage.setItem(
+    "packmate-lists",
+    JSON.stringify(syncedLists)
+  );
+
+  loadLists(user.id);
+};
   const deleteList = async (id: string) => {
     if (!confirm("Želiš li obrisati listu?")) return;
 
