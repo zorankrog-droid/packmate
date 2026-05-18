@@ -17,26 +17,33 @@ export default function SharePage() {
   if (!shareId) return;
 
   loadSharedList();
+}, [shareId]);
+
+useEffect(() => {
+  if (!list?.id) return;
 
   const channel = supabase
-    .channel("shared-items")
+    .channel(`shared-items-${list.id}`)
     .on(
       "postgres_changes",
       {
         event: "*",
         schema: "public",
         table: "items",
+        filter: `list_id=eq.${list.id}`,
       },
       () => {
         loadSharedList();
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      console.log("Realtime status:", status);
+    });
 
   return () => {
     supabase.removeChannel(channel);
   };
-}, [shareId]);
+}, [list?.id]);
 
   const loadSharedList = async () => {
     const { data: listData } = await supabase
