@@ -11,21 +11,20 @@ export default function SharePage() {
   const [list, setList] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newItem, setNewItem] = useState("");
 
   useEffect(() => {
-    if (shareId) {
-      loadSharedList();
-    }
+    if (shareId) loadSharedList();
   }, [shareId]);
 
   const loadSharedList = async () => {
-    const { data: listData, error: listError } = await supabase
+    const { data: listData } = await supabase
       .from("lists")
       .select("*")
       .eq("share_id", shareId)
       .maybeSingle();
 
-    if (listError || !listData) {
+    if (!listData) {
       setLoading(false);
       return;
     }
@@ -41,20 +40,36 @@ export default function SharePage() {
     setLoading(false);
   };
 
+  const addItem = async () => {
+    if (!newItem || !list) return;
+
+    await supabase.from("items").insert({
+      list_id: list.id,
+      name: newItem,
+      checked: false,
+      priority: "medium",
+      category: "Putovanje",
+    });
+
+    setNewItem("");
+    loadSharedList();
+  };
+
+  const toggleItem = async (item: any) => {
+    await supabase
+      .from("items")
+      .update({ checked: !item.checked })
+      .eq("id", item.id);
+
+    loadSharedList();
+  };
+
   if (loading) {
-    return (
-      <main style={pageStyle}>
-        <h1>Učitavanje liste...</h1>
-      </main>
-    );
+    return <main style={pageStyle}><h1>Učitavanje liste...</h1></main>;
   }
 
   if (!list) {
-    return (
-      <main style={pageStyle}>
-        <h1>Lista nije pronađena</h1>
-      </main>
-    );
+    return <main style={pageStyle}><h1>Lista nije pronađena</h1></main>;
   }
 
   return (
@@ -63,8 +78,25 @@ export default function SharePage() {
         <h1 style={{ color: "#d4af37" }}>✈️ PackMate lista</h1>
         <h2>{list.name}</h2>
 
-        {items.map((item, index) => (
-          <div key={index} style={itemStyle}>
+        <div style={{ marginBottom: 20 }}>
+          <input
+            placeholder="Dodaj stavku"
+            value={newItem}
+            onChange={(e) => setNewItem(e.target.value)}
+            style={inputStyle}
+          />
+
+          <button onClick={addItem} style={buttonStyle}>
+            Dodaj stavku
+          </button>
+        </div>
+
+        {items.map((item) => (
+          <div
+            key={item.id}
+            style={itemStyle}
+            onClick={() => toggleItem(item)}
+          >
             <strong>
               {item.checked ? "☑" : "☐"} {item.name}
             </strong>
@@ -102,4 +134,24 @@ const itemStyle: React.CSSProperties = {
   padding: 18,
   borderRadius: 18,
   marginBottom: 14,
+  cursor: "pointer",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: 14,
+  borderRadius: 12,
+  border: "none",
+  marginBottom: 10,
+};
+
+const buttonStyle: React.CSSProperties = {
+  width: "100%",
+  padding: 14,
+  borderRadius: 12,
+  border: "none",
+  background: "#d4af37",
+  color: "#071120",
+  fontWeight: "bold",
+  cursor: "pointer",
 };
