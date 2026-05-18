@@ -1528,7 +1528,7 @@ if (
                 </button>
               </div>
 
-              <button onClick={() => shareList(list)} style={{ ...goldButton, padding: 12 }}>
+              <button onClick={() => shareList(list.id)} style={{ ...goldButton, padding: 12 }}>
                 🔗 Podijeli listu
               </button>
             </div>
