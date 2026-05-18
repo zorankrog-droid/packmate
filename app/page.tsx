@@ -934,6 +934,23 @@ if (
               </option>
             ))}
           </select>
+          <button
+  onClick={() => {
+    if (!selectedList) return;
+
+    const shareUrl = `${window.location.origin}/share/${selectedList}`;
+
+    navigator.clipboard.writeText(shareUrl);
+
+    alert("Link kopiran!");
+  }}
+  style={{
+    ...goldButton,
+    marginTop: 12,
+  }}
+>
+  🔗 Podijeli listu
+</button>
         </div>
 
         <div style={sectionCard}>
