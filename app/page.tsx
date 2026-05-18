@@ -936,13 +936,10 @@ if (
           </select>
           <button
   onClick={() => {
-    if (!selectedList) return;
+    const list = lists.find((l) => l.id === selectedList);
+    if (!list) return;
 
-    const shareUrl = `${window.location.origin}/share/${selectedList}`;
-
-    navigator.clipboard.writeText(shareUrl);
-
-    alert("Link kopiran!");
+    shareList(list);
   }}
   style={{
     ...goldButton,
@@ -1528,7 +1525,7 @@ if (
                 </button>
               </div>
 
-              <button onClick={() => shareList(list.id)} style={{ ...goldButton, padding: 12 }}>
+              <button onClick={() => shareList(list)} style={{ ...goldButton, padding: 12 }}>
                 🔗 Podijeli listu
               </button>
             </div>
