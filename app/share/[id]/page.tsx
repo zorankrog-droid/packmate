@@ -14,8 +14,29 @@ export default function SharePage() {
   const [newItem, setNewItem] = useState("");
 
   useEffect(() => {
-    if (shareId) loadSharedList();
-  }, [shareId]);
+  if (!shareId) return;
+
+  loadSharedList();
+
+  const channel = supabase
+    .channel("shared-items")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "items",
+      },
+      () => {
+        loadSharedList();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [shareId]);
 
   const loadSharedList = async () => {
     const { data: listData } = await supabase
