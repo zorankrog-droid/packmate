@@ -874,7 +874,21 @@ if (
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={sectionCard}>
           <h1 style={{ color: gold }}>✈️ PackMate</h1>
-
+<div
+  style={{
+    marginBottom: 16,
+    padding: "8px 12px",
+    borderRadius: 999,
+    background: isOffline
+      ? "#7f1d1d"
+      : "#14532d",
+    color: "white",
+    fontSize: 14,
+    display: "inline-block",
+  }}
+>
+  {isOffline ? "🔴 Offline način rada" : "🟢 Online"}
+</div>
           <button onClick={installApp} style={{ ...goldButton, marginBottom: 16 }}>
             📲 Instaliraj aplikaciju
           </button>
