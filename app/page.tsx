@@ -669,7 +669,34 @@ ${repackingMode}
 
   setDeferredPrompt(null);
 };
+const subscribeToPush = async () => {
+  if (!("serviceWorker" in navigator)) {
+    alert("Push notifikacije nisu podržane.");
+    return;
+  }
 
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    alert("Notifikacije nisu dopuštene.");
+    return;
+  }
+
+  const registration = await navigator.serviceWorker.ready;
+
+  const subscription = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey:
+      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+  });
+
+  localStorage.setItem(
+    "packmate-push-subscription",
+    JSON.stringify(subscription)
+  );
+
+  alert("Push notifikacije su uključene!");
+};
 
   const exportPDF = () => {
     if (!selectedList) return;
@@ -893,6 +920,16 @@ if (
             📲 Instaliraj aplikaciju
           </button>
 
+<button
+  onClick={subscribeToPush}
+  style={{
+    ...goldButton,
+    marginBottom: 16,
+    marginLeft: 10,
+  }}
+>
+  🔔 Uključi notifikacije
+</button>
           <p>{user.email}</p>
 
           <button onClick={logout} style={secondaryButton}>
