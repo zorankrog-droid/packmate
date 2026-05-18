@@ -11,6 +11,7 @@ export default function SharePage() {
   const [list, setList] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState(1);
   const [newItem, setNewItem] = useState("");
 
   useEffect(() => {
@@ -45,6 +46,30 @@ useEffect(() => {
   };
 }, [list?.id]);
 
+useEffect(() => {
+  if (!list?.id) return;
+
+  const presenceChannel = supabase.channel(
+    `presence-list-${list.id}`
+  );
+
+  presenceChannel
+    .on("presence", { event: "sync" }, () => {
+      const state = presenceChannel.presenceState();
+      setOnlineUsers(Object.keys(state).length);
+    })
+    .subscribe(async (status) => {
+      if (status === "SUBSCRIBED") {
+        await presenceChannel.track({
+          online_at: new Date().toISOString(),
+        });
+      }
+    });
+
+  return () => {
+    supabase.removeChannel(presenceChannel);
+  };
+}, [list?.id]);
   const loadSharedList = async () => {
     const { data: listData } = await supabase
       .from("lists")
@@ -105,7 +130,19 @@ useEffect(() => {
       <div style={cardStyle}>
         <h1 style={{ color: "#d4af37" }}>✈️ PackMate lista</h1>
         <h2>{list.name}</h2>
-
+<div
+  style={{
+    marginTop: 10,
+    marginBottom: 20,
+    padding: "8px 14px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.08)",
+    display: "inline-block",
+    fontSize: 14,
+  }}
+>
+  👥 Online korisnika: {onlineUsers}
+</div>
         <div style={{ marginBottom: 20 }}>
           <input
             placeholder="Dodaj stavku"
