@@ -130,6 +130,9 @@ useEffect(() => {
       <div style={cardStyle}>
         <h1 style={{ color: "#d4af37" }}>✈️ PackMate lista</h1>
         <h2>{list.name}</h2>
+        <p style={{ opacity: 0.75, marginTop: 6 }}>
+  👥 Zajednička lista za pakiranje
+</p>
 <div
   style={{
     marginTop: 10,
