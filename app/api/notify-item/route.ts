@@ -15,12 +15,13 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: Request) {
   try {
-    const { itemName, addedBy } = await req.json();
+    const { itemName, addedBy, senderUserId } = await req.json();
 
     const { data: subscriptions, error } =
       await supabaseAdmin
         .from("push_subscriptions")
-        .select("subscription");
+        .select("subscription, user_id")
+.neq("user_id", senderUserId);
 
     if (error) {
       return NextResponse.json({ error }, { status: 500 });

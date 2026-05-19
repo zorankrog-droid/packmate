@@ -459,6 +459,7 @@ const syncOfflineLists = async () => {
   body: JSON.stringify({
     itemName,
     addedBy: user?.email || "Korisnik",
+    senderUserId: user?.id,
   }),
 });
 
