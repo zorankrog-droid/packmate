@@ -414,6 +414,7 @@ const syncOfflineLists = async () => {
     checked: false,
     priority,
     category,
+    added_by: user?.email || "Korisnik",
   });
 
   setItemName("");
@@ -1472,6 +1473,10 @@ if (
                     </div>
 
                     <small style={{ opacity: 0.75 }}>{item.priority || "medium"}</small>
+
+                    <div style={{ opacity: 0.6, fontSize: 12, marginTop: 4 }}>
+  dodao: {item.added_by || "Gost"}
+</div>
                   </div>
 
                   <div style={{ display: "flex", gap: 10 }}>
