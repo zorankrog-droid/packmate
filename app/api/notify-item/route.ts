@@ -15,31 +15,35 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: Request) {
   try {
-    const { itemName, addedBy, senderUserId } = await req.json();
+    const { itemName, addedBy, senderEndpoint } = await req.json();
 
     const { data: subscriptions, error } =
-      await supabaseAdmin
-        .from("push_subscriptions")
-        .select("subscription, user_id")
-.neq("user_id", senderUserId);
+  await supabaseAdmin
+    .from("push_subscriptions")
+    .select("subscription, endpoint");
 
-    if (error) {
-      return NextResponse.json({ error }, { status: 500 });
-    }
+if (error) {
+  return NextResponse.json({ error }, { status: 500 });
+}
 
-    await Promise.all(
-      (subscriptions || []).map((row: any) =>
-        webpush
-          .sendNotification(
-            row.subscription,
-            JSON.stringify({
-              title: "✈️ PackMate",
-              body: `${addedBy || "Netko"} je dodao: ${itemName}`,
-            })
-          )
-          .catch(() => null)
+const filteredSubscriptions =
+  (subscriptions || []).filter(
+    (row: any) => row.endpoint !== senderEndpoint
+  );
+
+await Promise.all(
+  filteredSubscriptions.map((row: any) =>
+    webpush
+      .sendNotification(
+        row.subscription,
+        JSON.stringify({
+          title: "✈️ PackMate",
+          body: `${addedBy || "Netko"} je dodao: ${itemName}`,
+        })
       )
-    );
+      .catch(() => null)
+  )
+);
 
     return NextResponse.json({ success: true });
   } catch (error) {
