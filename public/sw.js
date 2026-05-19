@@ -54,3 +54,27 @@ self.addEventListener("fetch", (event) => {
       })
   );
 });
+
+self.addEventListener("push", function (event) {
+  const data = event.data ? event.data.json() : {};
+
+  const title = data.title || "✈️ PackMate";
+
+  const options = {
+    body: data.body || "Nova stavka dodana",
+    icon: "/icon-192.png",
+    badge: "/icon-192.png",
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.openWindow("/")
+  );
+});
