@@ -64,6 +64,8 @@ self.addEventListener("push", function (event) {
     body: data.body || "Nova stavka dodana",
     icon: "/icon-192.png",
     badge: "/icon-192.png",
+    data: {url: data.url || "/",
+  },
   };
 
   event.waitUntil(
@@ -75,6 +77,6 @@ self.addEventListener("notificationclick", function (event) {
   event.notification.close();
 
   event.waitUntil(
-    clients.openWindow("/")
+    clients.openWindow(event.notification.data?.url || "/")
   );
 });

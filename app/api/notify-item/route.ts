@@ -44,6 +44,7 @@ await Promise.all(
         JSON.stringify({
           title: "✈️ PackMate",
           body: `${addedBy || "Netko"} je dodao: ${itemName}`,
+          url: `/?list=${listId}`,
         })
       )
       .catch(() => null)
