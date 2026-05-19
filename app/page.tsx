@@ -10,6 +10,15 @@ export default function Home() {
 
   const [lists, setLists] = useState<any[]>([]);
   const [selectedList, setSelectedList] = useState("");
+
+  useEffect(() => {
+  const savedList = localStorage.getItem("packmate-selected-list");
+
+  if (savedList) {
+    setSelectedList(savedList);
+    loadItems(savedList);
+  }
+}, []);
   const [items, setItems] = useState<any[]>([]);
 
   const [listName, setListName] = useState("");
@@ -985,6 +994,12 @@ if (
             value={selectedList}
             onChange={(e) => {
               setSelectedList(e.target.value);
+
+localStorage.setItem(
+  "packmate-selected-list",
+  e.target.value
+);
+              
               if (e.target.value) loadItems(e.target.value);
               else setItems([]);
             }}
