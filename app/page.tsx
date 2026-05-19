@@ -451,6 +451,17 @@ const syncOfflineLists = async () => {
     added_by: user?.email || "Korisnik",
   });
 
+  await fetch("/api/notify-item", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    itemName,
+    addedBy: user?.email || "Korisnik",
+  }),
+});
+
   setItemName("");
   loadItems(selectedList);
 };
@@ -729,12 +740,21 @@ const subscribeToPush = async () => {
     "packmate-push-subscription",
     JSON.stringify(subscription)
   );
-  
+
 if (user) {
-  await supabase.from("push_subscriptions").insert({
+console.log("USER:", user);
+console.log("SPREMANJE PRETPLATE...");
+
+  const { error } = await supabase
+  .from("push_subscriptions")
+  .insert({
     user_id: user.id,
     subscription,
   });
+
+if (error) {
+  console.error("PUSH INSERT ERROR:", error);
+}
 }
 
   alert("Push notifikacije su uključene!");
