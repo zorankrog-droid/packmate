@@ -42,10 +42,10 @@ await Promise.all(
       .sendNotification(
         row.subscription,
         JSON.stringify({
-          title: "✈️ PackMate",
-          body: `${addedBy || "Netko"} je dodao: ${itemName}`,
-          url: `/?list=${listId}`,
-        })
+  title: "✈️ PackMate",
+  body: `${addedBy || "Netko"} je dodao: ${itemName}`,
+  url: `/?list=${listId}`,
+})
       )
       .catch(() => null)
   )
