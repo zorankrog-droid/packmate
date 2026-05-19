@@ -392,6 +392,7 @@ const syncOfflineLists = async () => {
       priority,
       category,
       offline: true,
+      added_by: user?.email || "Korisnik",
     };
 
     const updatedItems = [...items, newItem];
