@@ -15,7 +15,12 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: Request) {
   try {
-    const { itemName, addedBy, senderEndpoint } = await req.json();
+    const {
+  itemName,
+  addedBy,
+  senderEndpoint,
+  listId,
+} = await req.json();
 
     const { data: subscriptions, error } =
   await supabaseAdmin

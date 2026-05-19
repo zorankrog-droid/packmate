@@ -462,6 +462,7 @@ const syncOfflineLists = async () => {
     senderEndpoint: JSON.parse(
   localStorage.getItem("packmate-push-subscription") || "{}"
 ).endpoint,
+listId: selectedList,
   }),
 });
 
