@@ -13,6 +13,7 @@ export default function SharePage() {
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState(1);
   const [newItem, setNewItem] = useState("");
+  const [guestName, setGuestName] = useState("");
 
   useEffect(() => {
   if (!shareId) return;
@@ -130,6 +131,22 @@ useEffect(() => {
       <div style={cardStyle}>
         <h1 style={{ color: "#d4af37" }}>✈️ PackMate lista</h1>
         <h2>{list.name}</h2>
+
+<input
+  value={guestName}
+  onChange={(e) => setGuestName(e.target.value)}
+  placeholder="Vaše ime"
+  style={{
+    width: "100%",
+    padding: 12,
+    marginTop: 12,
+    borderRadius: 10,
+    border: "1px solid #333",
+    background: "#111",
+    color: "white",
+  }}
+/>
+
         <p style={{ opacity: 0.75, marginTop: 6 }}>
   👥 Zajednička lista za pakiranje
 </p>
