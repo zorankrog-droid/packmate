@@ -12,13 +12,19 @@ export default function Home() {
   const [selectedList, setSelectedList] = useState("");
 
   useEffect(() => {
-  const savedList = localStorage.getItem("packmate-selected-list");
+  const params = new URLSearchParams(window.location.search);
+  const listFromUrl = params.get("list");
+
+  const savedList =
+    listFromUrl || localStorage.getItem("packmate-selected-list");
 
   if (savedList) {
     setSelectedList(savedList);
+    localStorage.setItem("packmate-selected-list", savedList);
     loadItems(savedList);
   }
 }, []);
+
   const [items, setItems] = useState<any[]>([]);
 
   const [listName, setListName] = useState("");
