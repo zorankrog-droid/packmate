@@ -114,6 +114,7 @@ useEffect(() => {
       checked: false,
       priority: "medium",
       category: "Putovanje",
+      added_by: guestName || "Gost",
     });
 
     setNewItem("");
@@ -197,9 +198,14 @@ useEffect(() => {
               {item.checked ? "☑" : "☐"} {item.name}
             </strong>
             <div style={{ opacity: 0.7, marginTop: 4 }}>
-              {item.priority} • {item.category || "Putovanje"}
-            </div>
-          </div>
+  {item.priority} • {item.category || "Putovanje"}
+</div>
+
+<div style={{ opacity: 0.6, fontSize: 12, marginTop: 4 }}>
+  dodao: {item.added_by || "Gost"}
+</div>
+
+</div>
         ))}
       </div>
     </main>
