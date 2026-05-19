@@ -16,6 +16,17 @@ export default function SharePage() {
   const [guestName, setGuestName] = useState("");
 
   useEffect(() => {
+  const savedName = localStorage.getItem("packmate-guest-name");
+  if (savedName) setGuestName(savedName);
+}, []);
+
+useEffect(() => {
+  if (guestName) {
+    localStorage.setItem("packmate-guest-name", guestName);
+  }
+}, [guestName]);
+
+  useEffect(() => {
   if (!shareId) return;
 
   loadSharedList();
