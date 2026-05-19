@@ -747,9 +747,12 @@ console.log("SPREMANJE PRETPLATE...");
 
   const { error } = await supabase
   .from("push_subscriptions")
-  .insert({
+  .upsert({
     user_id: user.id,
     subscription,
+    endpoint: subscription.endpoint,
+  }, {
+    onConflict: "endpoint",
   });
 
 if (error) {
