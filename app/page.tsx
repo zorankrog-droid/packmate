@@ -729,6 +729,13 @@ const subscribeToPush = async () => {
     "packmate-push-subscription",
     JSON.stringify(subscription)
   );
+  
+if (user) {
+  await supabase.from("push_subscriptions").insert({
+    user_id: user.id,
+    subscription,
+  });
+}
 
   alert("Push notifikacije su uključene!");
 };
