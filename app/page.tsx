@@ -418,6 +418,30 @@ const syncOfflineLists = async () => {
 );
 };
 
+useEffect(() => {
+  if (!selectedList) return;
+
+  const channel = supabase
+    .channel(`items-${selectedList}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "items",
+        filter: `list_id=eq.${selectedList}`,
+      },
+      () => {
+        loadItems(selectedList);
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [selectedList]);
+
   const createItem = async () => {
   if (!selectedList || !itemName) return;
 
