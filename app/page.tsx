@@ -258,20 +258,30 @@ useEffect(() => {
     setSelectedList("");
   };
 
-  const loadLists = async (userId: string) => {
-  const { data } = await supabase
+  const loadLists = async () => {
+  if (!user) return;
+
+  const { data: ownedLists } = await supabase
     .from("lists")
     .select("*")
-    .eq("user_id", userId);
+    .eq("user_id", user.id);
 
-  const loadedLists = data || [];
+  const { data: memberLists } = await supabase
+    .from("list_members")
+    .select(`
+      list_id,
+      lists (*)
+    `)
+    .eq("user_id", user.id);
 
-  setLists(loadedLists);
+  const shared =
+    memberLists
+      ?.map((m: any) => m.lists)
+      .filter(Boolean) || [];
 
-  localStorage.setItem(
-    "packmate-lists",
-    JSON.stringify(loadedLists)
-  );
+  const allLists = [...(ownedLists || []), ...shared];
+
+  setLists(allLists);
 };
 
   
