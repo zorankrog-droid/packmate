@@ -81,9 +81,9 @@ const [isOffline, setIsOffline] =
 
     setUser(user);
 
-    if (user) {
-      loadLists();
-    }
+if (user) {
+  loadLists(user);
+}
   } catch {
     setIsOffline(true);
   }
