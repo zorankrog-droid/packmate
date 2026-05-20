@@ -259,13 +259,13 @@ useEffect(() => {
     setSelectedList("");
   };
 
-  const loadLists = async () => {
-  if (!user) return;
+  const loadLists = async (currentUser: any = user) => {
+  if (!currentUser) return;
 
   const { data: ownedLists } = await supabase
     .from("lists")
     .select("*")
-    .eq("user_id", user.id);
+    .eq("user_id", currentUser.id);
 
   const { data: memberLists } = await supabase
     .from("list_members")
@@ -273,7 +273,7 @@ useEffect(() => {
       list_id,
       lists (*)
     `)
-    .eq("user_id", user.id);
+    .eq("user_id", currentUser.id);
 
   const shared =
     memberLists
