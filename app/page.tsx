@@ -1111,6 +1111,19 @@ localStorage.setItem(
               </option>
             ))}
           </select>
+          <div style={{ marginTop: 10 }}>
+  <input
+    type="email"
+    placeholder="Email korisnika"
+    value={shareEmail}
+    onChange={(e) => setShareEmail(e.target.value)}
+    style={inputStyle}
+  />
+
+  <button onClick={shareSelectedList}>
+    Podijeli listu
+  </button>
+</div>
           <button
   onClick={() => {
     const list = lists.find((l) => l.id === selectedList);
