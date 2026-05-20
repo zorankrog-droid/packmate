@@ -106,29 +106,41 @@ useEffect(() => {
   };
 
   const addItem = async () => {
-    if (!newItem || !list) return;
+  if (!newItem || !list) return;
 
-    await supabase.from("items").insert({
-      list_id: list.id,
-      name: newItem,
-      checked: false,
-      priority: "medium",
-      category: "Putovanje",
-      added_by: guestName || "Gost",
-    });
+  const { error } = await supabase.from("items").insert({
+    list_id: list.id,
+    name: newItem,
+    checked: false,
+    priority: "medium",
+    category: "Putovanje",
+    added_by: guestName || "Gost",
+  });
 
-    setNewItem("");
-    loadSharedList();
-  };
+  if (error) {
+    console.error("SHARE ADD ERROR:", error);
+    alert("Greška kod dodavanja stavke: " + error.message);
+    return;
+  }
+
+  setNewItem("");
+  loadSharedList();
+};
 
   const toggleItem = async (item: any) => {
-    await supabase
-      .from("items")
-      .update({ checked: !item.checked })
-      .eq("id", item.id);
+  const { error } = await supabase
+    .from("items")
+    .update({ checked: !item.checked })
+    .eq("id", item.id);
 
-    loadSharedList();
-  };
+  if (error) {
+    console.error("SHARE TOGGLE ERROR:", error);
+    alert("Greška kod označavanja: " + error.message);
+    return;
+  }
+
+  loadSharedList();
+};
 
   if (loading) {
     return <main style={pageStyle}><h1>Učitavanje liste...</h1></main>;
