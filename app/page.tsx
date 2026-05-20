@@ -28,6 +28,7 @@ export default function Home() {
   const [items, setItems] = useState<any[]>([]);
 
   const [listName, setListName] = useState("");
+  const [shareEmail, setShareEmail] = useState("");
   const [itemName, setItemName] = useState("");
 
   const [priority, setPriority] = useState("medium");
@@ -318,6 +319,30 @@ const createList = async () => {
   setListName("");
   loadLists();
 };
+
+const shareSelectedList = async () => {
+  if (!selectedList || !shareEmail) return;
+
+  const { data: targetUser } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("email", shareEmail)
+    .single();
+
+  if (!targetUser) {
+    alert("Korisnik s tim emailom nije pronađen.");
+    return;
+  }
+
+  await supabase.from("list_members").insert({
+    list_id: selectedList,
+    user_id: targetUser.id,
+  });
+
+  setShareEmail("");
+  alert("Lista je podijeljena!");
+};
+
 const syncOfflineLists = async () => {
   if (!user || isOffline) return;
 
