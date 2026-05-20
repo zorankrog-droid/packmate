@@ -316,7 +316,7 @@ const createList = async () => {
   });
 
   setListName("");
-  loadLists(user.id);
+  loadLists();
 };
 const syncOfflineLists = async () => {
   if (!user || isOffline) return;
@@ -370,14 +370,14 @@ const syncOfflineLists = async () => {
     JSON.stringify(syncedLists)
   );
 
-  loadLists(user.id);
+  loadLists();
 };
   const deleteList = async (id: string) => {
     if (!confirm("Želiš li obrisati listu?")) return;
 
     await supabase.from("lists").delete().eq("id", id);
 
-    if (user) loadLists(user.id);
+    if (user) loadLists();
 
     if (selectedList === id) {
       setSelectedList("");
@@ -396,7 +396,7 @@ const syncOfflineLists = async () => {
         .update({ share_id: shareId })
         .eq("id", list.id);
 
-      if (user) loadLists(user.id);
+      if (user) loadLists();
     }
 
     const shareUrl = `${window.location.origin}/share/${shareId}`;
