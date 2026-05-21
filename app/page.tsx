@@ -297,10 +297,11 @@ const loadTemplates = async () => {
 };
   
 const createTemplate = async () => {
-  if (!templateName) return;
+  if (!templateName || !user) return;
 
   const { error } = await supabase.from("templates").insert({
     name: templateName,
+    user_id: user.id,
   });
 
   if (error) {
