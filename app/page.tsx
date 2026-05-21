@@ -9,6 +9,8 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
 
   const [lists, setLists] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templateName, setTemplateName] = useState("");
   const [selectedList, setSelectedList] = useState("");
 
   useEffect(() => {
@@ -83,6 +85,7 @@ const [isOffline, setIsOffline] =
 
 if (user) {
   loadLists(user);
+  loadTemplates();
 }
   } catch {
     setIsOffline(true);
@@ -284,8 +287,31 @@ useEffect(() => {
 
   setLists(allLists);
 };
+const loadTemplates = async () => {
+  const { data } = await supabase
+    .from("templates")
+    .select("*")
+    .order("created_at", { ascending: false });
 
+  setTemplates(data || []);
+};
   
+const createTemplate = async () => {
+  if (!templateName) return;
+
+  const { error } = await supabase.from("templates").insert({
+    name: templateName,
+  });
+
+  if (error) {
+    alert("Greška kod spremanja templatea: " + error.message);
+    return;
+  }
+
+  setTemplateName("");
+  loadTemplates();
+};
+
 const createList = async () => {
   if (!listName) return;
 
@@ -1088,9 +1114,30 @@ if (
             Logout
           </button>
         </div>
-
+        
         <div style={sectionCard}>
-          <h2 style={titleStyle}>Nova lista</h2>
+  <h2 style={titleStyle}>Moji templatei</h2>
+
+  <input
+    placeholder="Naziv templatea"
+    value={templateName}
+    onChange={(e) => setTemplateName(e.target.value)}
+    style={inputStyle}
+  />
+
+  <button onClick={createTemplate} style={goldButton}>
+    Dodaj template
+  </button>
+
+  {templates.map((t) => (
+    <div key={t.id} style={sectionCard}>
+      {t.name}
+    </div>
+  ))}
+</div>
+
+<div style={sectionCard}>
+  <h2 style={titleStyle}>Nova lista</h2>
 
           <input
             placeholder="Naziv liste"
