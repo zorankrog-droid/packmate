@@ -425,8 +425,26 @@ const syncOfflineLists = async () => {
     }
 
     const shareUrl = `${window.location.origin}/share/${shareId}`;
-    await navigator.clipboard.writeText(shareUrl);
-    alert("Link kopiran!\n\n" + shareUrl);
+    const response = await fetch("/api/send-invite", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: shareEmail,
+    listName: list.name,
+    shareUrl,
+    senderName: user?.email || "PackMate korisnik",
+  }),
+});
+
+if (!response.ok) {
+  alert("Greška kod slanja emaila");
+  return;
+}
+
+setShareEmail("");
+alert("Pozivnica poslana!");
   };
 
   const loadItems = async (listId: string) => {
