@@ -10,9 +10,10 @@ export default function Home() {
 
   const [lists, setLists] = useState<any[]>([]);
   const [templates, setTemplates] = useState<any[]>([]);
-  const [templateName, setTemplateName] = useState("");
-  const [selectedList, setSelectedList] = useState("");
+const [templateName, setTemplateName] = useState("");
+const [selectedTemplate, setSelectedTemplate] = useState("");
 
+const [selectedList, setSelectedList] = useState("");
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const listFromUrl = params.get("list");
@@ -1131,10 +1132,22 @@ if (
   </button>
 
   {templates.map((t) => (
-    <div key={t.id} style={sectionCard}>
-      {t.name}
-    </div>
-  ))}
+  <button
+    key={t.id}
+    onClick={() => setSelectedTemplate(t.id)}
+    style={{
+      ...secondaryButton,
+      width: "100%",
+      marginTop: 10,
+      border:
+        selectedTemplate === t.id
+          ? "2px solid gold"
+          : "1px solid #333",
+    }}
+  >
+    {t.name}
+  </button>
+))}
 </div>
 
 <div style={sectionCard}>
