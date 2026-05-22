@@ -1291,20 +1291,6 @@ localStorage.setItem(
         </div>
 
         <div style={sectionCard}>
-          <h2 style={titleStyle}>🚢 Cruise Templates</h2>
-
-          <select value={template} onChange={(e) => setTemplate(e.target.value)} style={inputStyle}>
-            <option value="msc">🚢 MSC Krstarenje</option>
-            <option value="zanzibar">🌴 Zanzibar</option>
-            <option value="business">💼 Business Trip</option>
-          </select>
-
-          <button onClick={loadTemplate} style={goldButton}>
-            🚢 Učitaj template
-          </button>
-        </div>
-
-        <div style={sectionCard}>
           <h2 style={titleStyle}>🤖 AI Generator</h2>
 <input
   placeholder="Destinacija"
