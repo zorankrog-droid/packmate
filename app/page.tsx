@@ -312,6 +312,9 @@ const createTemplate = async () => {
   }
 
   setTemplateName("");
+  setSelectedList("");
+setItems([]);
+localStorage.removeItem("packmate-selected-list");
   loadTemplates();
 };
 const addTemplateItem = async () => {
