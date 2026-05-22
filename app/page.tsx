@@ -1218,7 +1218,10 @@ if (
   placeholder="Nova stavka templatea"
   value={templateItemName}
   onChange={(e) => setTemplateItemName(e.target.value)}
-  style={inputStyle}
+  style={{
+    ...inputStyle,
+    marginTop: 18,
+  }}
 />
 
 <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
