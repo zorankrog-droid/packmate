@@ -374,6 +374,26 @@ const deleteTemplateItem = async (itemId: string) => {
   }
 };
 
+const deleteTemplate = async (templateId: string) => {
+  const confirmed = confirm("Želite li obrisati cijeli template?");
+
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from("templates")
+    .delete()
+    .eq("id", templateId);
+
+  if (error) {
+    alert("Greška kod brisanja templatea: " + error.message);
+    return;
+  }
+
+  setSelectedTemplate("");
+  setTemplateItems([]);
+  loadTemplates();
+};
+
 const loadTemplateItems = async () => {
   if (!selectedTemplate || !selectedList) {
     alert("Odaberi template i listu");
@@ -1262,25 +1282,45 @@ if (
 
 <div>
   {templates.map((t) => (
-    <button
-      key={t.id}
+  <div
+    key={t.id}
+    style={{
+      ...secondaryButton,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
+      marginTop: 12,
+      border:
+        selectedTemplate === t.id
+          ? "2px solid gold"
+          : "2px solid transparent",
+    }}
+  >
+    <span
       onClick={() => {
         setSelectedTemplate(t.id);
         loadSelectedTemplateItems(t.id);
       }}
-      style={{
-        ...secondaryButton,
-        width: "100%",
-        marginTop: 12,
-        border:
-          selectedTemplate === t.id
-            ? "2px solid gold"
-            : "2px solid transparent",
-      }}
+      style={{ flex: 1, cursor: "pointer" }}
     >
       {t.name}
+    </span>
+
+    <button
+      onClick={() => deleteTemplate(t.id)}
+      style={{
+        background: "transparent",
+        border: "none",
+        color: "#ff6b6b",
+        fontSize: 18,
+        cursor: "pointer",
+      }}
+    >
+      🗑️
     </button>
-  ))}
+  </div>
+))}
 
   {templateItems.length > 0 && (
     <div style={{ marginTop: 14 }}>
