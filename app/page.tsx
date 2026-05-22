@@ -1205,12 +1205,21 @@ if (
   style={inputStyle}
 />
 
-<button
-  onClick={addTemplateItem}
-  style={goldButton}
->
-  Dodaj stavku u template
-</button>
+<div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+  <button
+    onClick={addTemplateItem}
+    style={goldButton}
+  >
+    ➕ Dodaj stavku u template
+  </button>
+
+  <button
+    onClick={loadTemplateItems}
+    style={secondaryButton}
+  >
+    📥 Učitaj template u listu
+  </button>
+</div>
 
 <button
   onClick={loadTemplateItems}
@@ -1224,13 +1233,14 @@ if (
     key={t.id}
     onClick={() => setSelectedTemplate(t.id)}
     style={{
-      ...secondaryButton,
-      width: "100%",
-      border:
-        selectedTemplate === t.id
-          ? "2px solid gold"
-          : "2px solid transparent",
-    }}
+  ...secondaryButton,
+  width: "100%",
+  marginTop: 12,
+  border:
+    selectedTemplate === t.id
+      ? "2px solid gold"
+      : "2px solid transparent",
+}}
   >
     {t.name}
   </button>
