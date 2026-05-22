@@ -338,6 +338,49 @@ const addTemplateItem = async () => {
   alert("Stavka dodana u template!");
 };
 
+const loadTemplateItems = async () => {
+  if (!selectedTemplate || !selectedList) {
+    alert("Odaberi template i listu");
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("template_items")
+    .select("*")
+    .eq("template_id", selectedTemplate);
+
+  if (error) {
+    alert("Greška: " + error.message);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert("Template nema stavki");
+    return;
+  }
+
+  const itemsToInsert = data.map((item) => ({
+    list_id: selectedList,
+    name: item.name,
+    category: item.category,
+    priority: item.priority,
+    checked: false,
+    added_by: user?.email || "Korisnik",
+  }));
+checked: false
+  const { error: insertError } = await supabase
+    .from("items")
+    .insert(itemsToInsert);
+
+  if (insertError) {
+    alert("Greška kod učitavanja templatea: " + insertError.message);
+    return;
+  }
+
+  loadItems(selectedList);
+  alert("Template učitan!");
+};
+
 const createList = async () => {
   if (!listName) return;
 
@@ -1167,6 +1210,13 @@ if (
   style={goldButton}
 >
   Dodaj stavku u template
+</button>
+
+<button
+  onClick={loadTemplateItems}
+  style={goldButton}
+>
+  Učitaj template
 </button>
 
   {templates.map((t) => (
