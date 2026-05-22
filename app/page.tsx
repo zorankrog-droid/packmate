@@ -13,6 +13,7 @@ export default function Home() {
 const [templateName, setTemplateName] = useState("");
 const [selectedTemplate, setSelectedTemplate] = useState("");
 const [templateItemName, setTemplateItemName] = useState("");
+const [templateItems, setTemplateItems] = useState<any[]>([]);
 
 const [selectedList, setSelectedList] = useState("");
   useEffect(() => {
@@ -336,6 +337,21 @@ const addTemplateItem = async () => {
 
   setTemplateItemName("");
   alert("Stavka dodana u template!");
+};
+
+const loadSelectedTemplateItems = async (templateId: string) => {
+  const { data, error } = await supabase
+    .from("template_items")
+    .select("*")
+    .eq("template_id", templateId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    alert("Greška kod učitavanja stavki templatea: " + error.message);
+    return;
+  }
+
+  setTemplateItems(data || []);
 };
 
 const loadTemplateItems = async () => {
@@ -1221,23 +1237,41 @@ if (
   </button>
 </div>
 
+<div>
   {templates.map((t) => (
-  <button
-    key={t.id}
-    onClick={() => setSelectedTemplate(t.id)}
-    style={{
-  ...secondaryButton,
-  width: "100%",
-  marginTop: 12,
-  border:
-    selectedTemplate === t.id
-      ? "2px solid gold"
-      : "2px solid transparent",
-}}
-  >
-    {t.name}
-  </button>
-))}
+    <button
+      key={t.id}
+      onClick={() => {
+        setSelectedTemplate(t.id);
+        loadSelectedTemplateItems(t.id);
+      }}
+      style={{
+        ...secondaryButton,
+        width: "100%",
+        marginTop: 12,
+        border:
+          selectedTemplate === t.id
+            ? "2px solid gold"
+            : "2px solid transparent",
+      }}
+    >
+      {t.name}
+    </button>
+  ))}
+
+  {templateItems.length > 0 && (
+    <div style={{ marginTop: 14 }}>
+      <p style={{ opacity: 0.7 }}>Stavke u templateu:</p>
+
+      {templateItems.map((item) => (
+        <div key={item.id} style={secondaryButton}>
+          • {item.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 </div>
 
 <div style={sectionCard}>
