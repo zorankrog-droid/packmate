@@ -1176,11 +1176,10 @@ if (
     style={{
       ...secondaryButton,
       width: "100%",
-      marginTop: 10,
       border:
         selectedTemplate === t.id
           ? "2px solid gold"
-          : "1px solid #333",
+          : "2px solid transparent",
     }}
   >
     {t.name}
