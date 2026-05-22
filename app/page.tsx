@@ -354,6 +354,26 @@ const loadSelectedTemplateItems = async (templateId: string) => {
   setTemplateItems(data || []);
 };
 
+const deleteTemplateItem = async (itemId: string) => {
+  const confirmed = confirm("Želite li obrisati ovu stavku iz templatea?");
+
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from("template_items")
+    .delete()
+    .eq("id", itemId);
+
+  if (error) {
+    alert("Greška kod brisanja stavke: " + error.message);
+    return;
+  }
+
+  if (selectedTemplate) {
+    loadSelectedTemplateItems(selectedTemplate);
+  }
+};
+
 const loadTemplateItems = async () => {
   if (!selectedTemplate || !selectedList) {
     alert("Odaberi template i listu");
@@ -1267,10 +1287,31 @@ if (
       <p style={{ opacity: 0.7 }}>Stavke u templateu:</p>
 
       {templateItems.map((item) => (
-        <div key={item.id} style={secondaryButton}>
-          • {item.name}
-        </div>
-      ))}
+  <div
+    key={item.id}
+    style={{
+      ...secondaryButton,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    <span>• {item.name}</span>
+
+    <button
+      onClick={() => deleteTemplateItem(item.id)}
+      style={{
+        background: "transparent",
+        border: "none",
+        color: "#ff6b6b",
+        fontSize: 18,
+        cursor: "pointer",
+      }}
+    >
+      🗑️
+    </button>
+  </div>
+))}
     </div>
   )}
 </div>
