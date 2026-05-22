@@ -1221,13 +1221,6 @@ if (
   </button>
 </div>
 
-<button
-  onClick={loadTemplateItems}
-  style={goldButton}
->
-  Učitaj template
-</button>
-
   {templates.map((t) => (
   <button
     key={t.id}
