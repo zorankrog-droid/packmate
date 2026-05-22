@@ -12,6 +12,7 @@ export default function Home() {
   const [templates, setTemplates] = useState<any[]>([]);
 const [templateName, setTemplateName] = useState("");
 const [selectedTemplate, setSelectedTemplate] = useState("");
+const [templateItemName, setTemplateItemName] = useState("");
 
 const [selectedList, setSelectedList] = useState("");
   useEffect(() => {
@@ -312,6 +313,26 @@ const createTemplate = async () => {
 
   setTemplateName("");
   loadTemplates();
+};
+const addTemplateItem = async () => {
+  if (!selectedTemplate || !templateItemName) return;
+
+  const { error } = await supabase
+    .from("template_items")
+    .insert({
+      template_id: selectedTemplate,
+      name: templateItemName,
+      category: "Putovanje",
+      priority: "medium",
+    });
+
+  if (error) {
+    alert("Greška: " + error.message);
+    return;
+  }
+
+  setTemplateItemName("");
+  alert("Stavka dodana u template!");
 };
 
 const createList = async () => {
@@ -1130,6 +1151,20 @@ if (
   <button onClick={createTemplate} style={goldButton}>
     Dodaj template
   </button>
+
+<input
+  placeholder="Nova stavka templatea"
+  value={templateItemName}
+  onChange={(e) => setTemplateItemName(e.target.value)}
+  style={inputStyle}
+/>
+
+<button
+  onClick={addTemplateItem}
+  style={goldButton}
+>
+  Dodaj stavku u template
+</button>
 
   {templates.map((t) => (
   <button
