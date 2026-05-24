@@ -1670,19 +1670,27 @@ localStorage.setItem(
 <div style={{ height: 10 }} />
 
 <div style={{ display: "grid", gap: 12 }}>
-  <input
-    type="date"
-    value={startDate}
-    onChange={(e) => setStartDate(e.target.value)}
-    style={inputStyle}
-  />
+  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+    <label>
+      <div style={{ marginBottom: 6, opacity: 0.7 }}>Od</div>
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+        style={inputStyle}
+      />
+    </label>
 
-  <input
-    type="date"
-    value={endDate}
-    onChange={(e) => setEndDate(e.target.value)}
-    style={inputStyle}
-  />
+    <label>
+      <div style={{ marginBottom: 6, opacity: 0.7 }}>Do</div>
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+        style={inputStyle}
+      />
+    </label>
+  </div>
 
   <input
     placeholder="Broj dana"
