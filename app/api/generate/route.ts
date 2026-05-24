@@ -25,7 +25,11 @@ Format mora biti točno:
     {
       "name": "Putovnica",
       "priority": "high",
-      "category": "Dokumenti"
+      "category": "Dokumenti",
+      "bag": "carryon"
+    }
+  ]
+}      "category": "Dokumenti"
     }
   ]
 }
@@ -45,6 +49,12 @@ Dozvoljene category:
 - Djeca
 - Putovanje
 - Posao
+
+Dozvoljene bag:
+- backpack
+- carryon
+- checked
+- kids
 
 Pravila za kvalitetu:
 Ako korisnik unese timeline ili itinerary:
