@@ -1018,6 +1018,10 @@ ${destination}
 Broj dana:
 ${tripDays}
 
+Datum putovanja:
+Od ${startDate}
+Do ${endDate}
+
 Vrijeme:
 ${realWeather}
 Flight mode:
