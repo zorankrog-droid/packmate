@@ -1373,6 +1373,20 @@ if (
     </span>
 
 <button
+  onClick={() => setDefaultTemplate(t.id)}
+  style={{
+    background: "transparent",
+    border: "none",
+    color: t.is_default ? "#d4af37" : "#888",
+    fontSize: 18,
+    cursor: "pointer",
+    marginRight: 8,
+  }}
+>
+  {t.is_default ? "⭐" : "☆"}
+</button>
+
+<button
   onClick={() => editTemplate(t)}
   style={{
     background: "transparent",
@@ -1383,6 +1397,20 @@ if (
     marginRight: 8,
   }}
 >
+<button
+  onClick={() => setDefaultTemplate(t.id)}
+  style={{
+    background: "transparent",
+    border: "none",
+    color: t.is_default ? "#d4af37" : "#888",
+    fontSize: 18,
+    cursor: "pointer",
+    marginRight: 8,
+  }}
+>
+  {t.is_default ? "⭐" : "☆"}
+</button>
+
   ✏️
 </button>
 
