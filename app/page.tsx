@@ -1056,6 +1056,7 @@ ${repackingMode}
         name: item.name,
         priority: item.priority || "medium",
         category: item.category || "Putovanje",
+        bag: item.bag || "checked",
         checked: false,
         list_id: selectedList,
       });
