@@ -16,6 +16,10 @@ const [templateItemName, setTemplateItemName] = useState("");
 const [templateItems, setTemplateItems] = useState<any[]>([]);
 
 const [selectedList, setSelectedList] = useState("");
+
+const [startDate, setStartDate] = useState("");
+const [endDate, setEndDate] = useState("");
+
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const listFromUrl = params.get("list");
@@ -1665,16 +1669,42 @@ localStorage.setItem(
 
 <div style={{ height: 10 }} />
 
-<input
-  placeholder="Broj dana"
-  value={tripDays}
-  onChange={(e) =>
-    setTripDays(
-      e.target.value
-    )
-  }
-  style={inputStyle}
-/>
+<div style={{ display: "grid", gap: 12 }}>
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    style={inputStyle}
+  />
+
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    style={inputStyle}
+  />
+
+  <input
+    placeholder="Broj dana"
+    value={
+      startDate && endDate
+        ? Math.max(
+            1,
+            Math.ceil(
+              (new Date(endDate).getTime() -
+                new Date(startDate).getTime()) /
+                (1000 * 60 * 60 * 24)
+            ) + 1
+          )
+        : ""
+    }
+    readOnly
+    style={{
+      ...inputStyle,
+      opacity: 0.7,
+    }}
+  />
+</div>
 
 <div style={{ height: 10 }} />
 
