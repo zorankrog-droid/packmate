@@ -212,7 +212,13 @@ ${prompt}
     });
 
     const text = response.output_text || '{"items":[]}';
-    const parsed = JSON.parse(text);
+
+const cleanedText = text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+
+const parsed = JSON.parse(cleanedText);
 
     return Response.json({
       items: Array.isArray(parsed.items) ? parsed.items : [],
