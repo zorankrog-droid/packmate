@@ -414,6 +414,30 @@ const deleteTemplate = async (templateId: string) => {
   loadTemplates();
 };
 
+const editTemplate = async (template: any) => {
+  const newName = prompt(
+    "Uredi naziv templatea:",
+    template.name
+  );
+
+  if (!newName) return;
+
+  const { error } = await supabase
+    .from("templates")
+    .update({ name: newName })
+    .eq("id", template.id);
+
+  if (error) {
+    alert(
+      "Greška kod uređivanja templatea: " +
+        error.message
+    );
+    return;
+  }
+
+  loadTemplates();
+};
+
 const loadTemplateItems = async () => {
   if (!selectedTemplate || !selectedList) {
     alert("Odaberi template i listu");
@@ -1326,6 +1350,20 @@ if (
     >
       {t.name}
     </span>
+
+<button
+  onClick={() => editTemplate(t)}
+  style={{
+    background: "transparent",
+    border: "none",
+    color: "#d4af37",
+    fontSize: 18,
+    cursor: "pointer",
+    marginRight: 8,
+  }}
+>
+  ✏️
+</button>
 
     <button
       onClick={() => deleteTemplate(t.id)}
