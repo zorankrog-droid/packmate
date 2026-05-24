@@ -488,7 +488,7 @@ const loadTemplateItems = async () => {
     checked: false,
     added_by: user?.email || "Korisnik",
   }));
-checked: false
+
   const { error: insertError } = await supabase
     .from("items")
     .insert(itemsToInsert);
@@ -500,6 +500,59 @@ checked: false
 
   loadItems(selectedList);
   alert("Template učitan!");
+};
+
+const createListFromTemplate = async () => {
+  if (!selectedTemplate || !listName || !user) {
+    alert("Odaberi template i upiši naziv liste");
+    return;
+  }
+
+  const { data: newList, error: listError } =
+    await supabase
+      .from("lists")
+      .insert({
+        name: listName,
+        user_id: user.id,
+      })
+      .select()
+      .single();
+
+  if (listError || !newList) {
+    alert("Greška kod kreiranja liste");
+    return;
+  }
+
+  const { data: templateData, error: templateError } =
+    await supabase
+      .from("template_items")
+      .select("*")
+      .eq("template_id", selectedTemplate);
+
+  if (templateError || !templateData) {
+    alert("Greška kod učitavanja templatea");
+    return;
+  }
+
+  const itemsToInsert = templateData.map((item) => ({
+    list_id: newList.id,
+    name: item.name,
+    category: item.category,
+    priority: item.priority,
+    checked: false,
+    added_by: user.email,
+  }));
+
+  await supabase
+    .from("items")
+    .insert(itemsToInsert);
+
+  setSelectedList(newList.id);
+
+  loadLists(user);
+  loadItems(newList.id);
+
+  alert("Lista kreirana iz templatea!");
 };
 
 const createList = async () => {
@@ -1397,19 +1450,6 @@ if (
     marginRight: 8,
   }}
 >
-<button
-  onClick={() => setDefaultTemplate(t.id)}
-  style={{
-    background: "transparent",
-    border: "none",
-    color: t.is_default ? "#d4af37" : "#888",
-    fontSize: 18,
-    cursor: "pointer",
-    marginRight: 8,
-  }}
->
-  {t.is_default ? "⭐" : "☆"}
-</button>
 
   ✏️
 </button>
@@ -1493,6 +1533,12 @@ if (
             Dodaj listu
           </button>
         </div>
+<button
+  onClick={createListFromTemplate}
+  style={secondaryButton}
+>
+  🚀 Kreiraj listu iz templatea
+</button>
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>Odaberi listu</h2>
