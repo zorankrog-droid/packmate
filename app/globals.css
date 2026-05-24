@@ -24,3 +24,9 @@ select,
 textarea {
   font-family: inherit;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(77%) sepia(66%) saturate(548%) hue-rotate(2deg)
+    brightness(103%) contrast(95%);
+  cursor: pointer;
+  transform: scale(1.4);
+}
