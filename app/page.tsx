@@ -2129,7 +2129,39 @@ localStorage.setItem(
                       {item.name}
                     </div>
 
-                    <small style={{ opacity: 0.75 }}>{item.priority || "medium"}</small>
+                    <div
+  style={{
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
+    flexWrap: "wrap",
+    marginTop: 6,
+  }}
+>
+  <small style={{ opacity: 0.75 }}>
+    {item.priority || "medium"}
+  </small>
+
+  <small
+    style={{
+      background: "rgba(212,175,55,0.15)",
+      color: "#d4af37",
+      padding: "4px 8px",
+      borderRadius: 10,
+      fontSize: 11,
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+    }}
+  >
+    {item.bag === "backpack"
+      ? "🎒 Backpack"
+      : item.bag === "carryon"
+      ? "💼 Carry-on"
+      : item.bag === "kids"
+      ? "🧒 Kids bag"
+      : "🧳 Checked"}
+  </small>
+</div>
 
                     <div style={{ opacity: 0.6, fontSize: 12, marginTop: 4 }}>
   dodao: {item.added_by || "Gost"}
