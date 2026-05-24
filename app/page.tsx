@@ -66,6 +66,7 @@ const [babies, setBabies] =
   const [stayMode, setStayMode] =
   useState("hotel");
   const [template, setTemplate] = useState("msc");
+  const [showTemplates, setShowTemplates] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 const [isOffline, setIsOffline] =
   useState(() => {
@@ -1359,7 +1360,25 @@ if (
         </div>
         
         <div style={sectionCard}>
+  <div
+  onClick={() => setShowTemplates(!showTemplates)}
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer",
+    marginBottom: 12,
+  }}
+>
   <h2 style={titleStyle}>Moji templatei</h2>
+
+  <span style={{ color: "#d4af37", fontSize: 22 }}>
+    {showTemplates ? "−" : "+"}
+  </span>
+</div>
+
+{showTemplates && (
+  <div>
 
   <input
     placeholder="Naziv templatea"
@@ -1381,6 +1400,9 @@ if (
     marginTop: 18,
   }}
 />
+
+</div>
+)}
 
 <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
   <button
