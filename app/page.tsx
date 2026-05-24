@@ -438,6 +438,27 @@ const editTemplate = async (template: any) => {
   loadTemplates();
 };
 
+const setDefaultTemplate = async (templateId: string) => {
+  if (!user) return;
+
+  await supabase
+    .from("templates")
+    .update({ is_default: false })
+    .eq("user_id", user.id);
+
+  const { error } = await supabase
+    .from("templates")
+    .update({ is_default: true })
+    .eq("id", templateId);
+
+  if (error) {
+    alert("Greška kod postavljanja zadanog templatea: " + error.message);
+    return;
+  }
+
+  loadTemplates();
+};
+
 const loadTemplateItems = async () => {
   if (!selectedTemplate || !selectedList) {
     alert("Odaberi template i listu");
