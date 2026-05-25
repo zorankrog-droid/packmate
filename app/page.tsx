@@ -2254,14 +2254,7 @@ localStorage.setItem(
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>Moje liste</h2>
-<button
-  onClick={exportPDF}
-  style={goldButton}
->
-  📄 Export PDF
-</button>
 
-<div style={{ height: 10 }} />
           {lists.map((list) => (
             <div
               key={list.id}
