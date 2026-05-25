@@ -20,6 +20,9 @@ const [selectedList, setSelectedList] = useState("");
 const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
 
+const [isGenerating, setIsGenerating] = useState(false);
+const [generateStatus, setGenerateStatus] = useState("");
+
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const listFromUrl = params.get("list");
@@ -959,18 +962,22 @@ const deleteItem = async (id: string) => {
   };
 
   const generateAIList = async () => {
+    setIsGenerating(true);
+setGenerateStatus("Pripremam podatke za AI...");
     let realWeather = "";
     if (!selectedList) {
       alert("Prvo odaberi listu.");
+      setIsGenerating(false);
       return;
     }
-const exportPDF = () => {
-  window.print();
-};
+
     if (!aiPrompt) {
       alert("Upiši opis putovanja.");
+      setIsGenerating(false);
       return;
     }
+    
+    setGenerateStatus("Provjeravam vremensku prognozu...");
 if (destination) {
   try {
     const weatherResponse =
@@ -1005,6 +1012,8 @@ Vrijeme: ${weatherData.description}
     );
   }
 }
+setGenerateStatus("AI izrađuje pametnu listu...");
+
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: {
@@ -1051,6 +1060,8 @@ ${repackingMode}
       return;
     }
 
+setGenerateStatus("Spremam stavke u tvoju listu...");
+
     for (const item of data.items) {
       await supabase.from("items").insert({
         name: item.name,
@@ -1061,7 +1072,8 @@ ${repackingMode}
         list_id: selectedList,
       });
     }
-
+setGenerateStatus("Lista je uspješno generirana!");
+setIsGenerating(false);
     setAiPrompt("");
     loadItems(selectedList);
     alert("AI lista generirana!");
@@ -1914,9 +1926,29 @@ localStorage.setItem(
 
   🧠 AI Repacking Mode
 </label>
-          <button onClick={generateAIList} style={goldButton}>
-            Generiraj AI listu
-          </button>
+          <button
+  onClick={generateAIList}
+  style={goldButton}
+  disabled={isGenerating}
+>
+  {isGenerating
+    ? "⏳ AI generira listu..."
+    : "✨ Generiraj AI listu"}
+</button>
+
+{isGenerating && (
+  <div
+    style={{
+      color: "#d4af37",
+      marginTop: 12,
+      fontSize: 14,
+      fontWeight: 600,
+    }}
+  >
+    ⏳ {generateStatus}
+  </div>
+)}
+
         </div>
 
         <div style={sectionCard}>
