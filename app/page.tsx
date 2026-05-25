@@ -2288,9 +2288,7 @@ localStorage.setItem(
                 </button>
               </div>
 
-              <button onClick={() => shareList(list)} style={{ ...goldButton, padding: 12 }}>
-                🔗 Podijeli listu
-              </button>
+              
             </div>
           ))}
         </div>
@@ -2373,7 +2371,7 @@ const sectionCard: React.CSSProperties = {
   WebkitBackdropFilter:
     "blur(14px)",
   border:
-    "1px solid rgba(255,255,255,0.08)",
+    "1px solid rgba(32, 3, 3, 0.08)",
   borderRadius: 28,
   padding: 24,
   marginBottom: 20,
