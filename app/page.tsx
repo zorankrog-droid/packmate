@@ -2274,7 +2274,37 @@ localStorage.setItem(
                   marginBottom: 12,
                 }}
               >
-                <span>{list.name}</span>
+                <span
+  onClick={() => {
+    setSelectedList(list.id);
+
+    localStorage.setItem(
+      "packmate-selected-list",
+      list.id
+    );
+
+    loadItems(list.id);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }}
+  style={{
+    cursor: "pointer",
+    flex: 1,
+    fontWeight:
+      selectedList === list.id
+        ? 700
+        : 400,
+    color:
+      selectedList === list.id
+        ? "#d4af37"
+        : "white",
+  }}
+>
+  {list.name}
+</span>
 
                 <button onClick={() => deleteList(list.id)} style={secondaryButton}>
                   🗑
