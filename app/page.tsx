@@ -687,6 +687,19 @@ const syncOfflineLists = async () => {
     }
   };
 
+const updateListName = async (id: string, newName: string) => {
+  const cleanName = newName.trim();
+
+  if (!cleanName) return;
+
+  await supabase
+    .from("lists")
+    .update({ name: cleanName })
+    .eq("id", id);
+
+  loadLists();
+};
+
   const shareList = async (list: any) => {
     let shareId = list.share_id;
 
