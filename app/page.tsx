@@ -2272,11 +2272,21 @@ localStorage.setItem(
             <div
               key={list.id}
               style={{
-                background: "rgba(255,255,255,0.05)",
-                padding: 16,
-                borderRadius: 16,
-                marginBottom: 12,
-              }}
+  background:
+    selectedList === list.id
+      ? "rgba(212,175,55,0.15)"
+      : "rgba(255,255,255,0.05)",
+
+  border:
+    selectedList === list.id
+      ? "2px solid #d4af37"
+      : "1px solid rgba(255,255,255,0.08)",
+
+  padding: 16,
+  borderRadius: 16,
+  marginBottom: 12,
+  transition: "all 0.2s ease",
+}}
             >
               <div
                 style={{
