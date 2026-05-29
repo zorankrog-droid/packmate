@@ -2285,10 +2285,7 @@ localStorage.setItem(
 
     loadItems(list.id);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+
   }}
   style={{
     cursor: "pointer",
@@ -2305,6 +2302,19 @@ localStorage.setItem(
 >
   {list.name}
 </span>
+
+<button
+  onClick={() => {
+    const newName = prompt("Novi naziv liste", list.name);
+
+    if (newName && newName.trim()) {
+      alert("Uređivanje naziva spremamo u sljedećem koraku.");
+    }
+  }}
+  style={secondaryButton}
+>
+  ✏️
+</button>
 
                 <button onClick={() => deleteList(list.id)} style={secondaryButton}>
                   🗑
