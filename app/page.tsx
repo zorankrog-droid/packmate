@@ -2321,7 +2321,7 @@ localStorage.setItem(
     const newName = prompt("Novi naziv liste", list.name);
 
     if (newName && newName.trim()) {
-      alert("Uređivanje naziva spremamo u sljedećem koraku.");
+      updateListName(list.id, newName);
     }
   }}
   style={secondaryButton}
