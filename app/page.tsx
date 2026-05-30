@@ -687,6 +687,47 @@ const syncOfflineLists = async () => {
     }
   };
 
+  const duplicateList = async (list: any) => {
+  const newName = `${list.name} (kopija)`;
+
+  const { data: newList, error } = await supabase
+    .from("lists")
+    .insert({
+      name: newName,
+      user_id: user?.id,
+    })
+    .select()
+    .single();
+
+  if (error || !newList) {
+    alert("Greška kod kopiranja liste");
+    return;
+  }
+
+  const { data: itemsToCopy } = await supabase
+    .from("items")
+    .select("*")
+    .eq("list_id", list.id);
+
+  if (itemsToCopy?.length) {
+    const copiedItems = itemsToCopy.map((item) => ({
+      list_id: newList.id,
+      name: item.name,
+      checked: false,
+      priority: item.priority,
+      category: item.category,
+      bag: item.bag,
+      added_by: item.added_by,
+    }));
+
+    await supabase
+      .from("items")
+      .insert(copiedItems);
+  }
+
+  loadLists();
+};
+
 const updateListName = async (id: string, newName: string) => {
   const cleanName = newName.trim();
 
@@ -2345,6 +2386,13 @@ localStorage.setItem(
   style={secondaryButton}
 >
   ✏️
+</button>
+
+<button
+  onClick={() => duplicateList(list)}
+  style={secondaryButton}
+>
+  📋
 </button>
 
                 <button onClick={() => deleteList(list.id)} style={secondaryButton}>
