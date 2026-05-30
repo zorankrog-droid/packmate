@@ -2323,7 +2323,15 @@ localStorage.setItem(
         : "white",
   }}
 >
-  {list.name}
+<div>
+  <div>{list.name}</div>
+
+  {selectedList === list.id && (
+    <small style={{ opacity: 0.7 }}>
+      {items.filter((item) => item.checked).length} / {items.length} spakirano
+    </small>
+  )}
+</div>
 </span>
 
 <button
