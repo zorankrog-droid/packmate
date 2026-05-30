@@ -296,8 +296,36 @@ useEffect(() => {
 
   const allLists = [...(ownedLists || []), ...shared];
 
-  setLists(allLists);
+const listIds = allLists.map((list: any) => list.id);
+
+if (listIds.length === 0) {
+  setLists([]);
+  return;
+}
+
+const { data: allItems } = await supabase
+  .from("items")
+  .select("id, list_id, checked")
+  .in("list_id", listIds);
+
+const listsWithProgress = allLists.map((list: any) => {
+  const listItems =
+    allItems?.filter((item: any) => item.list_id === list.id) || [];
+
+  const checkedCount = listItems.filter(
+    (item: any) => item.checked
+  ).length;
+
+  return {
+    ...list,
+    total_items: listItems.length,
+    checked_items: checkedCount,
+  };
+});
+
+setLists(listsWithProgress);
 };
+
 const loadTemplates = async () => {
   const { data } = await supabase
     .from("templates")
@@ -2367,11 +2395,9 @@ localStorage.setItem(
 <div>
   <div>{list.name}</div>
 
-  {selectedList === list.id && (
-    <small style={{ opacity: 0.7 }}>
-      {items.filter((item) => item.checked).length} / {items.length} spakirano
-    </small>
-  )}
+  <small style={{ opacity: 0.7 }}>
+  {list.checked_items || 0} / {list.total_items || 0} spakirano
+</small>
 </div>
 </span>
 
