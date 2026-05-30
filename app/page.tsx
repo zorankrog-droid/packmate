@@ -968,6 +968,8 @@ const updateItem = async (
   loadItems(selectedList);
 };
 const deleteItem = async (id: string) => {
+if (!confirm("Želiš li obrisati ovu stavku?")) return;
+
   if (isOffline) {
     const updatedItems = items.filter(
       (item) => item.id !== id
