@@ -215,6 +215,7 @@ useEffect(() => {
       },
       () => {
         loadItems(selectedList);
+        loadLists();
       }
     )
     .subscribe();
