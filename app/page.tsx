@@ -382,12 +382,22 @@ const addTemplateItem = async () => {
     });
 
   if (error) {
-    alert("Greška: " + error.message);
+    setDeleteModal({
+  title: "❌ Greška",
+  message: "Greška: " + error.message,
+  confirmText: "U redu",
+  onConfirm: () => {},
+});
     return;
   }
 
   setTemplateItemName("");
-  alert("Stavka dodana u template!");
+  setDeleteModal({
+  title: "✅ Stavka dodana",
+  message: "Stavka je uspješno dodana u template.",
+  confirmText: "U redu",
+  onConfirm: () => {},
+});
 };
 
 const loadSelectedTemplateItems = async (templateId: string) => {
