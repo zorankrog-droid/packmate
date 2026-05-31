@@ -699,8 +699,6 @@ const syncOfflineLists = async () => {
   loadLists();
 };
   const deleteList = async (id: string) => {
-    if (!confirm("Želiš li obrisati listu?")) return;
-
     await supabase.from("lists").delete().eq("id", id);
 
     if (user) loadLists();
