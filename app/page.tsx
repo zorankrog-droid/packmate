@@ -511,12 +511,26 @@ const loadTemplateItems = async () => {
     .insert(itemsToInsert);
 
   if (insertError) {
-    alert("Greška kod učitavanja templatea: " + insertError.message);
-    return;
-  }
+  setDeleteModal({
+    title: "❌ Greška",
+    message:
+      "Greška kod učitavanja templatea: " +
+      insertError.message,
+    confirmText: "U redu",
+    onConfirm: () => {},
+  });
 
-  loadItems(selectedList);
-  alert("Template učitan!");
+  return;
+}
+
+loadItems(selectedList);
+
+setDeleteModal({
+  title: "📦 Template učitan",
+  message: "Stavke iz templatea dodane su u listu.",
+  confirmText: "U redu",
+  onConfirm: () => {},
+});
 };
 
 const createListFromTemplate = async () => {
