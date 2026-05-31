@@ -392,6 +392,7 @@ const addTemplateItem = async () => {
   }
 
   setTemplateItemName("");
+  loadSelectedTemplateItems(selectedTemplate);
   setDeleteModal({
   title: "✅ Stavka dodana",
   message: "Stavka je uspješno dodana u template.",
