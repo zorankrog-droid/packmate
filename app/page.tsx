@@ -2709,7 +2709,12 @@ setNewItemName(item.name);
 </button>
 
 <button
-  onClick={() => duplicateList(list)}
+  onClick={() =>
+    setDeleteModal({
+      message: `Kopirati listu "${list.name}"?`,
+      onConfirm: () => duplicateList(list),
+    })
+  }
   style={secondaryButton}
 >
   📋
