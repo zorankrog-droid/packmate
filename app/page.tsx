@@ -406,9 +406,6 @@ const loadSelectedTemplateItems = async (templateId: string) => {
 };
 
 const deleteTemplateItem = async (itemId: string) => {
-  const confirmed = confirm("Želite li obrisati ovu stavku iz templatea?");
-
-  if (!confirmed) return;
 
   const { error } = await supabase
     .from("template_items")
