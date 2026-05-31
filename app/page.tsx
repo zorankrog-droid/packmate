@@ -961,7 +961,6 @@ const updateItem = async (
   loadItems(selectedList);
 };
 const deleteItem = async (id: string) => {
-if (!confirm("Želiš li obrisati ovu stavku?")) return;
 
   if (isOffline) {
     const updatedItems = items.filter(
@@ -2556,7 +2555,12 @@ setNewItemName(item.name);
   ✏️
 </button>
                     <button
-                      onClick={() => deleteItem(item.id)}
+                      onClick={() =>
+  setDeleteModal({
+    message: `Obrisati stavku "${item.name}"?`,
+    onConfirm: () => deleteItem(item.id),
+  })
+}
                       style={{ ...secondaryButton, padding: "10px 12px" }}
                     >
                       🗑
