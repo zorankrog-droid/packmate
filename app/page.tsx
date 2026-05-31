@@ -18,6 +18,8 @@ const [templateItems, setTemplateItems] = useState<any[]>([]);
 const [editingTemplate, setEditingTemplate] = useState<any>(null);
 const [newTemplateName, setNewTemplateName] = useState("");
 
+const [deleteModal, setDeleteModal] = useState<any>(null);
+
 const [editingTemplateItem, setEditingTemplateItem] = useState<any>(null);
 const [newTemplateItemName, setNewTemplateItemName] = useState("");
 
@@ -1610,6 +1612,65 @@ if (
   </div>
 )}
 
+{deleteModal && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000,
+      padding: 20,
+    }}
+  >
+    <div
+      style={{
+        background: "#0f1d33",
+        borderRadius: 24,
+        padding: 24,
+        width: "100%",
+        maxWidth: 420,
+        border: "1px solid rgba(255,255,255,0.12)",
+      }}
+    >
+      <h2 style={{ color: "#ff6b6b", marginBottom: 12 }}>
+        Potvrda brisanja
+      </h2>
+
+      <p style={{ opacity: 0.85, marginBottom: 20 }}>
+        {deleteModal.message || "Jeste li sigurni da želite obrisati?"}
+      </p>
+
+      <button
+        onClick={async () => {
+          await deleteModal.onConfirm();
+          setDeleteModal(null);
+        }}
+        style={{
+          ...goldButton,
+          backgroundColor: "#ff6b6b",
+          color: "white",
+        }}
+      >
+        Obriši
+      </button>
+
+      <button
+        onClick={() => setDeleteModal(null)}
+        style={{
+          ...secondaryButton,
+          width: "100%",
+          marginTop: 12,
+        }}
+      >
+        Odustani
+      </button>
+    </div>
+  </div>
+)}
+
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={sectionCard}>
           <h1 style={{ color: gold }}>✈️ PackMate</h1>
@@ -2593,7 +2654,12 @@ setNewItemName(item.name);
   📋
 </button>
 
-                <button onClick={() => deleteList(list.id)} style={secondaryButton}>
+                <button onClick={() =>
+  setDeleteModal({
+    message: `Obrisati listu "${list.name}"?`,
+    onConfirm: () => deleteList(list.id),
+  })
+} style={secondaryButton}>
                   🗑
                 </button>
               </div>
