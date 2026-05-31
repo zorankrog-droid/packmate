@@ -446,9 +446,6 @@ const editTemplateItem = async (item: any) => {
 };
 
 const deleteTemplate = async (templateId: string) => {
-  const confirmed = confirm("Želite li obrisati cijeli template?");
-
-  if (!confirmed) return;
 
   const { error } = await supabase
     .from("templates")
@@ -1825,7 +1822,12 @@ if (
 </button>
 
     <button
-      onClick={() => deleteTemplate(t.id)}
+      onClick={() =>
+  setDeleteModal({
+    message: `Obrisati template "${t.name}"?`,
+    onConfirm: () => deleteTemplate(t.id),
+  })
+}
       style={{
         background: "transparent",
         border: "none",
