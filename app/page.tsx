@@ -515,9 +515,15 @@ const loadTemplateItems = async () => {
 
 const createListFromTemplate = async () => {
   if (!selectedTemplate || !listName || !user) {
-    alert("Odaberi template i upiši naziv liste");
-    return;
-  }
+  setDeleteModal({
+    title: "⚠️ Nedostaju podaci",
+    message: "Odaberi template i upiši naziv liste.",
+    confirmText: "U redu",
+    onConfirm: () => {},
+  });
+
+  return;
+}
 
   const { data: newList, error: listError } =
     await supabase
