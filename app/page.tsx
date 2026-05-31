@@ -1685,9 +1685,9 @@ if (
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <h2 style={{ color: "#ff6b6b", marginBottom: 12 }}>
-        Potvrda brisanja
-      </h2>
+      <h2 style={{ color: "#ff6b6b" }}>
+  {deleteModal.title || "Potvrda"}
+</h2>
 
       <p style={{ opacity: 0.85, marginBottom: 20 }}>
         {deleteModal.message || "Jeste li sigurni da želite obrisati?"}
