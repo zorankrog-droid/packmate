@@ -15,6 +15,12 @@ const [selectedTemplate, setSelectedTemplate] = useState("");
 const [templateItemName, setTemplateItemName] = useState("");
 const [templateItems, setTemplateItems] = useState<any[]>([]);
 
+const [editingTemplate, setEditingTemplate] = useState<any>(null);
+const [newTemplateName, setNewTemplateName] = useState("");
+
+const [editingTemplateItem, setEditingTemplateItem] = useState<any>(null);
+const [newTemplateItemName, setNewTemplateItemName] = useState("");
+
 const [selectedList, setSelectedList] = useState("");
 
 const [editingList, setEditingList] = useState<any>(null);
@@ -458,27 +464,8 @@ const deleteTemplate = async (templateId: string) => {
 };
 
 const editTemplate = async (template: any) => {
-  const newName = prompt(
-    "Uredi naziv templatea:",
-    template.name
-  );
-
-  if (!newName) return;
-
-  const { error } = await supabase
-    .from("templates")
-    .update({ name: newName })
-    .eq("id", template.id);
-
-  if (error) {
-    alert(
-      "Greška kod uređivanja templatea: " +
-        error.message
-    );
-    return;
-  }
-
-  loadTemplates();
+  setEditingTemplate(template);
+  setNewTemplateName(template.name);
 };
 
 const setDefaultTemplate = async (templateId: string) => {
@@ -1544,6 +1531,72 @@ if (
         onClick={() => {
           setEditingItem(null);
           setNewItemName("");
+        }}
+        style={{
+          ...secondaryButton,
+          width: "100%",
+          marginTop: 12,
+        }}
+      >
+        Odustani
+      </button>
+    </div>
+  </div>
+)}
+
+{editingTemplate && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000,
+      padding: 20,
+    }}
+  >
+    <div
+      style={{
+        background: "#0f1d33",
+        borderRadius: 24,
+        padding: 24,
+        width: "100%",
+        maxWidth: 420,
+        border: "1px solid rgba(255,255,255,0.12)",
+      }}
+    >
+      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+        Uredi naziv templatea
+      </h2>
+
+      <input
+        value={newTemplateName}
+        onChange={(e) => setNewTemplateName(e.target.value)}
+        style={inputStyle}
+      />
+
+      <button
+        onClick={async () => {
+          await supabase
+            .from("templates")
+            .update({ name: newTemplateName })
+            .eq("id", editingTemplate.id);
+
+          setEditingTemplate(null);
+          setNewTemplateName("");
+          loadTemplates();
+        }}
+        style={goldButton}
+      >
+        Spremi
+      </button>
+
+      <button
+        onClick={() => {
+          setEditingTemplate(null);
+          setNewTemplateName("");
         }}
         style={{
           ...secondaryButton,
