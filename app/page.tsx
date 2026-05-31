@@ -1872,7 +1872,12 @@ if (
 </button>
 
     <button
-      onClick={() => deleteTemplateItem(item.id)}
+      onClick={() =>
+  setDeleteModal({
+    message: `Obrisati stavku templatea "${item.name}"?`,
+    onConfirm: () => deleteTemplateItem(item.id),
+  })
+}
       style={{
         background: "transparent",
         border: "none",
