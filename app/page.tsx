@@ -775,8 +775,12 @@ if (!response.ok) {
   return;
 }
 
-setShareEmail("");
-alert("Pozivnica poslana!");
+setDeleteModal({
+  title: "✅ Pozivnica poslana",
+  message: "Email pozivnica je uspješno poslana.",
+  confirmText: "U redu",
+  onConfirm: () => {},
+});
   };
 
   const loadItems = async (listId: string) => {
