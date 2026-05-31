@@ -589,7 +589,12 @@ const createListFromTemplate = async () => {
   loadLists(user);
   loadItems(newList.id);
 
-  alert("Lista kreirana iz templatea!");
+  setDeleteModal({
+  title: "✅ Lista kreirana",
+  message: "Lista je uspješno kreirana iz templatea.",
+  confirmText: "U redu",
+  onConfirm: () => {},
+});
 };
 
 const createList = async () => {
@@ -2038,8 +2043,16 @@ if (
           </button>
         </div>
 <button
-  onClick={createListFromTemplate}
-  style={secondaryButton}
+  onClick={() =>
+    setDeleteModal({
+      title: "📋 Kreirati listu?",
+      message:
+        "Želiš li kreirati novu listu iz odabranog templatea?",
+      confirmText: "Kreiraj",
+      onConfirm: () => createListFromTemplate(),
+    })
+  }
+  style={goldButton}
 >
   🚀 Kreiraj listu iz templatea
 </button>
