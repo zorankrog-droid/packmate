@@ -472,9 +472,15 @@ const setDefaultTemplate = async (templateId: string) => {
 
 const loadTemplateItems = async () => {
   if (!selectedTemplate || !selectedList) {
-    alert("Odaberi template i listu");
-    return;
-  }
+  setDeleteModal({
+    title: "⚠️ Nedostaju podaci",
+    message: "Odaberi template i listu.",
+    confirmText: "U redu",
+    onConfirm: () => {},
+  });
+
+  return;
+}
 
   const { data, error } = await supabase
     .from("template_items")
