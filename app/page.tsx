@@ -1534,6 +1534,7 @@ if (
       zIndex: 2000,
       padding: 20,
     }}
+
   >
     <div
       style={{
@@ -1575,6 +1576,75 @@ if (
         onClick={() => {
           setEditingTemplate(null);
           setNewTemplateName("");
+        }}
+        style={{
+          ...secondaryButton,
+          width: "100%",
+          marginTop: 12,
+        }}
+      >
+        Odustani
+      </button>
+    </div>
+  </div>
+)}
+
+{editingTemplateItem && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000,
+      padding: 20,
+    }}
+  >
+    <div
+      style={{
+        background: "#0f1d33",
+        borderRadius: 24,
+        padding: 24,
+        width: "100%",
+        maxWidth: 420,
+        border: "1px solid rgba(255,255,255,0.12)",
+      }}
+    >
+      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+        Uredi naziv stavke templatea
+      </h2>
+
+      <input
+        value={newTemplateItemName}
+        onChange={(e) => setNewTemplateItemName(e.target.value)}
+        style={inputStyle}
+      />
+
+      <button
+        onClick={async () => {
+          await supabase
+            .from("template_items")
+            .update({ name: newTemplateItemName })
+            .eq("id", editingTemplateItem.id);
+
+          setEditingTemplateItem(null);
+          setNewTemplateItemName("");
+
+          if (selectedTemplate) {
+            loadSelectedTemplateItems(selectedTemplate);
+          }
+        }}
+        style={goldButton}
+      >
+        Spremi
+      </button>
+
+      <button
+        onClick={() => {
+          setEditingTemplateItem(null);
+          setNewTemplateItemName("");
         }}
         style={{
           ...secondaryButton,
