@@ -1840,11 +1840,18 @@ if (
   </button>
 
   <button
-    onClick={loadTemplateItems}
-    style={secondaryButton}
-  >
-    📥 Učitaj template u listu
-  </button>
+  onClick={() =>
+    setDeleteModal({
+      title: "📦 Učitati template?",
+      message: "Želiš li učitati stavke iz odabranog templatea u odabranu listu?",
+      confirmText: "Učitaj",
+      onConfirm: () => loadTemplateItems(),
+    })
+  }
+  style={secondaryButton}
+>
+  📥 Učitaj template u listu
+</button>
 </div>
 
 <div>
