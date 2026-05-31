@@ -1853,11 +1853,28 @@ if (
 
 <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
   <button
-    onClick={addTemplateItem}
-    style={goldButton}
-  >
-    ➕ Dodaj stavku u template
-  </button>
+  onClick={() => {
+    if (!templateItemName.trim()) {
+      setDeleteModal({
+        title: "⚠️ Nedostaje naziv",
+        message: "Upiši naziv stavke prije dodavanja.",
+        confirmText: "U redu",
+        onConfirm: () => {},
+      });
+      return;
+    }
+
+    setDeleteModal({
+      title: "➕ Dodati stavku?",
+      message: `Želiš li dodati stavku "${templateItemName}" u template?`,
+      confirmText: "Dodaj",
+      onConfirm: () => addTemplateItem(),
+    });
+  }}
+  style={goldButton}
+>
+  ➕ Dodaj stavku u template
+</button>
 
   <button
   onClick={() =>
