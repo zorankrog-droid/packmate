@@ -1700,7 +1700,7 @@ if (
           color: "white",
         }}
       >
-        Obriši
+        {deleteModal.confirmText || "Obriši"}
       </button>
 
       <button
@@ -2711,9 +2711,10 @@ setNewItemName(item.name);
 <button
   onClick={() =>
     setDeleteModal({
-      message: `Kopirati listu "${list.name}"?`,
-      onConfirm: () => duplicateList(list),
-    })
+  message: `Kopirati listu "${list.name}"?`,
+  confirmText: "Kopiraj",
+  onConfirm: () => duplicateList(list),
+})
   }
   style={secondaryButton}
 >
