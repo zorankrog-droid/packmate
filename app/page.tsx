@@ -1911,6 +1911,7 @@ if (
     <span
       onClick={() => {
         setSelectedTemplate(t.id);
+        setListName(t.name);
         loadSelectedTemplateItems(t.id);
       }}
       style={{ flex: 1, cursor: "pointer" }}
