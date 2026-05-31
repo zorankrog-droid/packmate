@@ -423,23 +423,8 @@ const deleteTemplateItem = async (itemId: string) => {
 };
 
 const editTemplateItem = async (item: any) => {
-  const newName = prompt("Uredi naziv stavke:", item.name);
-
-  if (!newName) return;
-
-  const { error } = await supabase
-    .from("template_items")
-    .update({ name: newName })
-    .eq("id", item.id);
-
-  if (error) {
-    alert("Greška kod uređivanja stavke: " + error.message);
-    return;
-  }
-
-  if (selectedTemplate) {
-    loadSelectedTemplateItems(selectedTemplate);
-  }
+  setEditingTemplateItem(item);
+  setNewTemplateItemName(item.name);
 };
 
 const deleteTemplate = async (templateId: string) => {
