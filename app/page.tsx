@@ -20,6 +20,9 @@ const [selectedList, setSelectedList] = useState("");
 const [editingList, setEditingList] = useState<any>(null);
 const [newListName, setNewListName] = useState("");
 
+const [editingItem, setEditingItem] = useState<any>(null);
+const [newItemName, setNewItemName] = useState("");
+
 const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
 
@@ -1489,6 +1492,71 @@ if (
     </div>
   </div>
 )}
+
+{editingItem && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000,
+      padding: 20,
+    }}
+  >
+    <div
+      style={{
+        background: "#0f1d33",
+        borderRadius: 24,
+        padding: 24,
+        width: "100%",
+        maxWidth: 420,
+        border: "1px solid rgba(255,255,255,0.12)",
+      }}
+    >
+      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+        Uredi naziv stavke
+      </h2>
+
+      <input
+        value={newItemName}
+        onChange={(e) => setNewItemName(e.target.value)}
+        style={inputStyle}
+      />
+
+      <button
+        onClick={() => {
+          updateItem(editingItem.id, {
+            name: newItemName,
+          });
+
+          setEditingItem(null);
+          setNewItemName("");
+        }}
+        style={goldButton}
+      >
+        Spremi
+      </button>
+
+      <button
+        onClick={() => {
+          setEditingItem(null);
+          setNewItemName("");
+        }}
+        style={{
+          ...secondaryButton,
+          width: "100%",
+          marginTop: 12,
+        }}
+      >
+        Odustani
+      </button>
+    </div>
+  </div>
+)}
+
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={sectionCard}>
           <h1 style={{ color: gold }}>✈️ PackMate</h1>
@@ -2357,20 +2425,8 @@ localStorage.setItem(
                     </button>
 <button
   onClick={() => {
-    const newName =
-      prompt(
-        "Uredi stavku",
-        item.name
-      );
-
-    if (!newName) return;
-
-    updateItem(
-      item.id,
-      {
-        name: newName,
-      }
-    );
+    setEditingItem(item);
+setNewItemName(item.name);
   }}
   style={{
     width: 48,
