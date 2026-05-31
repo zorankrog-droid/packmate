@@ -17,6 +17,9 @@ const [templateItems, setTemplateItems] = useState<any[]>([]);
 
 const [selectedList, setSelectedList] = useState("");
 
+const [editingList, setEditingList] = useState<any>(null);
+const [newListName, setNewListName] = useState("");
+
 const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
 
@@ -1426,6 +1429,66 @@ if (
 
   return (
     <main style={{ minHeight: "100vh", background: bg, color: "white", padding: 20 }}>
+      {editingList && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000,
+      padding: 20,
+    }}
+  >
+    <div
+      style={{
+        background: "#0f1d33",
+        borderRadius: 24,
+        padding: 24,
+        width: "100%",
+        maxWidth: 420,
+        border: "1px solid rgba(255,255,255,0.12)",
+      }}
+    >
+      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+        Uredi naziv liste
+      </h2>
+
+      <input
+        value={newListName}
+        onChange={(e) => setNewListName(e.target.value)}
+        style={inputStyle}
+      />
+
+      <button
+        onClick={() => {
+          updateListName(editingList.id, newListName);
+          setEditingList(null);
+          setNewListName("");
+        }}
+        style={goldButton}
+      >
+        Spremi
+      </button>
+
+      <button
+        onClick={() => {
+          setEditingList(null);
+          setNewListName("");
+        }}
+        style={{
+          ...secondaryButton,
+          width: "100%",
+          marginTop: 12,
+        }}
+      >
+        Odustani
+      </button>
+    </div>
+  </div>
+)}
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={sectionCard}>
           <h1 style={{ color: gold }}>✈️ PackMate</h1>
@@ -2406,11 +2469,8 @@ localStorage.setItem(
 
 <button
   onClick={() => {
-    const newName = prompt("Novi naziv liste", list.name);
-
-    if (newName && newName.trim()) {
-      updateListName(list.id, newName);
-    }
+    setEditingList(list);
+    setNewListName(list.name);
   }}
   style={secondaryButton}
 >
