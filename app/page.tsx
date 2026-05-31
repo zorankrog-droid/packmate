@@ -1814,9 +1814,29 @@ if (
     style={inputStyle}
   />
 
-  <button onClick={createTemplate} style={goldButton}>
-    Dodaj template
-  </button>
+  <button
+  onClick={() => {
+    if (!templateName.trim()) {
+      setDeleteModal({
+        title: "⚠️ Nedostaje naziv",
+        message: "Upiši naziv templatea prije dodavanja.",
+        confirmText: "U redu",
+        onConfirm: () => {},
+      });
+      return;
+    }
+
+    setDeleteModal({
+      title: "➕ Dodati template?",
+      message: `Želiš li dodati template "${templateName}"?`,
+      confirmText: "Dodaj",
+      onConfirm: () => createTemplate(),
+    });
+  }}
+  style={goldButton}
+>
+  Dodaj template
+</button>
 
 <input
   placeholder="Nova stavka templatea"
