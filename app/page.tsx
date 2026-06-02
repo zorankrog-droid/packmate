@@ -1790,11 +1790,11 @@ if (
   style={{
     ...goldButton,
     marginBottom: 16,
-    marginLeft: 10,
   }}
 >
   🔔 Uključi notifikacije
 </button>
+
           <p>{user.email}</p>
 
           <button onClick={logout} style={secondaryButton}>
@@ -1821,223 +1821,232 @@ if (
 </div>
 
 {showTemplates && (
-  <div>
+  <>
+    <div>
+    <input
+      placeholder="Naziv templatea"
+      value={templateName}
+      onChange={(e) => setTemplateName(e.target.value)}
+      style={inputStyle}
+    />
 
-  <input
-    placeholder="Naziv templatea"
-    value={templateName}
-    onChange={(e) => setTemplateName(e.target.value)}
-    style={inputStyle}
-  />
-
-  <button
-  onClick={() => {
-    if (!templateName.trim()) {
-      setDeleteModal({
-        title: "⚠️ Nedostaje naziv",
-        message: "Upiši naziv templatea prije dodavanja.",
-        confirmText: "U redu",
-        onConfirm: () => {},
-      });
-      return;
-    }
-
-    setDeleteModal({
-      title: "➕ Dodati template?",
-      message: `Želiš li dodati template "${templateName}"?`,
-      confirmText: "Dodaj",
-      onConfirm: () => createTemplate(),
-    });
-  }}
-  style={goldButton}
->
-  Dodaj template
-</button>
-
-<input
-  placeholder="Nova stavka templatea"
-  value={templateItemName}
-  onChange={(e) => setTemplateItemName(e.target.value)}
-  style={{
-    ...inputStyle,
-    marginTop: 18,
-  }}
-/>
-
-</div>
-)}
-
-<div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-  <button
-  onClick={() => {
-    if (!templateItemName.trim()) {
-      setDeleteModal({
-        title: "⚠️ Nedostaje naziv",
-        message: "Upiši naziv stavke prije dodavanja.",
-        confirmText: "U redu",
-        onConfirm: () => {},
-      });
-      return;
-    }
-
-    setDeleteModal({
-      title: "➕ Dodati stavku?",
-      message: `Želiš li dodati stavku "${templateItemName}" u template?`,
-      confirmText: "Dodaj",
-      onConfirm: () => addTemplateItem(),
-    });
-  }}
-  style={goldButton}
->
-  ➕ Dodaj stavku u template
-</button>
-
-  <button
-  onClick={() =>
-    setDeleteModal({
-      title: "📦 Učitati template?",
-      message: "Želiš li učitati stavke iz odabranog templatea u odabranu listu?",
-      confirmText: "Učitaj",
-      onConfirm: () => loadTemplateItems(),
-    })
-  }
-  style={secondaryButton}
->
-  📥 Učitaj template u listu
-</button>
-</div>
-
-<div>
-  {templates.map((t) => (
-  <div
-    key={t.id}
-    style={{
-      ...secondaryButton,
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      width: "100%",
-      marginTop: 12,
-      border:
-        selectedTemplate === t.id
-          ? "2px solid gold"
-          : "2px solid transparent",
-    }}
-  >
-    <span
+    <button
       onClick={() => {
-        setSelectedTemplate(t.id);
-        setListName(t.name);
-        loadSelectedTemplateItems(t.id);
+        if (!templateName.trim()) {
+          setDeleteModal({
+            title: "⚠️ Nedostaje naziv",
+            message: "Upiši naziv templatea prije dodavanja.",
+            confirmText: "U redu",
+            onConfirm: () => {},
+          });
+          return;
+        }
+
+        setDeleteModal({
+          title: "➕ Dodati template?",
+          message: `Želiš li dodati template "${templateName}"?`,
+          confirmText: "Dodaj",
+          onConfirm: () => createTemplate(),
+        });
       }}
-      style={{ flex: 1, cursor: "pointer" }}
+      style={goldButton}
     >
-      {t.name}
-    </span>
-
-<button
-  onClick={() => setDefaultTemplate(t.id)}
-  style={{
-    background: "transparent",
-    border: "none",
-    color: t.is_default ? "#d4af37" : "#888",
-    fontSize: 18,
-    cursor: "pointer",
-    marginRight: 8,
-  }}
->
-  {t.is_default ? "⭐" : "☆"}
-</button>
-
-<button
-  onClick={() => editTemplate(t)}
-  style={{
-    background: "transparent",
-    border: "none",
-    color: "#d4af37",
-    fontSize: 18,
-    cursor: "pointer",
-    marginRight: 8,
-  }}
->
-
-  ✏️
-</button>
-
-    <button
-      onClick={() =>
-  setDeleteModal({
-    message: `Obrisati template "${t.name}"?`,
-    onConfirm: () => deleteTemplate(t.id),
-  })
-}
-      style={{
-        background: "transparent",
-        border: "none",
-        color: "#ff6b6b",
-        fontSize: 18,
-        cursor: "pointer",
-      }}
-    >
-      🗑️
+      Dodaj template
     </button>
-  </div>
-))}
 
-  {templateItems.length > 0 && (
-    <div style={{ marginTop: 14 }}>
-      <p style={{ opacity: 0.7 }}>Stavke u templateu:</p>
-
-      {templateItems.map((item) => (
-  <div
-    key={item.id}
-    style={{
-      ...secondaryButton,
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    }}
-  >
-    <span>• {item.name}</span>
-
-<button
-  onClick={() => editTemplateItem(item)}
-  style={{
-    background: "transparent",
-    border: "none",
-    color: "#d4af37",
-    fontSize: 18,
-    cursor: "pointer",
-    marginRight: 8,
-  }}
->
-  ✏️
-</button>
-
-    <button
-      onClick={() =>
-  setDeleteModal({
-    message: `Obrisati stavku templatea "${item.name}"?`,
-    onConfirm: () => deleteTemplateItem(item.id),
-  })
-}
+    <input
+      placeholder="Nova stavka templatea"
+      value={templateItemName}
+      onChange={(e) => setTemplateItemName(e.target.value)}
       style={{
-        background: "transparent",
-        border: "none",
-        color: "#ff6b6b",
-        fontSize: 18,
-        cursor: "pointer",
+        ...inputStyle,
+        marginTop: 18,
       }}
-    >
-      🗑️
-    </button>
-  </div>
-))}
+    />
+
+    <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+      <button
+        onClick={() => {
+          if (!templateItemName.trim()) {
+            setDeleteModal({
+              title: "⚠️ Nedostaje naziv",
+              message: "Upiši naziv stavke prije dodavanja.",
+              confirmText: "U redu",
+              onConfirm: () => {},
+            });
+            return;
+          }
+
+          setDeleteModal({
+            title: "➕ Dodati stavku?",
+            message: `Želiš li dodati stavku "${templateItemName}" u template?`,
+            confirmText: "Dodaj",
+            onConfirm: () => addTemplateItem(),
+          });
+        }}
+        style={goldButton}
+      >
+        ➕ Dodaj stavku u template
+      </button>
+
+      <button
+        onClick={() =>
+          setDeleteModal({
+            title: "📦 Učitati template?",
+            message:
+              "Želiš li učitati stavke iz odabranog templatea u odabranu listu?",
+            confirmText: "Učitaj",
+            onConfirm: () => loadTemplateItems(),
+          })
+        }
+        style={secondaryButton}
+      >
+        📥 Učitaj template u listu
+      </button>
     </div>
-  )}
-</div>
 
-</div>
+    <div>
+      {templates.map((t) => (
+        <div
+          key={t.id}
+          style={{
+            ...secondaryButton,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            marginTop: 12,
+            border:
+              selectedTemplate === t.id
+                ? "2px solid gold"
+                : "2px solid transparent",
+          }}
+        >
+          <span
+            onClick={() => {
+              setSelectedTemplate(t.id);
+              setListName(t.name);
+              loadSelectedTemplateItems(t.id);
+            }}
+            style={{ flex: 1, cursor: "pointer" }}
+          >
+            {t.name}
+          </span>
+
+          <button
+            onClick={() => setDefaultTemplate(t.id)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: t.is_default ? "#d4af37" : "#888",
+              fontSize: 18,
+              cursor: "pointer",
+              marginRight: 8,
+            }}
+          >
+            {t.is_default ? "⭐" : "☆"}
+          </button>
+
+          <button
+            onClick={() => editTemplate(t)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#d4af37",
+              fontSize: 18,
+              cursor: "pointer",
+              marginRight: 8,
+            }}
+          >
+            ✏️
+          </button>
+
+          <button
+            onClick={() =>
+              setDeleteModal({
+                title: "Potvrda brisanja",
+                message: `Obrisati template "${t.name}"?`,
+                confirmText: "Obriši",
+                onConfirm: () => deleteTemplate(t.id),
+              })
+            }
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#ff6b6b",
+              fontSize: 18,
+              cursor: "pointer",
+            }}
+          >
+            🗑️
+          </button>
+        </div>
+      ))}
+    </div>
+
+    {templateItems.length > 0 && (
+      <div style={{ marginTop: 14 }}>
+        <p style={{ opacity: 0.7 }}>Stavke u templateu:</p>
+
+        {templateItems.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              ...secondaryButton,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>• {item.name}</span>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
+              <button
+                onClick={() => editTemplateItem(item)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "#d4af37",
+                  fontSize: 18,
+                  cursor: "pointer",
+                }}
+              >
+                ✏️
+              </button>
+
+              <button
+                onClick={() =>
+                  setDeleteModal({
+                    title: "Potvrda brisanja",
+                    message: `Obrisati stavku templatea "${item.name}"?`,
+                    confirmText: "Obriši",
+                    onConfirm: () => deleteTemplateItem(item.id),
+                  })
+                }
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "#ff6b6b",
+                  fontSize: 18,
+                  cursor: "pointer",
+                }}
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</>
+)}
 
 <div style={sectionCard}>
   <h2 style={titleStyle}>Nova lista</h2>
@@ -2867,6 +2876,7 @@ setNewItemName(item.name);
 >
   +
 </button>
+</div>
     </main>
   );
 }
