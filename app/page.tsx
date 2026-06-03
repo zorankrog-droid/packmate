@@ -66,6 +66,8 @@ const [generateStatus, setGenerateStatus] = useState("");
 const [tripTemp, setTripTemp] =
   useState("");
 
+  const [placeSuggestions, setPlaceSuggestions] = useState<any[]>([]);
+
 const [destination, setDestination] =
   useState("");
   const [flightMode, setFlightMode] =
@@ -2167,16 +2169,60 @@ localStorage.setItem(
 
         <div style={sectionCard}>
           <h2 style={titleStyle}>🤖 AI Generator</h2>
-<input
-  placeholder="Destinacija"
-  value={destination}
-  onChange={(e) =>
-    setDestination(
-      e.target.value
-    )
-  }
-  style={inputStyle}
-/>
+<div style={{ position: "relative" }}>
+  <input
+    placeholder="Destinacija"
+    value={destination}
+    onChange={async (e) => {
+      const value = e.target.value;
+      setDestination(value);
+
+      if (value.trim().length < 2) {
+        setPlaceSuggestions([]);
+        return;
+      }
+
+      const res = await fetch(`/api/places?q=${encodeURIComponent(value)}`);
+      const data = await res.json();
+      setPlaceSuggestions(data);
+    }}
+    style={inputStyle}
+  />
+
+  {placeSuggestions.length > 0 && (
+    <div
+      style={{
+        position: "absolute",
+        top: "58px",
+        left: 0,
+        right: 0,
+        background: "#0f1d33",
+        border: "1px solid rgba(255,255,255,0.15)",
+        borderRadius: 14,
+        zIndex: 3000,
+        maxHeight: 240,
+        overflowY: "auto",
+      }}
+    >
+      {placeSuggestions.map((place) => (
+        <div
+          key={place.id}
+          onClick={() => {
+            setDestination(place.name);
+            setPlaceSuggestions([]);
+          }}
+          style={{
+            padding: "12px 14px",
+            cursor: "pointer",
+            borderBottom: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          {place.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
 <div style={{ height: 10 }} />
 
