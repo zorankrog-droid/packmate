@@ -8,26 +8,37 @@ export async function GET(req: Request) {
     return NextResponse.json([]);
   }
 
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=8&addressdetails=1&q=${encodeURIComponent(q)}`;
+  try {
+    const res = await fetch(
+      `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${encodeURIComponent(
+        q
+      )}&limit=8&sort=-population`,
+      {
+        headers: {
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY || "",
+          "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+        },
+      }
+    );
 
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": "PackMate/1.0",
-    },
-  });
+    if (!res.ok) {
+      return NextResponse.json([]);
+    }
 
-  if (!res.ok) {
+    const data = await res.json();
+
+    const places = data.data.map((city: any) => ({
+      id: city.id,
+      name: `${city.name}, ${city.country}`,
+      city: city.name,
+      country: city.country,
+      region: city.region,
+      lat: city.latitude,
+      lon: city.longitude,
+    }));
+
+    return NextResponse.json(places);
+  } catch {
     return NextResponse.json([]);
   }
-
-  const data = await res.json();
-
-  const places = data.map((place: any) => ({
-    id: place.place_id,
-    name: place.display_name,
-    lat: place.lat,
-    lon: place.lon,
-  }));
-
-  return NextResponse.json(places);
 }
