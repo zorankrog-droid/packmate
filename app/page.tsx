@@ -2173,19 +2173,30 @@ localStorage.setItem(
   <input
     placeholder="Destinacija"
     value={destination}
-    onChange={async (e) => {
-      const value = e.target.value;
-      setDestination(value);
+   onChange={(e) => {
+  const value = e.target.value;
+  setDestination(value);
 
-      if (value.trim().length < 2) {
-        setPlaceSuggestions([]);
-        return;
-      }
+  if (value.trim().length < 3) {
+    setPlaceSuggestions([]);
+    return;
+  }
 
-      const res = await fetch(`/api/places?q=${encodeURIComponent(value)}`);
+  clearTimeout((window as any).placeSearchTimer);
+
+  (window as any).placeSearchTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(
+        `/api/places?q=${encodeURIComponent(value)}`
+      );
+
       const data = await res.json();
       setPlaceSuggestions(data);
-    }}
+    } catch {
+      setPlaceSuggestions([]);
+    }
+  }, 600);
+}}
     style={inputStyle}
   />
 
