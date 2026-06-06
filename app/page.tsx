@@ -2233,7 +2233,7 @@ const weatherRes = await fetch(
 const weatherData = await weatherRes.json();
 
 if (weatherData.currentTemp !== null) {
-  setTripTemp(String(Math.round(weatherData.currentTemp)));
+  setTripTemp(`${Math.round(weatherData.currentTemp)}°C`);
 }
 
 if (weatherData.daily) {
