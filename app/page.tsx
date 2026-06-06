@@ -2319,6 +2319,42 @@ if (weatherData.daily) {
   }
   style={inputStyle}
 />
+
+{weatherForecast.length > 0 && startDate && endDate && (
+  <div
+    style={{
+      marginTop: 12,
+      display: "grid",
+      gap: 8,
+    }}
+  >
+    <div style={{ color: "#d4af37", fontWeight: 700 }}>
+      🌦️ Prognoza za dane putovanja
+    </div>
+
+    {weatherForecast
+      .filter((day) => day.date >= startDate && day.date <= endDate)
+      .map((day) => (
+        <div
+          key={day.date}
+          style={{
+            padding: "10px 12px",
+            borderRadius: 12,
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>{day.date}</span>
+          <span>
+            {Math.round(day.min)}°C / {Math.round(day.max)}°C
+          </span>
+        </div>
+      ))}
+  </div>
+)}
+
 <select
   value={flightMode}
   onChange={(e) =>
