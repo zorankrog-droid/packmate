@@ -2320,7 +2320,7 @@ if (weatherData.daily) {
   style={inputStyle}
 />
 
-{weatherForecast.length > 0 && startDate && endDate && (
+{weatherForecast.length > 0 && (
   <div
     style={{
       marginTop: 12,
@@ -2333,8 +2333,13 @@ if (weatherData.daily) {
     </div>
 
     {weatherForecast
-      .filter((day) => day.date >= startDate && day.date <= endDate)
-      .map((day) => (
+  .filter((day) =>
+    startDate && endDate
+      ? day.date >= startDate && day.date <= endDate
+      : true
+  )
+  .slice(0, startDate && endDate ? weatherForecast.length : 8)
+  .map((day) => (
         <div
           key={day.date}
           style={{
