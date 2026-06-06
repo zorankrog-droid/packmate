@@ -2356,6 +2356,21 @@ if (weatherData.daily) {
         (d) => d.date === date
       );
 
+const formatDate = (date: string) => {
+  const d = new Date(date);
+  return d.toLocaleDateString("hr-HR");
+};
+
+const weatherIcon = (code: number) => {
+  if ([0].includes(code)) return "☀️";
+  if ([1, 2, 3].includes(code)) return "🌤️";
+  if ([45, 48].includes(code)) return "🌫️";
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return "🌧️";
+  if ([71, 73, 75, 85, 86].includes(code)) return "❄️";
+  if ([95, 96, 99].includes(code)) return "⛈️";
+  return "🌦️";
+};
+
     return (
       <div
         key={date}
@@ -2371,7 +2386,9 @@ if (weatherData.daily) {
             "space-between",
         }}
       >
-        <span>{date}</span>
+        <span>
+  {forecastDay ? weatherIcon(forecastDay.code) : "⏳"} {formatDate(date)}
+</span>
 
         {forecastDay ? (
           <span>
@@ -2390,8 +2407,7 @@ if (weatherData.daily) {
               color: "#d4af37",
             }}
           >
-            ⏳ Prognoza još nije
-            dostupna
+            Prognoza još nije dostupna
           </span>
         )}
       </div>
