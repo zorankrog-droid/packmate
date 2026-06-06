@@ -2332,31 +2332,72 @@ if (weatherData.daily) {
       🌦️ Prognoza za dane putovanja
     </div>
 
-    {weatherForecast
-  .filter((day) =>
-    startDate && endDate
-      ? day.date >= startDate && day.date <= endDate
-      : true
-  )
-  .slice(0, startDate && endDate ? weatherForecast.length : 8)
-  .map((day) => (
-        <div
-          key={day.date}
-          style={{
-            padding: "10px 12px",
-            borderRadius: 12,
-            background: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <span>{day.date}</span>
+    {(() => {
+  const days: string[] = [];
+
+  if (startDate && endDate) {
+    let current = new Date(startDate);
+    const end = new Date(endDate);
+
+    while (current <= end) {
+      days.push(
+        current.toISOString().split("T")[0]
+      );
+
+      current.setDate(
+        current.getDate() + 1
+      );
+    }
+  }
+
+  return days.map((date) => {
+    const forecastDay =
+      weatherForecast.find(
+        (d) => d.date === date
+      );
+
+    return (
+      <div
+        key={date}
+        style={{
+          padding: "10px 12px",
+          borderRadius: 12,
+          background:
+            "rgba(255,255,255,0.08)",
+          border:
+            "1px solid rgba(255,255,255,0.12)",
+          display: "flex",
+          justifyContent:
+            "space-between",
+        }}
+      >
+        <span>{date}</span>
+
+        {forecastDay ? (
           <span>
-            {Math.round(day.min)}°C / {Math.round(day.max)}°C
+            {Math.round(
+              forecastDay.min
+            )}
+            °C /{" "}
+            {Math.round(
+              forecastDay.max
+            )}
+            °C
           </span>
-        </div>
-      ))}
+        ) : (
+          <span
+            style={{
+              color: "#d4af37",
+            }}
+          >
+            ⏳ Prognoza još nije
+            dostupna
+          </span>
+        )}
+      </div>
+    );
+  });
+})()}
   </div>
 )}
 
