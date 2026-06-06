@@ -8,6 +8,9 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<any>(null);
 
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+const [weatherForecast, setWeatherForecast] = useState<any[]>([]);
+
   const [lists, setLists] = useState<any[]>([]);
   const [templates, setTemplates] = useState<any[]>([]);
 const [templateName, setTemplateName] = useState("");
@@ -2218,9 +2221,31 @@ localStorage.setItem(
       {placeSuggestions.map((place) => (
         <div
           key={place.id}
-          onClick={() => {
+          onClick={async () => {
             setDestination(place.name);
-            setPlaceSuggestions([]);
+setSelectedPlace(place);
+setPlaceSuggestions([]);
+
+const weatherRes = await fetch(
+  `/api/weather?lat=${place.lat}&lon=${place.lon}`
+);
+
+const weatherData = await weatherRes.json();
+
+if (weatherData.currentTemp !== null) {
+  setTripTemp(String(Math.round(weatherData.currentTemp)));
+}
+
+if (weatherData.daily) {
+  const forecast = weatherData.daily.time.map((date: string, index: number) => ({
+    date,
+    min: weatherData.daily.temperature_2m_min[index],
+    max: weatherData.daily.temperature_2m_max[index],
+    code: weatherData.daily.weather_code[index],
+  }));
+
+  setWeatherForecast(forecast);
+}
           }}
           style={{
             padding: "12px 14px",
