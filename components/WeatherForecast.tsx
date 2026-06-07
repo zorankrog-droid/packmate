@@ -47,7 +47,7 @@ export default function WeatherForecast({
 
   return (
     <div style={{ marginTop: 12, display: "grid", gap: 8 }}>
-      <div style={{ color: "#d4af37", fontWeight: 700 }}>
+      <div style={{ color: "#fd9644", fontWeight: 700 }}>
         🌦️ Prognoza za dane putovanja
       </div>
 
@@ -77,7 +77,7 @@ export default function WeatherForecast({
                 °C
               </span>
             ) : (
-              <span style={{ color: "#d4af37" }}>
+              <span style={{ color: "#fd9644" }}>
                 Prognoza još nije dostupna
               </span>
             )}

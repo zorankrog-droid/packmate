@@ -1830,11 +1830,11 @@ const borderColor = theme.border;
   </h1>
 
   <button
-    onClick={logout}
-    style={secondaryButton}
-  >
-    Odjava
-  </button>
+  onClick={logout}
+  style={goldButton}
+>
+  Odjava
+</button>
 </div>
 
   

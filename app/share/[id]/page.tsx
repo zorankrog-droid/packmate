@@ -153,7 +153,7 @@ useEffect(() => {
   return (
     <main style={pageStyle}>
       <div style={cardStyle}>
-        <h1 style={{ color: "#d4af37" }}>✈️ PackMate lista</h1>
+        <h1 style={{ color: "#fd9644" }}>✈️ PackMate lista</h1>
         <h2>{list.name}</h2>
 
 <input
@@ -264,7 +264,7 @@ const buttonStyle: React.CSSProperties = {
   padding: 14,
   borderRadius: 12,
   border: "none",
-  background: "#d4af37",
+  background: "#fd9644",
   color: "#071120",
   fontWeight: "bold",
   cursor: "pointer",

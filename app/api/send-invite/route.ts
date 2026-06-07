@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         
         <div style="text-align:center;margin-bottom:24px;">
           <div style="font-size:42px;margin-bottom:8px;">✈️</div>
-          <h1 style="margin:0;color:#d4af37;font-size:30px;">
+          <h1 style="margin:0;color:#fd9644;font-size:30px;">
             PackMate pozivnica
           </h1>
         </div>
@@ -37,14 +37,14 @@ export async function POST(req: Request) {
 
         <div style="text-align:center;margin:30px 0;">
           <a href="${shareUrl}"
-             style="display:inline-block;background:#d4af37;color:#071120;text-decoration:none;font-weight:bold;font-size:17px;padding:15px 28px;border-radius:14px;">
+             style="display:inline-block;background:#fd9644;color:#071120;text-decoration:none;font-weight:bold;font-size:17px;padding:15px 28px;border-radius:14px;">
             Otvori listu
           </a>
         </div>
 
         <p style="font-size:14px;line-height:1.6;color:#94a3b8;margin:0;">
           Ako gumb ne radi, kopirajte ovaj link u preglednik:<br />
-          <span style="color:#d4af37;word-break:break-all;">${shareUrl}</span>
+          <span style="color:#fd9644;word-break:break-all;">${shareUrl}</span>
         </p>
 
       </div>
