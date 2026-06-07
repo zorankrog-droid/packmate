@@ -17,32 +17,56 @@ export default function ThemeSwitcher({
         marginBottom: 20,
       }}
     >
-      <select
-        value={themeName}
-        onChange={(e) =>
-          setThemeName(
-            e.target.value as
-              | "premiumDark"
-              | "travelLight"
-          )
-        }
+      <div
         style={{
-          padding: "10px 14px",
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.15)",
-          background: "#0f1d33",
-          color: "white",
-          cursor: "pointer",
+          display: "flex",
+          gap: 8,
+          background: "#081633",
+          padding: 6,
+          borderRadius: 14,
+          border: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <option value="premiumDark">
-          🌙 Premium Dark
-        </option>
+        <button
+          onClick={() =>
+            setThemeName("premiumDark")
+          }
+          style={{
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 14px",
+            cursor: "pointer",
+            fontWeight: 700,
+            background:
+              themeName === "premiumDark"
+                ? "#f39c12"
+                : "transparent",
+            color: "white",
+          }}
+        >
+          🌙 Dark
+        </button>
 
-        <option value="travelLight">
-          ☀️ Travel Light
-        </option>
-      </select>
+        <button
+          onClick={() =>
+            setThemeName("travelLight")
+          }
+          style={{
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 14px",
+            cursor: "pointer",
+            fontWeight: 700,
+            background:
+              themeName === "travelLight"
+                ? "#f39c12"
+                : "transparent",
+            color: "white",
+          }}
+        >
+          ☀️ Light
+        </button>
+      </div>
     </div>
   );
 }
