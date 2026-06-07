@@ -14,6 +14,8 @@ import DateRangePicker from "../components/DateRangePicker";
 
 import { themes } from "../lib/themes";
 
+import ThemeSwitcher from "../components/ThemeSwitcher";
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -1485,31 +1487,10 @@ const borderColor = theme.border;
     marginBottom: 20,
   }}
 >
-  <select
-    value={themeName}
-    onChange={(e) =>
-      setThemeName(
-        e.target.value as
-          "premiumDark" | "travelLight"
-      )
-    }
-    style={{
-      padding: "10px 14px",
-      borderRadius: 12,
-      border: "none",
-      background: gold,
-      color: "#081633",
-      fontWeight: 700,
-      cursor: "pointer",
-    }}
-  >
-    <option value="premiumDark">
-      Premium Dark
-    </option>
-    <option value="travelLight">
-      Travel Light
-    </option>
-  </select>
+  <ThemeSwitcher
+  themeName={themeName}
+  setThemeName={setThemeName}
+/>
 </div>
 
       {editingList && (
