@@ -1990,7 +1990,7 @@ const borderColor = theme.border;
             style={{
               background: "transparent",
               border: "none",
-              color: t.is_default ? "#d4af37" : "#888",
+              color: t.is_default ? "#fd9644" : "#888",
               fontSize: 18,
               cursor: "pointer",
               marginRight: 8,
@@ -2714,7 +2714,7 @@ if (weatherData.daily) {
         width: `${progress}%`,
         height: "100%",
         background:
-          "#d4af37",
+          "#fd9644",
         transition:
           "0.3s",
       }}
@@ -2878,7 +2878,7 @@ setNewItemName(item.name);
 
   border:
     selectedList === list.id
-      ? "2px solid #d4af37"
+      ? "2px solid #fd9644"
       : "1px solid rgba(255,255,255,0.08)",
 
   padding: 16,
@@ -2918,7 +2918,7 @@ setNewItemName(item.name);
         : 400,
     color:
       selectedList === list.id
-        ? "#d4af37"
+        ? "#fd9644"
         : "white",
   }}
 >
@@ -2987,7 +2987,7 @@ setNewItemName(item.name);
     borderRadius: "50%",
     border: "none",
     background:
-      "#d4af37",
+      "#fd9644",
     color: "#000",
     fontSize: 34,
     fontWeight: 700,
@@ -3023,7 +3023,7 @@ const goldButton: React.CSSProperties = {
   padding: 16,
   borderRadius: 16,
   border: "none",
-  backgroundColor: "#d4af37",
+  backgroundColor: "#fd9644",
   color: "#071120",
   fontWeight: 700,
   fontSize: 16,
@@ -3057,5 +3057,5 @@ const sectionCard: React.CSSProperties = {
 
 const titleStyle: React.CSSProperties = {
   marginBottom: 20,
-  color: "#d4af37",
+  color: "#fd9644",
 };
