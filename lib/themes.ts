@@ -6,8 +6,8 @@ export const themes = {
     text: "#ffffff",
     muted: "rgba(255,255,255,0.7)",
     border: "rgba(255,255,255,0.12)",
-    accent: "#f7941d",
-    accentHover: "#ffab3d",
+    accent: "#fd9644",
+    accentHover: "#fd9644",
   },
 
   travelLight: {
@@ -17,7 +17,7 @@ export const themes = {
   text: "#17324d",
   muted: "rgba(23,50,77,0.7)",
   border: "rgba(23,50,77,0.12)",
-  accent: "#f28c28",
-  accentHover: "#ff9f50",
+  accent: "#fd9644",
+  accentHover: "#fd9644",
 }
 };
