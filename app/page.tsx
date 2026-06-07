@@ -1824,7 +1824,7 @@ const borderColor = theme.border;
       onClick={logout}
       style={secondaryButton}
     >
-      🚪 Odjava
+      🔓 Odjava
     </button>
   </div>
 
