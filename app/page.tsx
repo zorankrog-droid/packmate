@@ -1474,6 +1474,41 @@ if (
 
   return (
     <main style={{ minHeight: "100vh", background: bg, color: "white", padding: 20 }}>
+      
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: 20,
+  }}
+>
+  <select
+    value={themeName}
+    onChange={(e) =>
+      setThemeName(
+        e.target.value as
+          "premiumDark" | "travelLight"
+      )
+    }
+    style={{
+      padding: "10px 14px",
+      borderRadius: 12,
+      border: "none",
+      background: gold,
+      color: "#081633",
+      fontWeight: 700,
+      cursor: "pointer",
+    }}
+  >
+    <option value="premiumDark">
+      Premium Dark
+    </option>
+    <option value="travelLight">
+      Travel Light
+    </option>
+  </select>
+</div>
+
       {editingList && (
   <div
     style={{
