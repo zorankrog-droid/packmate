@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+
 import type { DateRange } from "react-day-picker";
 
 import { supabase } from "../lib/supabase";
@@ -11,6 +11,8 @@ import { supabase } from "../lib/supabase";
 import WeatherForecast from "../components/WeatherForecast";
 
 import DateRangePicker from "../components/DateRangePicker";
+
+import { themes } from "../lib/themes";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -48,6 +50,13 @@ const [endDate, setEndDate] = useState("");
 
 const [range, setRange] = useState<DateRange | undefined>();
 const [showCalendar, setShowCalendar] = useState(false);
+
+const [themeName, setThemeName] =
+  useState<"premiumDark" | "travelLight">(
+    "premiumDark"
+  );
+
+const theme = themes[themeName];
 
 const formatDate = (date: string) => {
   const d = new Date(date);
