@@ -8,6 +8,10 @@ import type { DateRange } from "react-day-picker";
 
 import { supabase } from "../lib/supabase";
 
+import WeatherForecast from "../components/WeatherForecast";
+
+import DateRangePicker from "../components/DateRangePicker";
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -2275,90 +2279,18 @@ if (weatherData.daily) {
 
 <div style={{ height: 10 }} />
 
-<div style={{ position: "relative", marginBottom: 12 }}>
-  <div
-    onClick={() => {
-  setRange(undefined);
-  setStartDate("");
-  setEndDate("");
-  setShowCalendar(true);
-}}
-    style={{
-      ...inputStyle,
-      cursor: "pointer",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    }}
-  >
-    <span>
-      {startDate && endDate
-        ? `${formatDate(startDate)} - ${formatDate(endDate)}`
-        : "Odaberi datum putovanja"}
-    </span>
-    <span>📅</span>
-  </div>
-
-  {showCalendar && (
-    <div
-      style={{
-        background: "#0f1d33",
-        border: "1px solid rgba(255,255,255,0.15)",
-        borderRadius: 18,
-        padding: 12,
-        marginTop: 8,
-        zIndex: 3000,
-      }}
-    >
-     <DayPicker
-  mode="range"
-  selected={range}
-  onSelect={(selectedRange) => {
-    if (!selectedRange?.from) {
-      setRange(undefined);
-      setStartDate("");
-      setEndDate("");
-      return;
-    }
-
-    const from =
-      selectedRange.from.getFullYear() +
-      "-" +
-      String(selectedRange.from.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(selectedRange.from.getDate()).padStart(2, "0");
-
-    const isSameDay =
-      selectedRange.to &&
-      selectedRange.from.toDateString() === selectedRange.to.toDateString();
-
-    if (!selectedRange.to || isSameDay) {
-      setRange({
-        from: selectedRange.from,
-        to: undefined,
-      });
-      setStartDate(from);
-      setEndDate("");
-      return;
-    }
-
-    const to =
-      selectedRange.to.getFullYear() +
-      "-" +
-      String(selectedRange.to.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(selectedRange.to.getDate()).padStart(2, "0");
-
-    setRange(selectedRange);
-    setStartDate(from);
-    setEndDate(to);
-    setShowCalendar(false);
-  }}
+<DateRangePicker
+  range={range}
+  setRange={setRange}
+  startDate={startDate}
+  setStartDate={setStartDate}
+  endDate={endDate}
+  setEndDate={setEndDate}
+  showCalendar={showCalendar}
+  setShowCalendar={setShowCalendar}
+  inputStyle={inputStyle}
+  formatDate={formatDate}
 />
-    </div>
-  )}
-</div>
-
   <input
     placeholder="Broj dana"
     value={
@@ -2394,102 +2326,11 @@ if (weatherData.daily) {
   style={inputStyle}
 />
 
-{weatherForecast.length > 0 && (
-  <div
-    style={{
-      marginTop: 12,
-      display: "grid",
-      gap: 8,
-    }}
-  >
-    <div style={{ color: "#d4af37", fontWeight: 700 }}>
-      🌦️ Prognoza za dane putovanja
-    </div>
-
-    {(() => {
-  const days: string[] = [];
-
-  if (startDate && endDate) {
-    let current = new Date(startDate);
-    const end = new Date(endDate);
-
-    while (current <= end) {
-      days.push(
-        current.toISOString().split("T")[0]
-      );
-
-      current.setDate(
-        current.getDate() + 1
-      );
-    }
-  }
-
-  return days.map((date) => {
-    const forecastDay =
-      weatherForecast.find(
-        (d) => d.date === date
-      );
-
-const formatDate = (date: string) => {
-  const d = new Date(date);
-  return d.toLocaleDateString("hr-HR");
-};
-
-const weatherIcon = (code: number) => {
-  if ([0].includes(code)) return "☀️";
-  if ([1, 2, 3].includes(code)) return "🌤️";
-  if ([45, 48].includes(code)) return "🌫️";
-  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return "🌧️";
-  if ([71, 73, 75, 85, 86].includes(code)) return "❄️";
-  if ([95, 96, 99].includes(code)) return "⛈️";
-  return "🌦️";
-};
-
-    return (
-      <div
-        key={date}
-        style={{
-          padding: "10px 12px",
-          borderRadius: 12,
-          background:
-            "rgba(255,255,255,0.08)",
-          border:
-            "1px solid rgba(255,255,255,0.12)",
-          display: "flex",
-          justifyContent:
-            "space-between",
-        }}
-      >
-        <span>
-  {forecastDay ? weatherIcon(forecastDay.code) : "⏳"} {formatDate(date)}
-</span>
-
-        {forecastDay ? (
-          <span>
-            {Math.round(
-              forecastDay.min
-            )}
-            °C /{" "}
-            {Math.round(
-              forecastDay.max
-            )}
-            °C
-          </span>
-        ) : (
-          <span
-            style={{
-              color: "#d4af37",
-            }}
-          >
-            Prognoza još nije dostupna
-          </span>
-        )}
-      </div>
-    );
-  });
-})()}
-  </div>
-)}
+<WeatherForecast
+  weatherForecast={weatherForecast}
+  startDate={startDate}
+  endDate={endDate}
+/>
 
 <select
   value={flightMode}
