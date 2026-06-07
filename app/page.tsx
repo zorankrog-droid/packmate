@@ -2277,7 +2277,12 @@ if (weatherData.daily) {
 
 <div style={{ position: "relative", marginBottom: 12 }}>
   <div
-    onClick={() => setShowCalendar(!showCalendar)}
+    onClick={() => {
+  setRange(undefined);
+  setStartDate("");
+  setEndDate("");
+  setShowCalendar(true);
+}}
     style={{
       ...inputStyle,
       cursor: "pointer",
@@ -2309,19 +2314,53 @@ if (weatherData.daily) {
         mode="range"
         selected={range}
         onSelect={(selectedRange) => {
-          setRange(selectedRange);
+  if (!selectedRange) {
+    setRange(undefined);
+    setStartDate("");
+    setEndDate("");
+    return;
+  }
 
-          if (selectedRange?.from) {
-            const from = selectedRange.from.toISOString().split("T")[0];
-            setStartDate(from);
-          }
+  if (selectedRange.from && selectedRange.to) {
+    setRange(selectedRange);
 
-          if (selectedRange?.to) {
-            const to = selectedRange.to.toISOString().split("T")[0];
-            setEndDate(to);
-            setShowCalendar(false);
-          }
-        }}
+    const from =
+      selectedRange.from.getFullYear() +
+      "-" +
+      String(selectedRange.from.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(selectedRange.from.getDate()).padStart(2, "0");
+
+    const to =
+      selectedRange.to.getFullYear() +
+      "-" +
+      String(selectedRange.to.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(selectedRange.to.getDate()).padStart(2, "0");
+
+    setStartDate(from);
+    setEndDate(to);
+    setShowCalendar(false);
+    return;
+  }
+
+  if (selectedRange.from && !selectedRange.to) {
+    setRange({
+      from: selectedRange.from,
+      to: undefined,
+    });
+
+    const from =
+      selectedRange.from.getFullYear() +
+      "-" +
+      String(selectedRange.from.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(selectedRange.from.getDate()).padStart(2, "0");
+
+    setStartDate(from);
+    setEndDate("");
+  }
+}}
       />
     </div>
   )}
