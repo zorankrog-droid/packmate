@@ -1444,7 +1444,7 @@ const borderColor = theme.border;
             color: "white",
           }}
         >
-          <h1 style={{ textAlign: "center", color: gold, fontSize: 34 }}>
+          <h1 style={{ textAlign: "center", color: gold, fontSize: 42 }}>
             ✈️ PackMate
           </h1>
 
@@ -1817,10 +1817,20 @@ const borderColor = theme.border;
 
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <AppCard cardColor={card}>
-          <h1 style={{ color: gold }}>✈️ PackMate</h1>
-<div
-  style={{
-    marginBottom: 16,
+  <h1 style={{ color: gold }}>✈️ PackMate</h1>
+
+  <div style={{ marginBottom: 16 }}>
+    <button
+      onClick={logout}
+      style={secondaryButton}
+    >
+      🚪 Odjava
+    </button>
+  </div>
+
+  <div
+    style={{
+      marginBottom: 16,
     padding: "8px 12px",
     borderRadius: 999,
     background: isOffline
@@ -1847,11 +1857,7 @@ const borderColor = theme.border;
   🔔 Uključi notifikacije
 </button>
 
-          <p>{user.email}</p>
-
-          <button onClick={logout} style={secondaryButton}>
-            Logout
-          </button>
+          
         </AppCard>
         
         <div style={sectionCard}>
