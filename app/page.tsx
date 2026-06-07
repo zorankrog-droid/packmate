@@ -1816,7 +1816,7 @@ const borderColor = theme.border;
 )}
 
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
-        <div style={sectionCard}>
+        <AppCard cardColor={card}>
           <h1 style={{ color: gold }}>✈️ PackMate</h1>
 <div
   style={{
@@ -1852,7 +1852,7 @@ const borderColor = theme.border;
           <button onClick={logout} style={secondaryButton}>
             Logout
           </button>
-        </div>
+        </AppCard>
         
         <div style={sectionCard}>
   <div

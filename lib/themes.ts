@@ -11,13 +11,13 @@ export const themes = {
   },
 
   travelLight: {
-    bg: "#f3f6fb",
-    card: "#ffffff",
-    cardSoft: "#ffffff",
-    text: "#101828",
-    muted: "#667085",
-    border: "rgba(16,24,40,0.12)",
-    accent: "#f7941d",
-    accentHover: "#ffab3d",
-  },
+  bg: "#eef7ff",
+  card: "#ffffff",
+  cardSoft: "#f6fbff",
+  text: "#17324d",
+  muted: "rgba(23,50,77,0.7)",
+  border: "rgba(23,50,77,0.12)",
+  accent: "#f28c28",
+  accentHover: "#ff9f50",
+}
 };
