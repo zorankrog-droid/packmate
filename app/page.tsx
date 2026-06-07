@@ -2310,19 +2310,16 @@ if (weatherData.daily) {
         zIndex: 3000,
       }}
     >
-      <DayPicker
-        mode="range"
-        selected={range}
-        onSelect={(selectedRange) => {
-  if (!selectedRange) {
-    setRange(undefined);
-    setStartDate("");
-    setEndDate("");
-    return;
-  }
-
-  if (selectedRange.from && selectedRange.to) {
-    setRange(selectedRange);
+     <DayPicker
+  mode="range"
+  selected={range}
+  onSelect={(selectedRange) => {
+    if (!selectedRange?.from) {
+      setRange(undefined);
+      setStartDate("");
+      setEndDate("");
+      return;
+    }
 
     const from =
       selectedRange.from.getFullYear() +
@@ -2330,6 +2327,20 @@ if (weatherData.daily) {
       String(selectedRange.from.getMonth() + 1).padStart(2, "0") +
       "-" +
       String(selectedRange.from.getDate()).padStart(2, "0");
+
+    const isSameDay =
+      selectedRange.to &&
+      selectedRange.from.toDateString() === selectedRange.to.toDateString();
+
+    if (!selectedRange.to || isSameDay) {
+      setRange({
+        from: selectedRange.from,
+        to: undefined,
+      });
+      setStartDate(from);
+      setEndDate("");
+      return;
+    }
 
     const to =
       selectedRange.to.getFullYear() +
@@ -2338,30 +2349,12 @@ if (weatherData.daily) {
       "-" +
       String(selectedRange.to.getDate()).padStart(2, "0");
 
+    setRange(selectedRange);
     setStartDate(from);
     setEndDate(to);
     setShowCalendar(false);
-    return;
-  }
-
-  if (selectedRange.from && !selectedRange.to) {
-    setRange({
-      from: selectedRange.from,
-      to: undefined,
-    });
-
-    const from =
-      selectedRange.from.getFullYear() +
-      "-" +
-      String(selectedRange.from.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(selectedRange.from.getDate()).padStart(2, "0");
-
-    setStartDate(from);
-    setEndDate("");
-  }
-}}
-      />
+  }}
+/>
     </div>
   )}
 </div>
