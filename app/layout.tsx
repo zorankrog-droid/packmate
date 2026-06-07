@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PackMate AI",
+  title: "Kufer PackMate",
   description: "AI Travel Packing Assistant",
   manifest: "/manifest.json",
 };

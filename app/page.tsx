@@ -1446,7 +1446,15 @@ const borderColor = theme.border;
         >
           <h1 style={{ textAlign: "center", color: gold, fontSize: 42 }}>
             ✈️ PackMate
-          </h1>
+          </h1><h1
+  style={{
+    color: gold,
+    fontSize: 42,
+    fontWeight: 700,
+  }}
+>
+  🧳 Kufer PackMate
+</h1>
 
           <input
             type="email"
