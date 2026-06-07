@@ -1831,9 +1831,15 @@ const borderColor = theme.border;
 
   <button
   onClick={logout}
-  style={goldButton}
+  style={{
+    ...goldButton,
+    width: "auto",
+    padding: "10px 20px",
+    borderRadius: 12,
+    fontSize: 15,
+  }}
 >
-  Odjava
+  🔒 Odjava
 </button>
 </div>
 
