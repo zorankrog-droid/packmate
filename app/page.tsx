@@ -1444,9 +1444,7 @@ const borderColor = theme.border;
             color: "white",
           }}
         >
-          <h1 style={{ textAlign: "center", color: gold, fontSize: 42 }}>
-            ✈️ PackMate
-          </h1><h1
+          <h1
   style={{
     color: gold,
     fontSize: 42,
@@ -1834,7 +1832,7 @@ const borderColor = theme.border;
   }}
 >
   <h1 style={{ color: gold, margin: 0 }}>
-    ✈️ PackMate
+    🧳 Kufer PackMate
   </h1>
 
   <button
