@@ -3040,7 +3040,7 @@ const goldButton: React.CSSProperties = {
   padding: 16,
   borderRadius: 16,
   border: "none",
-  backgroundColor: "#fd9644",
+  backgroundColor: "#ffa825",
   color: "#071120",
   fontWeight: 700,
   fontSize: 16,
