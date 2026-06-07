@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import type { DateRange } from "react-day-picker";
+
 import { supabase } from "../lib/supabase";
 
 export default function Home() {
@@ -36,6 +41,14 @@ const [newItemName, setNewItemName] = useState("");
 
 const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
+
+const [range, setRange] = useState<DateRange | undefined>();
+const [showCalendar, setShowCalendar] = useState(false);
+
+const formatDate = (date: string) => {
+  const d = new Date(date);
+  return d.toLocaleDateString("hr-HR");
+};
 
 const [isGenerating, setIsGenerating] = useState(false);
 const [generateStatus, setGenerateStatus] = useState("");
@@ -2262,28 +2275,57 @@ if (weatherData.daily) {
 
 <div style={{ height: 10 }} />
 
-<div style={{ display: "grid", gap: 12 }}>
-  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-    <label>
-      <div style={{ marginBottom: 6, opacity: 0.7 }}>Od</div>
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        style={inputStyle}
-      />
-    </label>
-
-    <label>
-      <div style={{ marginBottom: 6, opacity: 0.7 }}>Do</div>
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        style={inputStyle}
-      />
-    </label>
+<div style={{ position: "relative", marginBottom: 12 }}>
+  <div
+    onClick={() => setShowCalendar(!showCalendar)}
+    style={{
+      ...inputStyle,
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    <span>
+      {startDate && endDate
+        ? `${formatDate(startDate)} - ${formatDate(endDate)}`
+        : "Odaberi datum putovanja"}
+    </span>
+    <span>📅</span>
   </div>
+
+  {showCalendar && (
+    <div
+      style={{
+        background: "#0f1d33",
+        border: "1px solid rgba(255,255,255,0.15)",
+        borderRadius: 18,
+        padding: 12,
+        marginTop: 8,
+        zIndex: 3000,
+      }}
+    >
+      <DayPicker
+        mode="range"
+        selected={range}
+        onSelect={(selectedRange) => {
+          setRange(selectedRange);
+
+          if (selectedRange?.from) {
+            const from = selectedRange.from.toISOString().split("T")[0];
+            setStartDate(from);
+          }
+
+          if (selectedRange?.to) {
+            const to = selectedRange.to.toISOString().split("T")[0];
+            setEndDate(to);
+            setShowCalendar(false);
+          }
+        }}
+      />
+    </div>
+  )}
+</div>
 
   <input
     placeholder="Broj dana"
@@ -3056,7 +3098,6 @@ setNewItemName(item.name);
 >
   +
 </button>
-</div>
     </main>
   );
 }
