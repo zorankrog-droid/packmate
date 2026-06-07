@@ -1411,9 +1411,12 @@ if (
     return "✈️";
   };
 
-  const bg = "#071120";
-  const card = "#0f1d33";
-  const gold = "#d4af37";
+  const bg = theme.bg;
+const card = theme.card;
+const gold = theme.accent;
+const textColor = theme.text;
+const mutedColor = theme.muted;
+const borderColor = theme.border;
 
   if (!user) {
     return (
@@ -1473,7 +1476,7 @@ if (
   }
 
   return (
-    <main style={{ minHeight: "100vh", background: bg, color: "white", padding: 20 }}>
+    <main style={{ minHeight: "100vh", background: bg, color: textColor, padding: 20 }}>
       
 <div
   style={{
@@ -1524,7 +1527,7 @@ if (
   >
     <div
       style={{
-        background: "#0f1d33",
+        background: card,
         borderRadius: 24,
         padding: 24,
         width: "100%",
@@ -1532,7 +1535,7 @@ if (
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+      <h2 style={{ color: gold, marginBottom: 16 }}>
         Uredi naziv liste
       </h2>
 
@@ -1585,7 +1588,7 @@ if (
   >
     <div
       style={{
-        background: "#0f1d33",
+        background: card,
         borderRadius: 24,
         padding: 24,
         width: "100%",
@@ -1593,7 +1596,7 @@ if (
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+      <h2 style={{ color: gold, marginBottom: 16 }}>
         Uredi naziv stavke
       </h2>
 
@@ -1650,7 +1653,7 @@ if (
   >
     <div
       style={{
-        background: "#0f1d33",
+        background: card,
         borderRadius: 24,
         padding: 24,
         width: "100%",
@@ -1658,7 +1661,7 @@ if (
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+      <h2 style={{ color: gold, marginBottom: 16 }}>
         Uredi naziv templatea
       </h2>
 
@@ -1716,7 +1719,7 @@ if (
   >
     <div
       style={{
-        background: "#0f1d33",
+        background: card,
         borderRadius: 24,
         padding: 24,
         width: "100%",
@@ -1724,7 +1727,7 @@ if (
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <h2 style={{ color: "#d4af37", marginBottom: 16 }}>
+      <h2 style={{ color: gold, marginBottom: 16 }}>
         Uredi naziv stavke templatea
       </h2>
 
@@ -1785,7 +1788,7 @@ if (
   >
     <div
       style={{
-        background: "#0f1d33",
+        background: card,
         borderRadius: 24,
         padding: 24,
         width: "100%",
@@ -1881,7 +1884,7 @@ if (
 >
   <h2 style={titleStyle}>Moji templatei</h2>
 
-  <span style={{ color: "#d4af37", fontSize: 22 }}>
+  <span style={{ color: gold, fontSize: 22 }}>
     {showTemplates ? "−" : "+"}
   </span>
 </div>
@@ -2018,7 +2021,7 @@ if (
             style={{
               background: "transparent",
               border: "none",
-              color: "#d4af37",
+              color: gold,
               fontSize: 18,
               cursor: "pointer",
               marginRight: 8,
@@ -2078,7 +2081,7 @@ if (
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "#d4af37",
+                  color: gold,
                   fontSize: 18,
                   cursor: "pointer",
                 }}
@@ -2271,7 +2274,7 @@ localStorage.setItem(
         top: "58px",
         left: 0,
         right: 0,
-        background: "#0f1d33",
+        background: card,
         border: "1px solid rgba(255,255,255,0.15)",
         borderRadius: 14,
         zIndex: 3000,
@@ -2572,7 +2575,7 @@ if (weatherData.daily) {
 {isGenerating && (
   <div
     style={{
-      color: "#d4af37",
+      color: gold,
       marginTop: 12,
       fontSize: 14,
       fontWeight: 600,
@@ -2810,7 +2813,7 @@ if (weatherData.daily) {
   <small
     style={{
       background: "rgba(212,175,55,0.15)",
-      color: "#d4af37",
+      color: gold,
       padding: "4px 8px",
       borderRadius: 10,
       fontSize: 11,
