@@ -1817,16 +1817,27 @@ const borderColor = theme.border;
 
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <AppCard cardColor={card}>
-  <h1 style={{ color: gold }}>✈️ PackMate</h1>
+  <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  }}
+>
+  <h1 style={{ color: gold, margin: 0 }}>
+    ✈️ PackMate
+  </h1>
 
-  <div style={{ marginBottom: 16 }}>
-    <button
-      onClick={logout}
-      style={secondaryButton}
-    >
-      🔓 Odjava
-    </button>
-  </div>
+  <button
+    onClick={logout}
+    style={secondaryButton}
+  >
+    Odjava
+  </button>
+</div>
+
+  
 
   <div
     style={{
