@@ -16,6 +16,8 @@ import { themes } from "../lib/themes";
 
 import ThemeSwitcher from "../components/ThemeSwitcher";
 
+import AppCard from "../components/AppCard";
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
